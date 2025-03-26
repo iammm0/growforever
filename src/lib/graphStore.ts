@@ -1,14 +1,14 @@
-import { create } from 'zustand'
-import {GraphState} from "@/models/GraphState";
-import {GraphNode} from "@/models/GraphNode";
+import { GraphNode } from "@/models/GraphNode"
 import {GraphEdge} from "@/models/GraphEdge";
+import { create } from 'zustand'
 
-interface GraphStore extends GraphState {
+interface GraphStore {
+    nodes: GraphNode[]
+    edges: GraphEdge[]
     setNodes: (nodes: GraphNode[]) => void
     setEdges: (edges: GraphEdge[]) => void
-    addNode: (node: GraphNode) => void
-    addEdge: (edge: GraphEdge) => void
-    updateNode: (id: string, data: Partial<GraphNode['data']>) => void
+    addNode: (...nodes: GraphNode[]) => void
+    addEdge: (...edges: GraphEdge[]) => void
     reset: () => void
 }
 
@@ -17,13 +17,7 @@ export const useGraphStore = create<GraphStore>((set) => ({
     edges: [],
     setNodes: (nodes) => set({ nodes }),
     setEdges: (edges) => set({ edges }),
-    addNode: (node) => set((state) => ({ nodes: [...state.nodes, node] })),
-    addEdge: (edge) => set((state) => ({ edges: [...state.edges, edge] })),
-    updateNode: (id, data) =>
-        set((state) => ({
-            nodes: state.nodes.map((node) =>
-                node.id === id ? { ...node, data: { ...node.data, ...data } } : node
-            ),
-        })),
+    addNode: (...nodes) => set((state) => ({ nodes: [...state.nodes, ...nodes] })),
+    addEdge: (...edges) => set((state) => ({ edges: [...state.edges, ...edges] })),
     reset: () => set({ nodes: [], edges: [] }),
 }))

@@ -1,6 +1,8 @@
 export type GraphNodeData = {
     label: string
-    description?: string
-    color?: string
-    [key: string]: unknown
+    title: string;
+    summary?: string;
+    tags?: string[];
+    color?: string;
+    content?: string;
 }
