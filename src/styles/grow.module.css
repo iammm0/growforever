@@ -1,0 +1,80 @@
+.page {
+    background-color: #ffffff;
+    color: #fff;
+    min-height: 100vh;
+    padding: 60px 24px;
+    font-family: 'Noto Sans SC', sans-serif;
+}
+
+.hero {
+    text-align: center;
+    padding: 100px 20px 60px;
+}
+
+.glow {
+    font-size: 9.5rem;
+    font-weight: 800;
+    color: #292b29;
+    animation: glowPulse 2.5s ease-in-out infinite;
+}
+
+.title {
+    color: #ccc;
+    font-weight: 400;
+    margin-top: 12px;
+    text-align: center;
+}
+
+
+.subtitle {
+    color: #ccc;
+    font-weight: 400;
+    margin-top: 12px;
+    text-align: center;
+}
+
+@keyframes glowPulse {
+    0% {
+        text-shadow: 0 0 8px #22c55e88;
+    }
+    50% {
+        text-shadow: 0 0 22px #22c55ecc;
+    }
+    100% {
+        text-shadow: 0 0 8px #22c55e88;
+    }
+}
+
+.section {
+    max-width: 960px;
+    margin: 0 auto;
+    padding-top: 40px;
+    text-align: center;
+}
+
+.markdownSection {
+    max-width: 1800px;
+    margin: 0 auto;
+    padding-top: 40px;
+    text-align: center;
+}
+
+.cardGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    padding: 0 20px;
+}
+
+.featureCard {
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #333;
+    padding: 24px;
+    border-radius: 16px;
+    transition: transform 0.3s ease;
+}
+.featureCard:hover {
+    transform: scale(1.03);
+    border-color: #22c55e;
+}

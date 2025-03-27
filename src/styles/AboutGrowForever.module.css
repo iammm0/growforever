@@ -1,0 +1,63 @@
+.card {
+    background: white;
+    color: black;
+    border-radius: 16px;
+    padding: 24px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.cardExpanded {
+    transform: scale(1.02);
+    border-color: #22c55e;
+    box-shadow: 0 6px 20px rgba(34, 197, 94, 0.3);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    cursor: pointer;
+}
+
+.title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #111;
+}
+
+.subtitle {
+    font-size: 0.875rem;
+    color: #666;
+    margin-top: 0.25rem;
+}
+
+.icon {
+    color: #22c55e;
+}
+
+/* markdown 渲染区域 */
+.markdown {
+    margin-top: 1rem;
+    font-size: 1rem;
+    color: #333;
+    line-height: 1.75;
+}
+
+/* 支持暗黑模式 */
+:global(.dark) .card {
+    background: #111;
+    color: #f0f0f0;
+    border-color: #2e2e2e;
+}
+
+:global(.dark) .subtitle {
+    color: #aaa;
+}
+
+:global(.dark) .markdown {
+    color: #ddd;
+}

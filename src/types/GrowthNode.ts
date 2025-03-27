@@ -1,0 +1,1 @@
+export type GrowMode = 'manual' | 'free' | 'fury'

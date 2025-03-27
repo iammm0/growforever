@@ -1,4 +1,3 @@
-import { Node } from 'reactflow'
 import { GraphNodeData } from '@/types/GraphNodeData'
 
 let nodeCount = 0
@@ -7,7 +6,12 @@ export function createThoughtNode(
     x?: number,
     y?: number,
     data: Partial<GraphNodeData> = {}
-): Node<GraphNodeData> {
+): {
+    id: string;
+    type: string;
+    position: { x: number; y: number };
+    data: { title: string; summary: string; tags: string[]; color: string; highlight: boolean; role: any }
+} {
     nodeCount++
 
     return {
@@ -23,6 +27,7 @@ export function createThoughtNode(
             tags: data.tags ?? ['默认'],
             color: data.color ?? '#000000',
             highlight: false,
+            role: data.role ?? 'normal',
         },
     }
 }
