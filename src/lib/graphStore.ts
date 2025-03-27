@@ -1,29 +1,23 @@
 import { create } from 'zustand'
-import {GraphState} from "@/models/GraphState";
-import {GraphNode} from "@/models/GraphNode";
-import {GraphEdge} from "@/models/GraphEdge";
+import { Node, Edge } from 'reactflow'
 
-interface GraphStore extends GraphState {
-    setNodes: (nodes: GraphNode[]) => void
-    setEdges: (edges: GraphEdge[]) => void
-    addNode: (node: GraphNode) => void
-    addEdge: (edge: GraphEdge) => void
-    updateNode: (id: string, data: Partial<GraphNode['data']>) => void
+interface GraphStore {
+    nodes: Node[]
+    edges: Edge[]
+    setNodes: (updater: (nodes: Node[]) => Node[]) => void
+    setEdges: (updater: (edges: Edge[]) => Edge[]) => void
+    addNode: (node: Node) => void
+    addEdge: (edge: Edge) => void
     reset: () => void
 }
 
 export const useGraphStore = create<GraphStore>((set) => ({
     nodes: [],
     edges: [],
-    setNodes: (nodes) => set({ nodes }),
-    setEdges: (edges) => set({ edges }),
+    setNodes: (updater) => set((state) => ({ nodes: updater(state.nodes) })),
+    setEdges: (updater) => set((state) => ({ edges: updater(state.edges) })),
     addNode: (node) => set((state) => ({ nodes: [...state.nodes, node] })),
     addEdge: (edge) => set((state) => ({ edges: [...state.edges, edge] })),
-    updateNode: (id, data) =>
-        set((state) => ({
-            nodes: state.nodes.map((node) =>
-                node.id === id ? { ...node, data: { ...node.data, ...data } } : node
-            ),
-        })),
     reset: () => set({ nodes: [], edges: [] }),
 }))
+
