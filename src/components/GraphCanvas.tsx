@@ -178,7 +178,6 @@ export default function GraphCanvas() {
             >
                 <MiniMap />
                 <Controls />
-                <Background gap={16} size={1} />
             </ReactFlow>
 
             {selectedNode && popoverPosition && (

@@ -1,10 +1,7 @@
 import './globals.css'
-import { Inter } from 'next/font/google'
 import type { Metadata } from 'next'
 import EmotionProvider from '../components/EmotionProvider'
 import React from "react";
-
-const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
     title: 'GrowForever - 永恒之森',
@@ -18,8 +15,9 @@ export default function RootLayout({
 }) {
     return (
         <html lang="zh-CN">
-        <body className={inter.className}>
+        <body>
         <EmotionProvider>
+
             <main className="min-h-screen">{children}</main>
             <footer className="w-full p-4 text-center text-sm text-gray-500 border-t">
                 © 2025 GrowForever 永恒之森 · 图结构人工智能演示项目
