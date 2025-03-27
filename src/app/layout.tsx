@@ -20,9 +20,6 @@ export default function RootLayout({
         <html lang="zh-CN">
         <body className={inter.className}>
         <EmotionProvider>
-            <header className="w-full p-4 bg-green-700 text-white text-2xl font-bold shadow">
-                GrowForever - 永恒之森
-            </header>
             <main className="min-h-screen">{children}</main>
             <footer className="w-full p-4 text-center text-sm text-gray-500 border-t">
                 © 2025 GrowForever 永恒之森 · 图结构人工智能演示项目

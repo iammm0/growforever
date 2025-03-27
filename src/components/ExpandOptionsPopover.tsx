@@ -1,35 +1,57 @@
+'use client'
 
-import {Button, Stack, Typography} from '@mui/material'
-import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
-import React from "react";
+import React, { forwardRef } from 'react'
+import { Node } from 'reactflow'
+import { Button, Paper, Typography, Stack } from '@mui/material'
 
-interface ExpandOptionsPopoverProps {
-    trigger: React.ReactNode
-    onExpand: (mode: 'depth' | 'free' | 'tag') => void
+type ExpandOptionsPopoverProps = {
+    node: Node
+    position: { x: number; y: number }
+    onExpand: (type: 'related' | 'deep' | 'new') => void
+    onClose: () => void
 }
 
-export function ExpandOptionsPopover({ trigger, onExpand }: ExpandOptionsPopoverProps) {
-    return (
-        <Popover>
-            <PopoverTrigger asChild>
-                {trigger}
-            </PopoverTrigger>
-            <PopoverContent>
-                <Typography variant="h6" gutterBottom>
-                    选择展开模式
+// ⬇️ forwardRef 用于接收 ref，从父组件注入
+const ExpandOptionsPopover = forwardRef<HTMLDivElement, ExpandOptionsPopoverProps>(
+    ({ node, position, onExpand, onClose }, ref) => {
+        return (
+            <Paper
+                ref={ref}
+                elevation={4}
+                style={{
+                    position: 'absolute',
+                    top: position.y + window.scrollY,
+                    left: position.x + window.scrollX,
+                    zIndex: 1000,
+                    padding: 16,
+                    borderRadius: 8,
+                    background: 'white',
+                    pointerEvents: 'auto',
+                }}
+            >
+                <Typography fontWeight="bold" gutterBottom>
+                    展开 {node.data?.title || ''}
                 </Typography>
-                <Stack spacing={1}>
-                    <Button onClick={() => onExpand('depth')} variant="contained" color="success">
-                        🔎 深度相关展开
+                <Stack direction="column" spacing={1}>
+                    <Button variant="outlined" onClick={() => onExpand('related')}>
+                        🔗 关联扩展
                     </Button>
-                    <Button onClick={() => onExpand('free')} variant="contained" color="primary">
-                        🌍 自由发散展开
+                    <Button variant="outlined" onClick={() => onExpand('deep')}>
+                        📚 深入展开
                     </Button>
-                    <Button onClick={() => onExpand('tag')} variant="contained" color="secondary">
-                        🏷️ 标签驱动展开
+                    <Button variant="outlined" onClick={() => onExpand('new')}>
+                        🌱 新想法
+                    </Button>
+                    <Button color="inherit" size="small" onClick={onClose}>
+                        取消
                     </Button>
                 </Stack>
-            </PopoverContent>
-        </Popover>
-    )
-}
+            </Paper>
+        )
+    }
+)
+
+// 🔐 必须加 displayName，避免 React Dev Tools 报错
+ExpandOptionsPopover.displayName = 'ExpandOptionsPopover'
+
+export default ExpandOptionsPopover

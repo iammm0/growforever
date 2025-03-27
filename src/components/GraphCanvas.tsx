@@ -1,117 +1,198 @@
 'use client'
 
-import React, { useState, useCallback, useEffect } from 'react'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
 import ReactFlow, {
     Background,
     Controls,
     MiniMap,
     useNodesState,
     useEdgesState,
-
+    addEdge,
+    Connection,
+    Edge,
+    MarkerType,
 } from 'reactflow'
+import type { Node } from 'reactflow'
 import 'reactflow/dist/style.css'
-import { useGraphStore } from '@/lib/graphStore'
-import ThoughtCard from './ThoughtCard'
-import { createThoughtNode } from '@/lib/nodeUtils'
-import { ExpandOptionsPopover } from './ExpandOptionsPopover'
-import { Button, Box } from '@mui/material'
-
-const nodeTypes = { thoughtCard: ThoughtCard }
+import {useGraphStore} from "@/lib/graphStore";
+import {nodeTypes} from "@/types/ThoughtNode";
+import ExpandOptionsPopover from "@/components/ExpandOptionsPopover";
 
 export default function GraphCanvas() {
-    const { nodes: storeNodes, edges: storeEdges, addNode, addEdge: addStoreEdge } = useGraphStore()
-    const [nodes, setLocalNodes, onNodesChange] = useNodesState(storeNodes)
-    const [edges, setLocalEdges, onEdgesChange] = useEdgesState(storeEdges)
-    const [selectedNode, setSelectedNode] = useState<any | null>(null)
+    const {
+        nodes: storeNodes,
+        edges: storeEdges,
+        setNodes: setStoreNodes,
+        setEdges: setStoreEdges,
+        addEdge: addEdgeToStore,
+    } = useGraphStore()
 
-    useEffect(() => setLocalNodes(storeNodes), [storeNodes])
-    useEffect(() => setLocalEdges(storeEdges), [storeEdges])
+    const [nodes, setNodes, onNodesChange] = useNodesState(storeNodes)
+    const [edges, setEdges, onEdgesChange] = useEdgesState(storeEdges)
 
-    const handleExpand = useCallback(
-        (mode: 'depth' | 'free' | 'tag', node: any) => {
-            const branchData = [
-                {
-                    title: mode === 'depth' ? '深入A' : mode === 'free' ? '发散A' : '标签A',
-                    summary: `由 ${node.data.title} ${mode} 展开`,
-                    tags: ['分支'],
-                },
-                {
-                    title: mode === 'depth' ? '深入B' : mode === 'free' ? '发散B' : '标签B',
-                    summary: `由 ${node.data.title} ${mode} 展开`,
-                    tags: ['分支'],
-                },
-            ]
+    const [initialized, setInitialized] = useState(false)
+    const [selectedNode, setSelectedNode] = useState<Node | null>(null)
+    const [popoverPosition, setPopoverPosition] = useState<{ x: number; y: number } | null>(null)
+    const popoverRef = useRef<HTMLDivElement | null>(null)
 
-            const createdNodes = branchData.map((data, idx) => {
-                const angle = (idx / branchData.length) * 2 * Math.PI
-                const distance = 180
-                return createThoughtNode(
-                    node.position.x + Math.cos(angle) * distance,
-                    node.position.y + Math.sin(angle) * distance,
-                    { ...data, color: '#60a5fa' }
-                )
-            })
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (
+                popoverRef.current &&
+                event.target instanceof window.Node &&
+                !popoverRef.current.contains(event.target)
+            ) {
+                setSelectedNode(null)
+                setPopoverPosition(null)
+            }
+        }
 
-            const createdEdges = createdNodes.map((childNode) => ({
-                id: `${node.id}-${childNode.id}`,
-                source: node.id,
-                target: childNode.id,
-            }))
-
-            addNode(...createdNodes)
-            addStoreEdge(...createdEdges)
-            setSelectedNode(null)
-        },
-        [addNode, addStoreEdge]
-    )
-
-    const handleNodeClick = useCallback((_event: any, node: any) => {
-        setSelectedNode(node)
+        document.addEventListener('mousedown', handleClickOutside)
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside)
+        }
     }, [])
 
-    const handlePaneClick = () => {
-        if (nodes.length === 0) {
-            const rootNode = createThoughtNode(400, 300, {
-                title: '一个想法',
-                summary: '一切从这里开始',
-                tags: ['root'],
-                color: '#4ade80',
-            })
-            addNode(rootNode)
-        } else {
-            setSelectedNode(null)
+    // 初始化根节点
+    useEffect(() => {
+        if (!initialized && storeNodes.length === 0) {
+            setStoreNodes(() => [
+                {
+                    id: 'root',
+                    type: 'thought',
+                    position: { x: 300, y: 150 },
+                    data: {
+                        title: '🌱 永恒之森 - 种子',
+                        summary: '一切从一个想法开始。',
+                        tags: ['AI', '思维链'],
+                        highlight: true,
+                    },
+                },
+            ])
+            setInitialized(true)
         }
+    }, [initialized, storeNodes.length, setStoreNodes])
+
+    // 同步 zustand 状态
+    useEffect(() => setNodes(storeNodes), [storeNodes])
+    useEffect(() => setEdges(storeEdges), [storeEdges])
+
+    const onConnect = useCallback(
+        (connection: Connection) => {
+            if (!connection.source || !connection.target) return
+            const newEdge: Edge = {
+                ...connection,
+                id: `${connection.source}-${connection.target}-${Date.now()}`,
+                source: connection.source,
+                target: connection.target,
+                sourceHandle: connection.sourceHandle ?? undefined,
+                targetHandle: connection.targetHandle ?? undefined,
+                type: 'default',
+                markerEnd: {
+                    type: MarkerType.ArrowClosed,
+                },
+            }
+            setEdges((eds) => addEdge(newEdge, eds))
+            addEdgeToStore(newEdge)
+        },
+        [setEdges, addEdgeToStore]
+    )
+
+
+    // 点击节点
+    const onNodeClick = useCallback(
+        (event: React.MouseEvent, clickedNode: Node) => {
+            setSelectedNode(clickedNode)
+
+            // 获取画布内坐标
+            const rect = (event.target as HTMLElement).getBoundingClientRect()
+            const position = {
+                x: rect.left + rect.width / 2,
+                y: rect.top,
+            }
+
+            setPopoverPosition(position)
+
+            // 高亮父节点
+            const parentEdge = edges.find((e) => e.target === clickedNode.id)
+            const parentId = parentEdge?.source
+            setNodes((nds) =>
+                nds.map((node) => ({
+                    ...node,
+                    data: {
+                        ...node.data,
+                        highlight: node.id === parentId || node.id === 'root',
+                    },
+                }))
+            )
+        },
+        [edges, setNodes]
+    )
+
+
+    const handleExpandOption = (type: 'related' | 'deep' | 'new') => {
+        if (!selectedNode) return
+        const newId = `${selectedNode.id}-${Date.now()}`
+        const newNode: Node = {
+            id: newId,
+            type: 'thought',
+            position: {
+                x: selectedNode.position.x + 200,
+                y: selectedNode.position.y + Math.random() * 100,
+            },
+            data: {
+                title: type === 'new' ? '新想法' : type === 'deep' ? '深入扩展' : '关联概念',
+                summary: '系统自动扩展的内容',
+                tags: [type],
+                highlight: false,
+            },
+        }
+
+        const newEdge: Edge = {
+            id: `${selectedNode.id}-${newId}`,
+            source: selectedNode.id,
+            target: newId,
+            type: 'default',
+        }
+
+        setNodes((nds) => [...nds, newNode])
+        setEdges((eds) => [...eds, newEdge])
+        setSelectedNode(null)
+        setPopoverPosition(null)
     }
 
+
     return (
-        <Box position="relative" height="100%" width="100%">
+        <div style={{ height: '100vh', width: '100vw' ,position: 'relative'}}>
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
                 onNodesChange={onNodesChange}
                 onEdgesChange={onEdgesChange}
-                onNodeClick={handleNodeClick}
-                onPaneClick={handlePaneClick}
-                fitView
+                onConnect={onConnect}
+                onNodeClick={onNodeClick}
                 nodeTypes={nodeTypes}
+                fitView
+                panOnDrag
+                zoomOnScroll
             >
                 <MiniMap />
                 <Controls />
                 <Background gap={16} size={1} />
             </ReactFlow>
 
-            {selectedNode && (
-                <Box position="absolute" top={20} right={20}>
-                    <ExpandOptionsPopover
-                        trigger={
-                            <Button variant="contained" color="success">
-                                选择展开模式
-                            </Button>
-                        }
-                        onExpand={(mode) => handleExpand(mode, selectedNode)}
-                    />
-                </Box>
+            {selectedNode && popoverPosition && (
+                <ExpandOptionsPopover
+                    ref={popoverRef}
+                    node={selectedNode}
+                    position={popoverPosition}
+                    onExpand={handleExpandOption}
+                    onClose={() => {
+                        setSelectedNode(null)
+                        setPopoverPosition(null)
+                    }}
+                />
             )}
-        </Box>
+        </div>
     )
 }

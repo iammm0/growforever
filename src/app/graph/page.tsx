@@ -2,6 +2,7 @@
 import GraphCanvas from '../../components/GraphCanvas'
 import ControlPanel from '../../components/ControlPanel'
 import {AppBar, Box, Container, Paper, Toolbar} from '@mui/material'
+import {ReactFlowProvider} from "reactflow";
 
 
 export default function GraphPage() {
@@ -13,7 +14,9 @@ export default function GraphPage() {
                 </Toolbar>
             </AppBar>
             <Box flex={1} height="100%" width="100%" position="relative" overflow="hidden">
-                <GraphCanvas />
+                <ReactFlowProvider>
+                    <GraphCanvas />
+                </ReactFlowProvider>
             </Box>
         </Box>
     )
