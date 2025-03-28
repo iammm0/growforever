@@ -1,11 +1,11 @@
 'use client'
 
 import {Box, Button, Typography} from '@mui/material'
-import GrowHero from '@/components/GrowHero'
-import FeatureCard from '@/components/FeatureCard'
+import GrowHero from '@/components/main/GrowHero'
+import FeatureCard from '@/components/main/FeatureCard'
 import { useRouter } from 'next/navigation'
 import styles from '@/styles/grow.module.css'
-import MarkdownFeatureSection from "@/components/MarkdownFeatureSection";
+import MarkdownFeatureSection from "@/components/main/MarkdownFeatureSection";
 
 
 const features = [
@@ -55,7 +55,7 @@ export default function Home() {
                 </Button>
             </Box>
 
-            <Box className={styles.section}>
+            <Box className={styles.featureCardSection}>
                 <Box className={styles.cardGrid}>
                     {features.map((f, idx) => (
                         <FeatureCard key={idx} title={f.title} description={f.description} />
@@ -64,8 +64,17 @@ export default function Home() {
             </Box>
 
             <Box className={styles.markdownSection}>
+                <Typography variant="h3" color="text.secondary" gutterBottom>
+                    为了让每一个有趣的点子不再被遗忘
+                </Typography>
+                <Typography variant="h5" color="text.secondary" gutterBottom>
+                    同时将引导人们探索从这一点子出发所生长出的所有可能性
+                </Typography>
                 <Typography variant="h4" color="text.secondary" gutterBottom>
-                    一个想法用于开始，亿万个想法用于实现。
+                    GrowForever 帮助你从无数延展出的点子中，找出最具创造力与可行性的那个
+                </Typography>
+                <Typography variant="h1" color="text.secondary" gutterBottom>
+                    从一念出发，筛选最有价值的创造
                 </Typography>
                 <MarkdownFeatureSection />
             </Box>

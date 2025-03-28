@@ -12,7 +12,7 @@ interface GraphStore {
     setEdges: (updater: (edges: Edge[]) => Edge[]) => void
     addNode: (node: Node) => void
     addEdge: (edge: Edge) => void
-    setGrowMode: (mode: "free" | "rage") => void
+    setGrowMode: (mode: GrowMode) => void
     setAutoExpanding: (v: boolean) => void
     reset: () => void
 }
@@ -27,7 +27,7 @@ export const useGraphStore = create<GraphStore>((set) => ({
     setEdges: (updater) => set((state) => ({ edges: updater(state.edges) })),
     addNode: (node) => set((state) => ({ nodes: [...state.nodes, node] })),
     addEdge: (edge) => set((state) => ({ edges: [...state.edges, edge] })),
-    setGrowMode: (mode) => set({ growMode: mode }),
+    setGrowMode: (mode:GrowMode) => set({ growMode: mode }),
     setAutoExpanding: (v) => set({ isAutoExpanding: v }),
     reset: () => set({ nodes: [], edges: [], isAutoExpanding: false }),
 }))

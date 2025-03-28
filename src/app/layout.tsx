@@ -1,7 +1,8 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import EmotionProvider from '../components/EmotionProvider'
+import EmotionProvider from '../components/nodes/EmotionProvider'
 import React from "react";
+import Footer from "@/components/main/Footer";
 
 export const metadata: Metadata = {
     title: 'GrowForever - 永恒之森',
@@ -19,9 +20,7 @@ export default function RootLayout({
         <EmotionProvider>
 
             <main className="min-h-screen">{children}</main>
-            <footer className="w-full p-4 text-center text-sm text-gray-500 border-t">
-                © 2025 GrowForever 永恒之森 · 图结构人工智能演示项目
-            </footer>
+            <Footer />
         </EmotionProvider>
         </body>
         </html>
