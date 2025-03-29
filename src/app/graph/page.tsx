@@ -4,7 +4,6 @@ import ControlPanel from '../../components/nodes/ControlPanel'
 import {AppBar, Box, Toolbar} from '@mui/material'
 import {ReactFlowProvider} from "reactflow";
 
-
 export default function GraphPage() {
     return (
         <Box display="flex" flexDirection="column" height="100vh">

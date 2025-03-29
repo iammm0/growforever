@@ -19,25 +19,25 @@ const markdownFiles = {
 const sections = [
     {
         id: 'inspiration',
-        title: '🌱 灵感来源',
-        short: '源自对认知过程结构化的思考，GrowForever 想解决“我们到底如何思考？”这个问题。',
+        title: '灵感来源',
+        short: 'GrowForever 的灵感来自对“人类心理活动能否被人工智能模拟”的探索，旨在重现个体真实的认知世界。',
     },
     {
         id: 'techStack',
-        title: '🧪 技术栈',
-        short: '使用 Next.js + React + TailwindCSS + React Flow 构建，融合 NLP 与数据可视化技术。',
+        title: '技术栈',
+        short: '以 Next.js 15 为核心，搭配 Tailwind CSS、MUI、React Flow 构建前端，后端融合 NLP、GPT 与图神经网络技术。',
     },
     {
         id: 'architecture',
-        title: '🏗️ 架构设计',
-        short: '基于模块化组件 + 状态管理（Zustand），数据结构高度解耦，支持思维节点自由生长。',
+        title: '系统架构',
+        short: '采用 GPT+GNN 混合模型架构，结合 Zustand 状态管理与 Neo4j 图数据库，实时解析与还原用户心理结构。',
     },
     {
         id: 'future',
-        title: '🚀 未来方向',
-        short: '将接入 AI 模型自动扩展、认知地图协同编辑、跨领域知识联想等功能，构建认知生态。',
+        title: '未来方向',
+        short: '致力于 AI 自主心理模拟与创意联想，形成可自我演化的个性化心理生态，打造真正具备“胡思乱想”能力的AI。',
     },
-]
+];
 
 export default function MarkdownFeatureSection() {
     const [expandedId, setExpandedId] = useState<string | null>(null)

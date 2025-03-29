@@ -3,12 +3,13 @@
 import { ToggleButton, ToggleButtonGroup, Typography, Stack } from '@mui/material'
 import { useGraphStore } from '@/lib/graphStore'
 import React from 'react'
+import {GrowMode} from "@/types/GrowthNode";
 
 export default function GrowModeToggle() {
     const growMode = useGraphStore((s) => s.growMode)
     const setGrowMode = useGraphStore((s) => s.setGrowMode)
 
-    const handleChange = (_e: React.MouseEvent<HTMLElement>, newMode: 'free' | 'rage' | null) => {
+    const handleChange = (_e: React.MouseEvent<HTMLElement>, newMode: GrowMode) => {
         if (newMode) setGrowMode(newMode)
     }
 

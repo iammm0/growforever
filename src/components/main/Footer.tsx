@@ -31,7 +31,7 @@ export default function Footer() {
                 >
                     GrowForever 永恒之森
                 </Box>{' '}
-                · 图结构人工智能演示项目
+                · 图结构人工智能演示项目(尚未接入图结构人工智能)
             </Typography>
         </Box>
     )

@@ -6,6 +6,7 @@ import FeatureCard from '@/components/main/FeatureCard'
 import { useRouter } from 'next/navigation'
 import styles from '@/styles/grow.module.css'
 import MarkdownFeatureSection from "@/components/main/MarkdownFeatureSection";
+import SloganCloud from "@/components/main/SloganCloud";
 
 
 const features = [
@@ -51,8 +52,11 @@ export default function Home() {
                     sx={{ mt: 6 }}
                     onClick={() => router.push('/graph')}
                 >
-                    从一颗思维种子开始爆炸 →
+                    从一颗思维种子开始爆炸<br />（尚未接入图人工智能，UI效果仅供演示）→
                 </Button>
+                <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+
+                </Typography>
             </Box>
 
             <Box className={styles.featureCardSection}>
@@ -63,19 +67,11 @@ export default function Home() {
                 </Box>
             </Box>
 
+            <Box>
+                <SloganCloud />
+            </Box>
+
             <Box className={styles.markdownSection}>
-                <Typography variant="h3" color="text.secondary" gutterBottom>
-                    为了让每一个有趣的点子不再被遗忘
-                </Typography>
-                <Typography variant="h5" color="text.secondary" gutterBottom>
-                    同时将引导人们探索从这一点子出发所生长出的所有可能性
-                </Typography>
-                <Typography variant="h4" color="text.secondary" gutterBottom>
-                    GrowForever 帮助你从无数延展出的点子中，找出最具创造力与可行性的那个
-                </Typography>
-                <Typography variant="h1" color="text.secondary" gutterBottom>
-                    从一念出发，筛选最有价值的创造
-                </Typography>
                 <MarkdownFeatureSection />
             </Box>
         </Box>

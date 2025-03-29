@@ -1,6 +1,6 @@
 'use client'
 
-import { Edge, Node } from 'reactflow'
+import { Node } from 'reactflow'
 import { nanoid } from 'nanoid'
 import { useGraphStore } from '@/lib/graphStore'
 
@@ -8,82 +8,136 @@ function getRandomInt(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-// 角度扩散：360° 平均分布
-function getSpreadPosition(centerX: number, centerY: number, index: number, total: number, distance: number) {
-    const angle = (index / total) * 2 * Math.PI
-    return {
-        x: centerX + Math.cos(angle) * distance,
-        y: centerY + Math.sin(angle) * distance,
+function isTooClose(posA: { x: number; y: number }, posB: { x: number; y: number }, minDist = 120) {
+    const dx = posA.x - posB.x
+    const dy = posA.y - posB.y
+    return Math.sqrt(dx * dx + dy * dy) < minDist
+}
+
+function generateChildNodes(
+    parent: Node,
+    count: number,
+    radius: number,
+    angleSpread: number,
+    existingNodes: Node[]
+): Node[] {
+    const angleStep = angleSpread / count
+    const generated: Node[] = []
+
+    for (let i = 0; i < count; i++) {
+        let attempt = 0
+        let x = 0, y = 0
+        let valid = false
+
+        while (!valid && attempt < 10) {
+            const angleDeg = -angleSpread / 2 + angleStep * i + (Math.random() - 0.5) * 10
+            const angle = (angleDeg * Math.PI) / 180
+            const offset = radius + (Math.random() - 0.5) * 60
+
+            x = parent.position.x + Math.cos(angle) * offset
+            y = parent.position.y + Math.sin(angle) * offset
+
+            valid = [...existingNodes, ...generated].every(
+                (n) => !isTooClose(n.position, { x, y })
+            )
+
+            attempt++
+        }
+
+        generated.push({
+            id: nanoid(),
+            type: 'thought',
+            position: { x, y },
+            data: {
+                title: '扩展想法',
+                summary: '自动扩展节点',
+                tags: ['自动'],
+                highlight: false,
+            },
+        })
+    }
+
+    return generated
+}
+
+async function expandRecursively(
+    parent: Node,
+    depth: number,
+    maxDepth: number,
+    delay: number,
+    minChildren: number,
+    maxChildren: number,
+    radius: number,
+    angleSpread: number,
+    autoArrange: boolean
+) {
+    if (depth >= maxDepth) return
+
+    const {
+        addNode,
+        addEdge,
+        growMode,
+        isAutoExpanding,
+        nodes: existingNodes,
+    } = useGraphStore.getState()
+
+    if (growMode === 'manual' || !isAutoExpanding) return
+
+    const count = getRandomInt(minChildren, maxChildren)
+    const children = generateChildNodes(parent, count, radius, angleSpread, existingNodes)
+
+    for (const child of children) {
+        addNode(child)
+        addEdge({
+            id: `${parent.id}-${child.id}`,
+            source: parent.id,
+            target: child.id,
+            type: 'default',
+        })
+
+        await new Promise((res) => setTimeout(res, delay))
+        await expandRecursively(
+            child,
+            depth + 1,
+            maxDepth,
+            delay,
+            minChildren,
+            maxChildren,
+            radius * 0.9,
+            angleSpread,
+            autoArrange
+        )
     }
 }
-
-function sleep(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms))
-}
-
 
 export async function simulateAutoExpand(rootId: string) {
     const {
         growMode,
         nodes,
-        addNode,
-        addEdge,
         setAutoExpanding,
+        isAutoExpanding,
+        config,
     } = useGraphStore.getState()
 
-    const root = nodes.find(n => n.id === rootId)
+    if (growMode === 'manual' || isAutoExpanding) return
+
+    const conf = config[growMode]
+    const root = nodes.find((n) => n.id === rootId)
     if (!root) return
 
     setAutoExpanding(true)
 
-    // 控制数量
-    const MAX_DEPTH = 4
-    const MAX_CHILD_PER_NODE = 6
-    const MIN_CHILD_PER_NODE = 3
-    const delay = growMode === 'fury' ? 100 : 600
-
-    // 队列用于 BFS 拓展
-    const queue: { parent: Node; depth: number }[] = [{ parent: root, depth: 1 }]
-
-    while (queue.length > 0) {
-        const { parent, depth } = queue.shift()!
-
-        if (depth > MAX_DEPTH) continue
-
-        const childCount = getRandomInt(MIN_CHILD_PER_NODE, MAX_CHILD_PER_NODE)
-
-        for (let i = 0; i < childCount; i++) {
-            const id = nanoid()
-            const pos = getSpreadPosition(parent.position.x, parent.position.y, i, childCount, 360)
-
-            const newNode: Node = {
-                id,
-                type: 'thought',
-                position: pos,
-                data: {
-                    title: `想法 ${id.slice(0, 5)}`,
-                    summary: growMode === 'fury' ? '狂暴扩展' : '自由扩展',
-                    tags: [growMode],
-                    highlight: false,
-                },
-            }
-
-            const newEdge: Edge = {
-                id: `${parent.id}-${id}`,
-                source: parent.id,
-                target: id,
-                type: 'default',
-            }
-
-            addNode(newNode)
-            addEdge(newEdge)
-
-            // 子节点进入队列递归扩展
-            queue.push({ parent: newNode, depth: depth + 1 })
-
-            await sleep(delay)
-        }
-    }
+    await expandRecursively(
+        root,
+        0,
+        conf.maxDepth,
+        conf.interval,
+        conf.childrenRange[0],
+        conf.childrenRange[1],
+        conf.spreadRadius,
+        conf.angleSpread,
+        conf.autoArrange
+    )
 
     setAutoExpanding(false)
 }

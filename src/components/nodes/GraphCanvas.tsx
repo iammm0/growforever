@@ -173,14 +173,22 @@ export default function GraphCanvas() {
         }
 
         if (!selectedNode) return
+
+
         const newId = `${selectedNode.id}-${Date.now()}`
+
+        const baseAngle = Math.random() * Math.PI * 2 // 随机初始角度
+        const radius = 200
+        const offsetAngle = (Math.random() - 0.5) * 0.5
+
+        const angle = baseAngle + offsetAngle
+        const newX = selectedNode.position.x + Math.cos(angle) * radius
+        const newY = selectedNode.position.y + Math.sin(angle) * radius
+
         const newNode: Node = {
             id: newId,
             type: 'thought',
-            position: {
-                x: selectedNode.position.x + 180 + Math.random() * 40,
-                y: selectedNode.position.y + (Math.random() - 0.5) * 100,
-            },
+            position: { x: newX, y: newY },
             data: {
                 title: type === 'new' ? '新想法' : type === 'deep' ? '深入扩展' : '关联概念',
                 summary: mockSummaries[Math.floor(Math.random() * mockSummaries.length)],
