@@ -17,7 +17,7 @@ import {useGraphStore} from '@/lib/graphStore'
 
 type Props = {
     open: boolean,
-    close: () => void,
+    closeAction: () => void,
 }
 
 const modeLabelMap = {
@@ -26,16 +26,16 @@ const modeLabelMap = {
     fury: '狂暴模式',
 }
 
-export default function ConfigDrawer({open, close}: Props) {
+export default function ConfigDrawer({open, closeAction}: Props) {
     const [tab, setTab] = useState<GrowMode>('manual')
     const setMode = useGraphStore((s) => s.setGrowMode)
 
     return (
-        <Drawer anchor="right" open={open} onClose={close}>
+        <Drawer anchor="right" open={open} onClose={closeAction}>
             <Box sx={{width: 400, p: 3}}>
                 <Box display="flex" justifyContent="space-between" alignItems="center">
                     <Typography variant="h6">高级配置</Typography>
-                    <IconButton onClick={close}>
+                    <IconButton onClick={closeAction}>
                         <CloseIcon/>
                     </IconButton>
                 </Box>
@@ -53,7 +53,15 @@ export default function ConfigDrawer({open, close}: Props) {
                     <Tab value="fury" label="狂暴"/>
                 </Tabs>
 
-                <Box mt={3}>
+                <Box
+                    sx={{
+                        width: '100%',
+                        maxWidth: 400,
+                        mx: 'auto',
+                        px: 2,
+                        py: 3,
+                    }}
+                >
                     <ExpandConfigPanel mode={tab}/>
                     <Box mt={2}>
                         <Typography variant="caption" color="textSecondary">

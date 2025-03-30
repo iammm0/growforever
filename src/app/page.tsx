@@ -1,6 +1,6 @@
 'use client'
 
-import {Box, Button, Typography} from '@mui/material'
+import {Box, Button} from '@mui/material'
 import GrowHero from '@/components/main/GrowHero'
 import FeatureCard from '@/components/main/FeatureCard'
 import { useRouter } from 'next/navigation'
@@ -54,9 +54,6 @@ export default function Home() {
                 >
                     从一颗思维种子开始爆炸<br />（尚未接入图人工智能，UI效果仅供演示）→
                 </Button>
-                <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-
-                </Typography>
             </Box>
 
             <Box className={styles.featureCardSection}>

@@ -23,7 +23,6 @@ export default function GraphCanvas() {
         nodes: storeNodes,
         edges: storeEdges,
         setNodes: setStoreNodes,
-        setEdges: setStoreEdges,
         addEdge: addEdgeToStore,
     } = useGraphStore()
 
@@ -111,8 +110,8 @@ export default function GraphCanvas() {
     }, [initialized, storeNodes.length, setStoreNodes])
 
     // 同步 zustand 状态
-    useEffect(() => setNodes(storeNodes), [storeNodes])
-    useEffect(() => setEdges(storeEdges), [storeEdges])
+    useEffect(() => setNodes(storeNodes), [setNodes, storeNodes])
+    useEffect(() => setEdges(storeEdges), [setEdges, storeEdges])
 
     const onConnect = useCallback(
         (connection: Connection) => {

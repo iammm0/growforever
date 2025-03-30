@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Stack, Popover, IconButton, Tooltip } from '@mui/material'
+import {Button, Stack, Popover, IconButton, Tooltip, Box, Drawer} from '@mui/material'
 import SettingsIcon from '@mui/icons-material/Settings'
 import { useGraphStore } from '@/lib/graphStore'
 import { createThoughtNode } from '@/lib/nodeUtils'
@@ -9,6 +9,8 @@ import { GrowMode } from '@/types/GrowthNode'
 import { useState } from 'react'
 import ExpandConfigPanel from '@/components/nodes/ExpandConfigPanel'
 import ConfigDrawer from "@/components/nodes/ConfigDrawer";
+import {useMediaQuery, useTheme} from "@mui/system";
+import {MenuIcon} from "lucide-react";
 
 const modeNameMap = {
     manual: '手动模式',
@@ -17,6 +19,10 @@ const modeNameMap = {
 }
 
 export default function ControlPanel() {
+    const theme = useTheme()
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+    const [menuOpen, setMenuOpen] = useState(false)
+
     const { addNode, reset, growMode, setGrowMode, nodes } = useGraphStore()
 
     const handleAdd = () => {
@@ -50,38 +56,88 @@ export default function ControlPanel() {
 
     return (
         <>
-            <Stack direction="row" spacing={2} alignItems="center">
-                <Button variant="contained" onClick={handleAdd}>
-                    ➕ 添加节点
-                </Button>
-                <Button variant="outlined" color="error" onClick={reset}>
-                    🗑️ 清空画布
-                </Button>
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={handleAutoGrow}
-                    disabled={growMode === 'manual'}
-                >
-                    🚀 自动扩展（{modeNameMap[growMode]}）
-                </Button>
-                <Button variant="text" onClick={handleToggleMode}>
-                    切换为{' '}
-                    {modeNameMap[
-                        growMode === 'manual'
-                            ? 'free'
-                            : growMode === 'free'
-                                ? 'fury'
-                                : 'manual'
-                        ]}
-                </Button>
+            {isMobile ? (
+                <>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+                        <IconButton onClick={() => setMenuOpen(true)} color="primary">
+                            <MenuIcon />
+                        </IconButton>
+                    </Box>
 
-                <Tooltip title="打开高级配置">
-                    <IconButton onClick={() => setDrawerOpen(true)}>
-                        <SettingsIcon />
-                    </IconButton>
-                </Tooltip>
-            </Stack>
+                    <Drawer anchor="right" open={menuOpen} onClose={() => setMenuOpen(false)}>
+                        <Box sx={{ width: 260, p: 2 }}>
+                            <Button variant="contained" fullWidth onClick={handleAdd} sx={{ mb: 1 }}>
+                                ➕ 添加节点
+                            </Button>
+                            <Button variant="outlined" fullWidth color="error" onClick={reset} sx={{ mb: 1 }}>
+                                🗑️ 清空画布
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                fullWidth
+                                onClick={handleAutoGrow}
+                                disabled={growMode === 'manual'}
+                                sx={{ mb: 1 }}
+                            >
+                                🚀 自动扩展（{modeNameMap[growMode]}）
+                            </Button>
+                            <Button variant="text" fullWidth onClick={handleToggleMode} sx={{ mb: 1 }}>
+                                切换为{' '}
+                                {modeNameMap[
+                                    growMode === 'manual' ? 'free' : growMode === 'free' ? 'fury' : 'manual'
+                                    ]}
+                            </Button>
+                            <Button
+                                startIcon={<SettingsIcon />}
+                                onClick={() => {
+                                    setDrawerOpen(true)
+                                    setMenuOpen(false)
+                                }}
+                                fullWidth
+                            >
+                                打开高级配置
+                            </Button>
+                        </Box>
+                    </Drawer>
+                </>
+            ) : (
+                <Stack
+                    direction="row"
+                    spacing={2}
+                    alignItems="center"
+                    justifyContent="center"
+                    sx={{ mb: 2 }}
+                >
+                    <Button variant="contained" onClick={handleAdd}>
+                        ➕ 添加节点
+                    </Button>
+                    <Button variant="outlined" color="error" onClick={reset}>
+                        🗑️ 清空画布
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={handleAutoGrow}
+                        disabled={growMode === 'manual'}
+                    >
+                        🚀 自动扩展（{modeNameMap[growMode]}）
+                    </Button>
+                    <Button variant="text" onClick={handleToggleMode}>
+                        切换为{' '}
+                        {modeNameMap[
+                            growMode === 'manual' ? 'free' : growMode === 'free' ? 'fury' : 'manual'
+                            ]}
+                    </Button>
+                    <Tooltip title="打开高级配置">
+                        <IconButton onClick={() => setDrawerOpen(true)}>
+                            <SettingsIcon />
+                        </IconButton>
+                    </Tooltip>
+                </Stack>
+            )}
+
+
 
             <Popover
                 open={openPopover}
@@ -98,7 +154,7 @@ export default function ControlPanel() {
                 <ExpandConfigPanel />
             </Popover>
 
-            <ConfigDrawer open={drawerOpen} close={() => setDrawerOpen(false)} />
+            <ConfigDrawer open={drawerOpen} closeAction={() => setDrawerOpen(false)} />
         </>
     )
 }

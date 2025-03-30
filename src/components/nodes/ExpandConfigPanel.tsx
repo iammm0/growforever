@@ -6,6 +6,7 @@ import {
 import { useGraphStore } from '@/lib/graphStore'
 import {GrowMode} from "@/types/GrowthNode";
 import LayoutPresetSelector from "@/components/nodes/LayoutPresetSelector";
+import {useMediaQuery, useTheme} from "@mui/system";
 
 type ExpandConfigPanelProps = {
     mode?: GrowMode
@@ -17,17 +18,35 @@ export default function ExpandConfigPanel({ mode }: ExpandConfigPanelProps) {
     const config = useGraphStore((s) => s.config[realMode])
     const setConfig = useGraphStore((s) => s.setConfig)
 
+    const theme = useTheme()
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+
     const update = (key: keyof typeof config, value: number | boolean | number[]) => {
         setConfig(realMode, { [key]: value })
     }
 
     return (
-        <Box p={3} bgcolor="#f9f9f9" borderRadius={2} width={360} boxShadow={2}>
+        <Box
+            p={3}
+            bgcolor="#f9f9f9"
+            borderRadius={2}
+            width={320}
+            maxWidth="100%"
+            sx={{
+                '@media (max-width: 600px)': {
+                    transform: 'scale(0.94)',
+                    transformOrigin: 'top center',
+                    px: 1.5,
+                    py: 2,
+                },
+            }}
+            boxShadow={2}
+        >
             <Typography variant="subtitle1" fontWeight="bold">
                 {[realMode]} 配置
             </Typography>
 
-            <Stack spacing={3}>
+            <Stack spacing={isMobile ? 2 : 3}>
                 {/* 💠 布局模板 */}
                 <LayoutPresetSelector />
                 <Box>

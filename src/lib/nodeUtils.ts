@@ -10,7 +10,7 @@ export function createThoughtNode(
     id: string;
     type: string;
     position: { x: number; y: number };
-    data: { title: string; summary: string; tags: string[]; color: string; highlight: boolean; role: any }
+    data: { title: string; summary: string; tags: string[]; color: string; highlight: boolean; role: string }
 } {
     nodeCount++
 

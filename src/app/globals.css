@@ -20,20 +20,6 @@
     --ring: #22c55e33;
 }
 
-.dark {
-    --background: #111111;
-    --foreground: #f5f5f5;
-
-    --primary: #4ade80;
-    --primary-foreground: #000000;
-
-    --secondary: #1f1f1f;
-    --secondary-foreground: #f5f5f5;
-
-    --muted: #1a1a1a;
-    --border: #333333;
-    --ring: #4ade8033;
-}
 
 /* ========= 全局基础样式 ========= */
 @layer base {

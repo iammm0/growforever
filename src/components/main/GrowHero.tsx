@@ -1,7 +1,7 @@
 'use client'
 
 import { Box, Typography } from '@mui/material'
-import styles from '@/styles/grow.module.css'
+import styles from '../../styles/GrowHero.module.css'
 
 export default function GrowHero() {
     return (
@@ -18,3 +18,4 @@ export default function GrowHero() {
         </Box>
     )
 }
+

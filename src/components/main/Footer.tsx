@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { Box, Typography } from '@mui/material'
+import { Box, Typography, Link } from '@mui/material'
 
 export default function Footer() {
     return (
@@ -31,7 +31,26 @@ export default function Footer() {
                 >
                     GrowForever 永恒之森
                 </Box>{' '}
-                · 图结构人工智能演示项目(尚未接入图结构人工智能)
+                · 图结构人工智能演示项目（尚未接入图结构人工智能）
+            </Typography>
+
+            <Typography
+                variant="body2"
+                sx={{
+                    color: '#555',
+                    fontSize: '0.75rem',
+                    mt: 1,
+                }}
+            >
+                <Link
+                    href="https://beian.miit.gov.cn/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    underline="hover"
+                    sx={{ color: '#15803d' }}
+                >
+                    豫ICP备2025117850号
+                </Link>
             </Typography>
         </Box>
     )

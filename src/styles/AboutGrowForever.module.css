@@ -52,21 +52,6 @@
     color: #22c55e;
 }
 
-/* 支持暗黑模式 */
-:global(.dark) .card {
-    background: #111;
-    color: #f0f0f0;
-    border-color: #2e2e2e;
-}
-
-:global(.dark) .subtitle {
-    color: #aaa;
-}
-
-:global(.dark) .markdown {
-    color: #ddd;
-}
-
 /* 标题部分 */
 .header {
     display: flex;

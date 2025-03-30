@@ -11,7 +11,7 @@ export default function HeaderSettings() {
             <IconButton onClick={() => setOpen(true)}>
                 <SettingsIcon />
             </IconButton>
-            <ConfigDrawer open={open} close={() => setOpen(false)} />
+            <ConfigDrawer open={open} closeAction={() => setOpen(false)} />
         </>
     )
 }
