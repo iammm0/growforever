@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: growforever-main
+spec:
+  selector:
+    app: growforever-main
+  ports:
+    - port: 80
+      targetPort: {{ .Values.service.port }}
+      protocol: TCP
+  type: ClusterIP
