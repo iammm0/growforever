@@ -1,32 +1,81 @@
-/* app/artist-model/artistModel.module.css */
-.container {
+.page {
     padding: 48px;
-    max-width: 960px;
+    max-width: 1200px;
     margin: 0 auto;
-    color: #333;
 }
 
 .title {
-    font-size: 36px;
+    font-size: 32px;
     font-weight: bold;
-    color: #3D9C5E;
-    margin-bottom: 24px;
+    margin-bottom: 32px;
+    color: #4A148C;
 }
 
-.content {
-    display: flex;
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 32px;
-    align-items: center;
-    flex-wrap: wrap;
 }
 
-.image {
+.card {
+    border: 1px solid #ddd;
     border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease-in-out;
 }
 
-.description {
-    font-size: 18px;
-    line-height: 1.6;
-    max-width: 500px;
+.cardImage {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.cardContent {
+    padding: 16px;
+    flex-grow: 1;
+}
+
+.cardTitle {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #2e7d32;
+}
+
+.cardDesc {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+}
+
+.tag {
+    background: #e0f2f1;
+    color: #00695c;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+.sourceLink {
+    font-size: 13px;
+    color: #1e88e5;
+    text-decoration: underline;
+}
+
+.meta {
+    padding: 0 16px 12px;
+    font-size: 12px;
+    color: #888;
 }

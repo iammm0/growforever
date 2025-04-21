@@ -2,16 +2,17 @@ import { writeFile } from 'fs/promises'
 import path from 'path'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function POST(request: NextRequest) {
-    const data = await request.formData()
-    const file: File | null = data.get('image') as unknown as File
-    if (!file) return NextResponse.json({ error: 'No file' }, { status: 400 })
+export async function POST(req: NextRequest) {
+    const form = await req.formData()
+    const file = form.get('image') as File
+    const customName = form.get('filename')?.toString() || file.name
 
-    const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
+    if (!file) return NextResponse.json({ error: 'No file provided' }, { status: 400 })
 
-    const filePath = path.join(process.cwd(), 'public/uploads', file.name)
-    await writeFile(filePath, buffer)
+    const buffer = Buffer.from(await file.arrayBuffer())
+    const uploadPath = path.join(process.cwd(), 'public', 'uploads', customName)
 
-    return NextResponse.json({ success: true })
+    await writeFile(uploadPath, buffer)
+
+    return NextResponse.json({ url: `/uploads/${customName}` })
 }

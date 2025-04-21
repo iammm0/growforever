@@ -1,6 +1,8 @@
 import fs from 'fs/promises'
 import path from 'path'
 import Image from 'next/image'
+import { Paper, Typography, Box } from '@mui/material'
+import styles from './artistWork.module.css'
 
 export default async function ArtistWorkPage() {
     const uploadsDir = path.join(process.cwd(), 'public/uploads')
@@ -10,32 +12,19 @@ export default async function ArtistWorkPage() {
     )
 
     return (
-        <main style={{ padding: '48px', maxWidth: '1100px', margin: '0 auto' }}>
-            <h1 style={{ fontSize: '32px', fontWeight: 'bold', color: '#1565c0' }}>
-                艺术家作品集
-            </h1>
-
-            <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
-                gap: '24px',
-                marginTop: '32px',
-            }}>
-                {images.map((filename, i) => (
+        <Box className={styles.container}>
+            {images.map((filename, i) => (
+                <Paper key={i} className={styles.imageWrapper} elevation={3}>
                     <Image
-                        key={i}
                         src={`/uploads/${filename}`}
                         alt={`作品 ${i + 1}`}
-                        width={240}
-                        height={240}
-                        style={{
-                            borderRadius: '12px',
-                            objectFit: 'cover',
-                            boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
-                        }}
+                        width={960}
+                        height={540}
+                        style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
+                        sizes="(max-width: 1024px) 100vw, 960px"
                     />
-                ))}
-            </div>
-        </main>
+                </Paper>
+            ))}
+        </Box>
     )
 }

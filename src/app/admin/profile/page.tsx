@@ -5,65 +5,129 @@ import {
     Box,
     TextField,
     Button,
-    Typography,
     Stack,
+    Avatar,
+    Typography
 } from '@mui/material'
+import { ArtistProfile } from '@/types/ArtistProfile'
+import styles from './EditProfileForm.module.css'
 
-export default function EditProfilePage() {
-    const [form, setForm] = useState({
-        name: '',
-        style: '',
-        bio: '',
-    })
+const defaultProfile: ArtistProfile = {
+    name: '',
+    style: '',
+    bio: '',
+    avatar: '',
+    email: '',
+    website: '',
+}
 
-    const loadProfile = async () => {
-        const res = await fetch('/api/profile')
-        const data = await res.json()
-        setForm(data)
-    }
+export default function EditProfileForm() {
+    const [form, setForm] = useState<ArtistProfile>(defaultProfile)
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
-        loadProfile()
+        fetch('/api/profile')
+            .then((res) => res.json())
+            .then((data) => setForm({ ...defaultProfile, ...data }))
+            .catch(() => setForm(defaultProfile))
     }, [])
 
-    const handleChange = (key: string, value: string) => {
-        setForm({ ...form, [key]: value })
+    const handleChange = <K extends keyof ArtistProfile>(key: K, value: ArtistProfile[K]) => {
+        setForm((prev) => ({ ...prev, [key]: value }))
     }
 
-    const handleSave = async () => {
+    const handleAvatarUpload = async (file: File) => {
+        const formData = new FormData()
+        formData.append('image', file)
+        formData.append('filename', `avatar_${file.name}`)
+
+        const res = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData,
+        })
+
+        const data = await res.json()
+        if (data.url) {
+            setForm((prev) => ({ ...prev, avatar: data.url }))
+        }
+    }
+
+    const handleSubmit = async () => {
+        setLoading(true)
         const res = await fetch('/api/profile', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(form),
         })
+        setLoading(false)
 
-        if (res.ok) alert('保存成功')
-        else alert('保存失败')
+        if (res.ok) {
+            alert('✅ 保存成功')
+        } else {
+            alert('❌ 保存失败')
+        }
     }
 
     return (
-        <Box sx={{ p: 4 }}>
-            <Typography variant="h5" mb={3}>编辑艺术家主页信息</Typography>
-            <Stack spacing={2}>
+        <div className={styles.container}>
+            <Typography variant="h5" gutterBottom>
+                编辑艺术家主页信息
+            </Typography>
+
+            <Stack spacing={3}>
                 <TextField
                     label="姓名"
-                    value={form.name}
+                    value={form.name || ''}
                     onChange={(e) => handleChange('name', e.target.value)}
                 />
                 <TextField
                     label="风格"
-                    value={form.style}
+                    value={form.style || ''}
                     onChange={(e) => handleChange('style', e.target.value)}
                 />
                 <TextField
                     label="简介"
-                    value={form.bio}
-                    onChange={(e) => handleChange('bio', e.target.value)}
                     multiline
-                    minRows={4}
+                    minRows={3}
+                    value={form.bio || ''}
+                    onChange={(e) => handleChange('bio', e.target.value)}
                 />
-                <Button onClick={handleSave} variant="contained">保存</Button>
+                <TextField
+                    label="Email"
+                    value={form.email || ''}
+                    onChange={(e) => handleChange('email', e.target.value)}
+                />
+                <TextField
+                    label="个人网站"
+                    value={form.website || ''}
+                    onChange={(e) => handleChange('website', e.target.value)}
+                />
+
+                <Box className={styles.avatarRow}>
+                    <Avatar src={form.avatar || ''} sx={{ width: 64, height: 64 }} />
+                    <Button variant="outlined" component="label">
+                        上传头像
+                        <input
+                            hidden
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                                const file = e.target.files?.[0]
+                                if (file) handleAvatarUpload(file)
+                            }}
+                        />
+                    </Button>
+                </Box>
+
+                <Button
+                    variant="contained"
+                    onClick={handleSubmit}
+                    disabled={loading}
+                >
+                    {loading ? '保存中...' : '保存'}
+                </Button>
             </Stack>
-        </Box>
+        </div>
     )
 }
+

@@ -1,0 +1,12 @@
+.container {
+    padding: 48px;
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.avatarRow {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 16px;
+}

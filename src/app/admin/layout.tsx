@@ -25,7 +25,7 @@ export default function AdminLayout({
                         color: '#2e7d32',
                     }}
                 >
-                    🎨 艺术家后台管理面板
+                    后台管理面板
                 </Typography>
                 <Box>{children}</Box>
             </Container>

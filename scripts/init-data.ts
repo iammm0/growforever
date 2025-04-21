@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import {Fanwork} from "@/types/fanwork";
+import {Fanwork} from "@/types/Fanwork";
 
 const dataDir = path.join(process.cwd(), 'data')
 const profilePath = path.join(dataDir, 'profile.json')

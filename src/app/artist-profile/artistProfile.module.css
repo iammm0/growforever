@@ -1,20 +1,16 @@
-/* app/artist-profile/artistProfile.module.css */
-.container {
+.root {
     padding: 48px;
     max-width: 960px;
     margin: 0 auto;
-    color: #333;
 }
 
-.title {
-    font-size: 36px;
-    font-weight: bold;
-    color: #3D9C5E;
-    margin-bottom: 24px;
+.header {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    margin-bottom: 32px;
 }
 
-.infoSection p {
-    font-size: 18px;
-    line-height: 1.8;
-    margin-bottom: 12px;
+.bioSection {
+    margin-top: 32px;
 }
