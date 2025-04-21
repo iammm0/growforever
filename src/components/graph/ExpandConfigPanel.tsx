@@ -5,7 +5,7 @@ import {
 } from '@mui/material'
 import { useGraphStore } from '@/lib/graphStore'
 import {GrowMode} from "@/types/GrowthNode";
-import LayoutPresetSelector from "@/components/nodes/LayoutPresetSelector";
+import LayoutPresetSelector from "@/components/graph/LayoutPresetSelector";
 import {useMediaQuery, useTheme} from "@mui/system";
 
 type ExpandConfigPanelProps = {

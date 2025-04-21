@@ -1,6 +1,6 @@
 'use client'
-import GraphCanvas from '../../components/nodes/GraphCanvas'
-import ControlPanel from '../../components/nodes/ControlPanel'
+import GraphCanvas from '@/components/graph/GraphCanvas'
+import ControlPanel from '@/components/graph/ControlPanel'
 import {AppBar, Box, Toolbar} from '@mui/material'
 import {ReactFlowProvider} from "reactflow";
 

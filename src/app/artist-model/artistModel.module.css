@@ -1,0 +1,32 @@
+/* app/artist-model/artistModel.module.css */
+.container {
+    padding: 48px;
+    max-width: 960px;
+    margin: 0 auto;
+    color: #333;
+}
+
+.title {
+    font-size: 36px;
+    font-weight: bold;
+    color: #3D9C5E;
+    margin-bottom: 24px;
+}
+
+.content {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.image {
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.description {
+    font-size: 18px;
+    line-height: 1.6;
+    max-width: 500px;
+}

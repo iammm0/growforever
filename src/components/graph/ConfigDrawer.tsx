@@ -10,7 +10,7 @@ import {
     Tab,
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
-import ExpandConfigPanel from '@/components/nodes/ExpandConfigPanel'
+import ExpandConfigPanel from '@/components/graph/ExpandConfigPanel'
 import {useState} from 'react'
 import {GrowMode} from '@/types/GrowthNode'
 import {useGraphStore} from '@/lib/graphStore'

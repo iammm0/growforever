@@ -1,13 +1,12 @@
 'use client'
 
 import {Box, Button} from '@mui/material'
-import GrowHero from '@/components/main/GrowHero'
-import FeatureCard from '@/components/main/FeatureCard'
+import GrowHero from '@/components/app/GrowHero'
+import FeatureCard from '@/components/app/FeatureCard'
 import { useRouter } from 'next/navigation'
 import styles from '@/styles/grow.module.css'
-import MarkdownFeatureSection from "@/components/main/MarkdownFeatureSection";
-import SloganCloud from "@/components/main/SloganCloud";
-import Header from "@/components/main/Header";
+import MarkdownFeatureSection from "@/components/app/MarkdownFeatureSection";
+import SloganCloud from "@/components/app/SloganCloud";
 
 
 const features = [
@@ -43,7 +42,6 @@ export default function Home() {
 
     return (
         <Box className={styles.page}>
-            <Header />
             <GrowHero />
 
             <Box className={styles.section}>
@@ -54,7 +52,7 @@ export default function Home() {
                     sx={{ mt: 6 }}
                     onClick={() => router.push('/graph')}
                 >
-                    从一颗思维种子开始爆炸<br />（尚未接入图人工智能，UI效果仅供演示）→
+                    开始播种想法
                 </Button>
             </Box>
 

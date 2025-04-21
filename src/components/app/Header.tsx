@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import styles from '../../styles/Header.module.css';
-import { AppBar, Toolbar, IconButton, Menu, MenuItem, Button } from '@mui/material';
+import { AppBar, Toolbar, IconButton, Menu, MenuItem, Button, Tooltip } from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useRouter } from 'next/navigation';
@@ -27,7 +27,7 @@ const Header: React.FC = () => {
     };
 
     const handleGitHubClick = () => {
-        window.open('https://github.com/growforever-main.git', '_blank');
+        window.open('https://github.com/iammm0/growforever-main.git', '_blank');
     };
 
     return (
@@ -35,24 +35,36 @@ const Header: React.FC = () => {
             <Toolbar className={styles.toolbar}>
                 {/* 左侧：菜单按钮 + GitHub */}
                 <div className={styles.leftButtons}>
-                    <IconButton
-                        className={styles.iconButton}
-                        aria-label="GitHub"
-                        onClick={handleGitHubClick}
-                    >
-                        <GitHubIcon />
-                    </IconButton>
+                    <Tooltip title="与我一起协作开发该项目！" arrow placement="bottom">
+                        <IconButton
+                            className={styles.iconButton}
+                            aria-label="GitHub"
+                            onClick={handleGitHubClick}
+                        >
+                            <GitHubIcon fontSize="medium" />
+                        </IconButton>
+                    </Tooltip>
                 </div>
 
                 {/* 右侧：文字下拉菜单 */}
                 <div className={styles.rightButtons}>
-                    <Button
-                        className={styles.menuButton}
-                        onClick={handleMenuOpen}
-                        endIcon={<ArrowDropDownIcon />}
-                    >
-                        关于艺术家 3rd
-                    </Button>
+                    <Tooltip title="我的艺术家朋友帮我绘制了永恒之森的同人角色！" arrow placement="bottom">
+                        <Button
+                            className={styles.menuButton}
+                            onClick={handleMenuOpen}
+                            endIcon={
+                                <ArrowDropDownIcon
+                                    style={{
+                                        transition: 'transform 0.3s',
+                                        transform: menuOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                                    }}
+                                />
+                            }
+                        >
+                            更多同创作品
+                        </Button>
+                    </Tooltip>
+
 
                     <Menu
                         anchorEl={anchorEl}

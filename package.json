@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "init:data": "tsx scripts/init-data.ts"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -44,6 +45,7 @@
     "eslint-config-next": "15.2.3",
     "postcss": "^8.5.3",
     "tailwindcss": "^3.4.3",
+    "tsx": "^4.19.3",
     "typescript": "^5"
   }
 }

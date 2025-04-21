@@ -1,0 +1,38 @@
+/* app/artist-work/artistWork.module.css */
+.container {
+    padding: 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+    color: #333;
+}
+
+.title {
+    font-size: 36px;
+    font-weight: bold;
+    color: #3D9C5E;
+    margin-bottom: 32px;
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.image {
+    object-fit: cover;
+    width: 100%;
+    height: auto;
+}

@@ -7,8 +7,8 @@ import { createThoughtNode } from '@/lib/nodeUtils'
 import { simulateAutoExpand } from '@/lib/simulateAutoExpand'
 import { GrowMode } from '@/types/GrowthNode'
 import { useState } from 'react'
-import ExpandConfigPanel from '@/components/nodes/ExpandConfigPanel'
-import ConfigDrawer from "@/components/nodes/ConfigDrawer";
+import ExpandConfigPanel from '@/components/graph/ExpandConfigPanel'
+import ConfigDrawer from "@/components/graph/ConfigDrawer";
 import {useMediaQuery, useTheme} from "@mui/system";
 import {MenuIcon} from "lucide-react";
 

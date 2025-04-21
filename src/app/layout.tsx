@@ -1,26 +1,33 @@
-import './globals.css'
-import type { Metadata } from 'next'
-import EmotionProvider from '../components/nodes/EmotionProvider'
-import React from "react";
-import Footer from "@/components/main/Footer";
+'use client'
 
-export const metadata: Metadata = {
-    title: 'GrowForever - 永恒之森',
-    description: '一个基于图结构的人工智能可视化界面',
-}
+import './globals.css'
+import EmotionProvider from '@/components/graph/EmotionProvider'
+import React from "react";
+import Footer from "@/components/app/Footer";
+import Header from "@/components/app/Header";
+import {usePathname} from "next/navigation";
+
+
 
 export default function RootLayout({
                                        children,
                                    }: {
     children: React.ReactNode
 }) {
+    const pathname = usePathname()
+
+    // 你可以在这里定义要隐藏 Header/Footer 的路径
+    const hideHeaderFooter = pathname?.startsWith('/graph')
+
     return (
         <html lang="zh-CN">
         <body>
         <EmotionProvider>
-
-            <main className="min-h-screen">{children}</main>
-            <Footer />
+            <div className="layoutContainer">
+                {!hideHeaderFooter && <Header />}
+                <main className="mainContent">{children}</main>
+                {!hideHeaderFooter && <Footer />}
+            </div>
         </EmotionProvider>
         </body>
         </html>
