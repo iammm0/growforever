@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import styles from '@/styles/grow.module.css'
 import MarkdownFeatureSection from "@/components/main/MarkdownFeatureSection";
 import SloganCloud from "@/components/main/SloganCloud";
+import Header from "@/components/main/Header";
 
 
 const features = [
@@ -42,6 +43,7 @@ export default function Home() {
 
     return (
         <Box className={styles.page}>
+            <Header />
             <GrowHero />
 
             <Box className={styles.section}>
