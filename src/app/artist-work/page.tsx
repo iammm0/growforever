@@ -1,7 +1,7 @@
 import fs from 'fs/promises'
 import path from 'path'
 import Image from 'next/image'
-import { Paper, Typography, Box } from '@mui/material'
+import { Paper, Box } from '@mui/material'
 import styles from './artistWork.module.css'
 
 export default async function ArtistWorkPage() {
