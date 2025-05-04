@@ -17,8 +17,8 @@ export default function ExpandConfigPanel({ mode }: ExpandConfigPanelProps) {
     const realMode = mode || currentMode
     const config = useGraphStore((s) => s.config[realMode])
     const setConfig = useGraphStore((s) => s.setConfig)
-
     const theme = useTheme()
+    const isDark = theme.palette.mode === 'dark'
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
     const update = (key: keyof typeof config, value: number | boolean | number[]) => {
@@ -28,11 +28,13 @@ export default function ExpandConfigPanel({ mode }: ExpandConfigPanelProps) {
     return (
         <Box
             p={3}
-            bgcolor="#f9f9f9"
             borderRadius={2}
             width={320}
             maxWidth="100%"
+            boxShadow={2}
             sx={{
+                backgroundColor: isDark ? '#1e1e1e' : '#f9f9f9',
+                color: isDark ? '#f0f0f0' : '#000',
                 '@media (max-width: 600px)': {
                     transform: 'scale(0.94)',
                     transformOrigin: 'top center',
@@ -40,9 +42,9 @@ export default function ExpandConfigPanel({ mode }: ExpandConfigPanelProps) {
                     py: 2,
                 },
             }}
-            boxShadow={2}
         >
-            <Typography variant="subtitle1" fontWeight="bold">
+
+        <Typography variant="subtitle1" fontWeight="bold">
                 {[realMode]} 配置
             </Typography>
 

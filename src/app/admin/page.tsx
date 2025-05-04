@@ -1,29 +1,28 @@
-// app/admin/page.tsx
 'use client'
 
 import Link from 'next/link'
-import { Button, Stack } from '@mui/material'
+import styles from '../../styles/AdminButtonPanel.module.css'
+import {Box} from "@mui/material";
+
 
 export default function AdminHomePage() {
     return (
-        <Stack spacing={3} alignItems="center">
-            <Link href="/admin/gallery" passHref>
-                <Button variant="contained" color="primary" size="large">
-                    上传作品图像
-                </Button>
+        <Box className={styles.wrapper}>
+            <Link href="/admin/gallery">
+                <button className={styles.glassButton}>
+                    <span>📁 上传作品图像</span>
+                </button>
             </Link>
-
-            <Link href="/admin/fanworks" passHref>
-                <Button variant="contained" color="secondary" size="large">
-                    添加同人作品
-                </Button>
+            <Link href="/admin/fanworks">
+                <button className={styles.glassButton}>
+                    <span>🎨 添加同人作品</span>
+                </button>
             </Link>
-
-            <Link href="/admin/profile" passHref>
-                <Button variant="contained" color="success" size="large">
-                    编辑艺术家资料
-                </Button>
+            <Link href="/admin/profile">
+                <button className={styles.glassButton}>
+                    <span>🧑‍🎤 编辑艺术家资料</span>
+                </button>
             </Link>
-        </Stack>
+        </Box>
     )
 }

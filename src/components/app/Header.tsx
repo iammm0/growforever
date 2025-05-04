@@ -6,6 +6,7 @@ import { AppBar, Toolbar, IconButton, Menu, MenuItem, Button, Tooltip } from '@m
 import GitHubIcon from '@mui/icons-material/GitHub';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useRouter } from 'next/navigation';
+import ThemeToggleButton from "@/components/app/ThemeToggleButton";
 
 const Header: React.FC = () => {
     const router = useRouter();
@@ -32,6 +33,7 @@ const Header: React.FC = () => {
 
     return (
         <AppBar position="sticky" className={styles.header} elevation={0}>
+
             <Toolbar className={styles.toolbar}>
                 {/* 左侧：菜单按钮 + GitHub */}
                 <div className={styles.leftButtons}>
@@ -48,6 +50,8 @@ const Header: React.FC = () => {
 
                 {/* 右侧：文字下拉菜单 */}
                 <div className={styles.rightButtons}>
+                    {/* 切换主题按钮 */}
+                    <ThemeToggleButton />
                     <Tooltip title="我的艺术家朋友帮我绘制了永恒之森的同人角色！" arrow placement="bottom">
                         <Button
                             className={styles.menuButton}

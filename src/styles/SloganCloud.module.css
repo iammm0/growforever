@@ -4,3 +4,9 @@
     padding: 60px 20px;
     text-align: center;
 }
+
+/* 🌙 暗色模式：Markdown 区块适配 */
+:global(.dark) .markdownSection {
+    background-color: #1a1a1a;
+    color: #e5e5e5;
+}

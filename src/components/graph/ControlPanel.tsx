@@ -55,106 +55,116 @@ export default function ControlPanel() {
     const [drawerOpen, setDrawerOpen] = useState(false)
 
     return (
-        <>
-            {isMobile ? (
-                <>
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-                        <IconButton onClick={() => setMenuOpen(true)} color="primary">
-                            <MenuIcon />
-                        </IconButton>
-                    </Box>
-
-                    <Drawer anchor="right" open={menuOpen} onClose={() => setMenuOpen(false)}>
-                        <Box sx={{ width: 260, p: 2 }}>
-                            <Button variant="contained" fullWidth onClick={handleAdd} sx={{ mb: 1 }}>
-                                ➕ 添加节点
-                            </Button>
-                            <Button variant="outlined" fullWidth color="error" onClick={reset} sx={{ mb: 1 }}>
-                                🗑️ 清空画布
-                            </Button>
-                            <Button
-                                variant="contained"
-                                color="secondary"
-                                fullWidth
-                                onClick={handleAutoGrow}
-                                disabled={growMode === 'manual'}
-                                sx={{ mb: 1 }}
-                            >
-                                🚀 自动扩展（{modeNameMap[growMode]}）
-                            </Button>
-                            <Button variant="text" fullWidth onClick={handleToggleMode} sx={{ mb: 1 }}>
-                                切换为{' '}
-                                {modeNameMap[
-                                    growMode === 'manual' ? 'free' : growMode === 'free' ? 'fury' : 'manual'
-                                    ]}
-                            </Button>
-                            <Button
-                                startIcon={<SettingsIcon />}
-                                onClick={() => {
-                                    setDrawerOpen(true)
-                                    setMenuOpen(false)
-                                }}
-                                fullWidth
-                            >
-                                打开高级配置
-                            </Button>
+        <Box
+            sx={{
+                px: isMobile ? 1.5 : 3,
+                py: isMobile ? 1 : 2,
+                width: '100%',
+            }}
+        >
+            <>
+                {isMobile ? (
+                    <>
+                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+                            <IconButton onClick={() => setMenuOpen(true)} color="primary">
+                                <MenuIcon />
+                            </IconButton>
                         </Box>
-                    </Drawer>
-                </>
-            ) : (
-                <Stack
-                    direction="row"
-                    spacing={2}
-                    alignItems="center"
-                    justifyContent="center"
-                    sx={{ mb: 2 }}
-                >
-                    <Button variant="contained" onClick={handleAdd}>
-                        ➕ 添加节点
-                    </Button>
-                    <Button variant="outlined" color="error" onClick={reset}>
-                        🗑️ 清空画布
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={handleAutoGrow}
-                        disabled={growMode === 'manual'}
+
+                        <Drawer anchor="right" open={menuOpen} onClose={() => setMenuOpen(false)}>
+                            <Box sx={{ width: 260, p: 2 }}>
+                                <Button variant="contained" fullWidth onClick={handleAdd} sx={{ mb: 1 }}>
+                                    ➕ 添加节点
+                                </Button>
+                                <Button variant="outlined" fullWidth color="error" onClick={reset} sx={{ mb: 1 }}>
+                                    🗑️ 清空画布
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    color="secondary"
+                                    fullWidth
+                                    onClick={handleAutoGrow}
+                                    disabled={growMode === 'manual'}
+                                    sx={{ mb: 1 }}
+                                >
+                                    🚀 自动扩展（{modeNameMap[growMode]}）
+                                </Button>
+                                <Button variant="text" fullWidth onClick={handleToggleMode} sx={{ mb: 1 }}>
+                                    切换为{' '}
+                                    {modeNameMap[
+                                        growMode === 'manual' ? 'free' : growMode === 'free' ? 'fury' : 'manual'
+                                        ]}
+                                </Button>
+                                <Button
+                                    startIcon={<SettingsIcon />}
+                                    onClick={() => {
+                                        setDrawerOpen(true)
+                                        setMenuOpen(false)
+                                    }}
+                                    fullWidth
+                                >
+                                    打开高级配置
+                                </Button>
+                            </Box>
+                        </Drawer>
+                    </>
+                ) : (
+                    <Stack
+                        direction="row"
+                        spacing={2}
+                        alignItems="center"
+                        justifyContent="center"
+                        sx={{ mb: 2 }}
                     >
-                        🚀 自动扩展（{modeNameMap[growMode]}）
-                    </Button>
-                    <Button variant="text" onClick={handleToggleMode}>
-                        切换为{' '}
-                        {modeNameMap[
-                            growMode === 'manual' ? 'free' : growMode === 'free' ? 'fury' : 'manual'
-                            ]}
-                    </Button>
-                    <Tooltip title="打开高级配置">
-                        <IconButton onClick={() => setDrawerOpen(true)}>
-                            <SettingsIcon />
-                        </IconButton>
-                    </Tooltip>
-                </Stack>
-            )}
+                        <Button variant="contained" onClick={handleAdd}>
+                            ➕ 添加节点
+                        </Button>
+                        <Button variant="outlined" color="error" onClick={reset}>
+                            🗑️ 清空画布
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={handleAutoGrow}
+                            disabled={growMode === 'manual'}
+                        >
+                            🚀 自动扩展（{modeNameMap[growMode]}）
+                        </Button>
+                        <Button variant="text" onClick={handleToggleMode}>
+                            切换为{' '}
+                            {modeNameMap[
+                                growMode === 'manual' ? 'free' : growMode === 'free' ? 'fury' : 'manual'
+                                ]}
+                        </Button>
+                        <Tooltip title="打开高级配置">
+                            <IconButton onClick={() => setDrawerOpen(true)}>
+                                <SettingsIcon />
+                            </IconButton>
+                        </Tooltip>
+                    </Stack>
+                )}
 
 
 
-            <Popover
-                open={openPopover}
-                anchorEl={anchorEl}
-                onClose={handleCloseConfig}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                }}
-                PaperProps={{
-                    sx: { mt: 1, p: 1, borderRadius: 2, minWidth: 360 },
-                }}
-            >
-                <ExpandConfigPanel />
-            </Popover>
+                <Popover
+                    open={openPopover}
+                    anchorEl={anchorEl}
+                    onClose={handleCloseConfig}
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    slotProps={{
+                        paper: {
+                            sx: { mt: 1, p: 1, borderRadius: 2, minWidth: 360 },
+                        },
+                    }}
+                >
+                    <ExpandConfigPanel />
+                </Popover>
 
-            <ConfigDrawer open={drawerOpen} closeAction={() => setDrawerOpen(false)} />
-        </>
+                <ConfigDrawer open={drawerOpen} closeAction={() => setDrawerOpen(false)} />
+            </>
+        </Box>
     )
 }

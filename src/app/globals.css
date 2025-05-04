@@ -160,3 +160,21 @@ html, body {
     width: 100vw;
     @apply bg-background;
 }
+
+
+/* ========= 🌙 暗色模式变量覆盖 ========= */
+:root.dark {
+    --background: #121212;
+    --foreground: #e5e5e5;
+
+    --primary: #4ade80;
+    --primary-foreground: #000000;
+
+    --secondary: #1f1f1f;
+    --secondary-foreground: #e5e5e5;
+
+    --muted: #2c2c2c;
+    --border: #333333;
+    --ring: #4ade8033;
+}
+

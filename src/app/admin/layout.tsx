@@ -1,4 +1,3 @@
-// app/admin/layout.tsx
 'use client'
 
 import React from 'react'
@@ -11,8 +10,6 @@ export default function AdminLayout({
     children: React.ReactNode
 }) {
     return (
-        <html lang="zh-CN">
-        <body>
         <EmotionProvider>
             <Container maxWidth="md" sx={{ py: 6 }}>
                 <Typography
@@ -30,7 +27,5 @@ export default function AdminLayout({
                 <Box>{children}</Box>
             </Container>
         </EmotionProvider>
-        </body>
-        </html>
     )
 }

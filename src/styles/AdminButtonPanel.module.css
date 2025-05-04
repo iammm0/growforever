@@ -1,0 +1,76 @@
+.wrapper {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly; /* 垂直方向平均分布 */
+    align-items: stretch;
+    padding: 48px 24px;
+    background-color: transparent;
+}
+
+.glassButton {
+    font-size: 1.25rem;
+    font-weight: bold;
+    padding: 18px 24px;
+    text-align: center;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    letter-spacing: 1px;
+    box-shadow: 0 0 10px rgba(34, 197, 94, 0.25);
+    transition: all 0.35s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.glassButton:hover {
+    transform: scale(1.04) rotateX(2deg);
+    box-shadow: 0 12px 24px rgba(34, 197, 94, 0.4);
+    background-color: rgba(34, 197, 94, 0.15);
+}
+
+.glassButton::before {
+    content: "";
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+            135deg,
+            rgba(34, 197, 94, 0.2),
+            rgba(255, 255, 255, 0.05),
+            rgba(34, 197, 94, 0.2)
+    );
+    transform: rotate(25deg);
+    animation: glowSweep 6s linear infinite;
+    z-index: 0;
+}
+
+.glassButton span {
+    position: relative;
+    z-index: 1;
+}
+
+/* 背景轻微脉动动画 */
+@keyframes bgPulse {
+    0% {
+        background: radial-gradient(circle at center, #0f172a, #020617);
+    }
+    100% {
+        background: radial-gradient(circle at center, #1e293b, #020617);
+    }
+}
+
+/* 持续光带扫动 */
+@keyframes glowSweep {
+    0% {
+        transform: translate(-50%, -50%) rotate(25deg);
+    }
+    100% {
+        transform: translate(50%, 50%) rotate(25deg);
+    }
+}

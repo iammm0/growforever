@@ -15,6 +15,10 @@
     animation: glowPulse 2.5s ease-in-out infinite;
 }
 
+:global(.dark) .glow {
+    color: #f0f0f0;
+}
+
 /* 发光动画 */
 @keyframes glowPulse {
     0% {

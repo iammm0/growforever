@@ -14,3 +14,12 @@
 .bioSection {
     margin-top: 32px;
 }
+
+/* 🌙 暗色模式适配 */
+:global(.dark) .root {
+    color: #e5e5e5;
+}
+
+:global(.dark) .bioSection {
+    color: #cccccc;
+}

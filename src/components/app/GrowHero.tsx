@@ -5,7 +5,9 @@ import styles from '../../styles/GrowHero.module.css'
 
 export default function GrowHero() {
     return (
-        <Box className={styles.hero}>
+        <Box
+            className={styles.hero}
+        >
             <Typography variant="h2" className={styles.glow} gutterBottom>
                 GrowForever
             </Typography>
@@ -18,4 +20,3 @@ export default function GrowHero() {
         </Box>
     )
 }
-

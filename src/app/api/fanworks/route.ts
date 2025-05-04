@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
         data.push(newWork)
         await writeFile(filePath, JSON.stringify(data, null, 2))
         return NextResponse.json({ success: true })
-    } catch (e) {
+    } catch {
         return NextResponse.json({ error: '保存失败' }, { status: 500 })
     }
 }

@@ -17,6 +17,7 @@ import {useGraphStore} from "@/lib/graphStore";
 import {nodeTypes} from "@/types/ThoughtNode";
 import ExpandOptionsPopover from "@/components/graph/ExpandOptionsPopover";
 import {Typography} from "@mui/material";
+import {useTheme} from "@mui/system";
 
 export default function GraphCanvas() {
     const {
@@ -44,6 +45,9 @@ export default function GraphCanvas() {
         '抽象出的关联元素',
         '来自AI的启发式推理',
     ]
+
+    const theme = useTheme()
+    const isDark = theme.palette.mode === 'dark'
 
 
 
@@ -211,22 +215,25 @@ export default function GraphCanvas() {
 
 
     return (
-        <div style={{ height: '100vh', width: '100vw' ,position: 'relative'}}>
+        <div
+            style={{ height: '100vh', width: '100vw' ,position: 'relative'}}
+            className={isDark ? 'dark-flow' : ''}
+        >
             <Typography
                 variant="caption"
                 sx={{
                     position: 'absolute',
                     top: 16,
                     right: 16,
-                    backgroundColor: '#000',
-                    color: '#fff',
+                    backgroundColor: isDark ? '#1f1f1f' : '#000',
+                    color: isDark ? '#e0e0e0' : '#fff',
                     padding: '4px 12px',
                     borderRadius: 4,
                     fontSize: '12px',
                     zIndex: 1000,
                 }}
             >
-                当前模式：{growMode === 'manual' ? '手动模式' : growMode === 'free' ? '自由模式' : '狂暴模式'}
+            当前模式：{growMode === 'manual' ? '手动模式' : growMode === 'free' ? '自由模式' : '狂暴模式'}
             </Typography>
 
             <ReactFlow

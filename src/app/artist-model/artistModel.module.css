@@ -79,3 +79,39 @@
     font-size: 12px;
     color: #888;
 }
+
+/* 🌙 暗色模式适配 */
+:global(.dark) .page {
+    color: #e0e0e0;
+}
+
+:global(.dark) .title {
+    color: #e6ccff; /* 亮紫 */
+}
+
+:global(.dark) .card {
+    background: #1e1e1e;
+    border-color: #333;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+:global(.dark) .cardTitle {
+    color: #a7f3d0; /* 亮绿 */
+}
+
+:global(.dark) .cardDesc {
+    color: #cccccc;
+}
+
+:global(.dark) .tag {
+    background: #004d40;
+    color: #b2f5ea;
+}
+
+:global(.dark) .sourceLink {
+    color: #90caf9;
+}
+
+:global(.dark) .meta {
+    color: #999999;
+}

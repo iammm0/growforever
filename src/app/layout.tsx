@@ -6,6 +6,7 @@ import React from "react";
 import Footer from "@/components/app/Footer";
 import Header from "@/components/app/Header";
 import {usePathname} from "next/navigation";
+import CustomThemeProvider from "@/context/ThemeContext";
 
 
 
@@ -22,13 +23,15 @@ export default function RootLayout({
     return (
         <html lang="zh-CN">
         <body>
-        <EmotionProvider>
-            <div className="layoutContainer">
-                {!hideHeaderFooter && <Header />}
-                <main className="mainContent">{children}</main>
-                {!hideHeaderFooter && <Footer />}
-            </div>
-        </EmotionProvider>
+        <CustomThemeProvider>
+            <EmotionProvider>
+                <div className="layoutContainer">
+                    {!hideHeaderFooter && <Header />}
+                    <main className="mainContent">{children}</main>
+                    {!hideHeaderFooter && <Footer />}
+                </div>
+            </EmotionProvider>
+        </CustomThemeProvider>
         </body>
         </html>
     )

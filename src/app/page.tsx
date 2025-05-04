@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import styles from '@/styles/grow.module.css'
 import MarkdownFeatureSection from "@/components/app/MarkdownFeatureSection";
 import SloganCloud from "@/components/app/SloganCloud";
+import {useTheme} from "@mui/system";
 
 
 const features = [
@@ -40,20 +41,38 @@ const features = [
 export default function Home() {
     const router = useRouter()
 
+    const theme = useTheme()
+    const isDark = theme.palette.mode === 'dark'
+
+
     return (
         <Box className={styles.page}>
-            <GrowHero />
 
-            <Box className={styles.section}>
-                <Button
-                    variant="contained"
-                    color="success"
-                    size="large"
-                    sx={{ mt: 6 }}
-                    onClick={() => router.push('/graph')}
-                >
-                    开始播种想法
-                </Button>
+            <Box
+                sx={{
+                    ...(isDark
+                        ? {}
+                        : {
+                            backgroundImage: 'url(/background/growhero.jpg)',
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
+                        }),
+                }}
+            >
+                <GrowHero />
+
+                <Box className={styles.section}>
+                    <Button
+                        variant="contained"
+                        color="success"
+                        size="large"
+                        sx={{ mt: 6 }}
+                        onClick={() => router.push('/graph')}
+                    >
+                        开始播种想法
+                    </Button>
+                </Box>
             </Box>
 
             <Box className={styles.featureCardSection}>
