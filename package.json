@@ -12,6 +12,9 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
+    "@fontsource/bebas-neue": "^5.2.5",
+    "@fontsource/moirai-one": "^5.2.5",
+    "@fontsource/orbitron": "^5.2.5",
     "@mui/icons-material": "^7.0.2",
     "@mui/lab": "^7.0.0-beta.11",
     "@mui/material": "^7.0.2",

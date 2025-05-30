@@ -2,11 +2,11 @@
 
 import React, { useState } from 'react';
 import styles from '../../styles/Header.module.css';
-import { AppBar, Toolbar, IconButton, Menu, MenuItem, Button, Tooltip } from '@mui/material';
+import { AppBar, Toolbar, IconButton, Menu, MenuItem, Tooltip } from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useRouter } from 'next/navigation';
 import ThemeToggleButton from "@/components/app/ThemeToggleButton";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 const Header: React.FC = () => {
     const router = useRouter();
@@ -50,26 +50,17 @@ const Header: React.FC = () => {
 
                 {/* 右侧：文字下拉菜单 */}
                 <div className={styles.rightButtons}>
+                    <Tooltip title="更多内容" arrow placement="bottom">
+                        <IconButton
+                            onClick={handleMenuOpen}
+                            className={styles.iconButton}
+                            size="large"
+                        >
+                            <MoreVertIcon />
+                        </IconButton>
+                    </Tooltip>
                     {/* 切换主题按钮 */}
                     <ThemeToggleButton />
-                    <Tooltip title="我的艺术家朋友帮我绘制了永恒之森的同人角色！" arrow placement="bottom">
-                        <Button
-                            className={styles.menuButton}
-                            onClick={handleMenuOpen}
-                            endIcon={
-                                <ArrowDropDownIcon
-                                    style={{
-                                        transition: 'transform 0.3s',
-                                        transform: menuOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                                    }}
-                                />
-                            }
-                        >
-                            更多同创作品
-                        </Button>
-                    </Tooltip>
-
-
                     <Menu
                         anchorEl={anchorEl}
                         open={menuOpen}

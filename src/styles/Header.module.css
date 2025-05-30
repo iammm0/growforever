@@ -62,24 +62,19 @@
     font-family: 'serif';
 }
 
-
-/* 菜单项样式 */
-.menuItem {
-    font-size: 17px;
-    font-weight: 500;
-    font-family: 'serif';
-    color: #3D9C5E;
-    padding: 16px 36px;
-    text-align: center;
-    transition: all 0.3s ease-in-out;
-    letter-spacing: 0.5px;
+.moreIcon {
+    background: transparent;
+    color: white !important;
+    border-radius: 12px;
+    padding: 8px;
+    transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
-.menuItem:hover {
-    background-color: #3D9C5E;
-    color: white;
-    transform: scale(1.05);
+.moreIcon:hover {
+    background-color: rgba(255, 255, 255, 0.12); /* 微透明背景 */
+    transform: scale(1.1);
 }
+
 
 /* GitHub图标按钮 */
 .iconButton {
@@ -140,15 +135,8 @@
     box-shadow: 0 2px 10px rgba(10, 255, 168, 0.15);
 }
 
-:global(.dark) .menuButton {
-    background: linear-gradient(90deg, #14532d, #166534);
-    color: #e7fbe7;
-    box-shadow: 0 2px 8px rgba(0, 255, 128, 0.08);
-}
-
-:global(.dark) .menuButton:hover {
-    background: linear-gradient(90deg, #166534, #15803d);
-    color: #ffffff;
+:global(.dark) .moreIcon:hover {
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 :global(.dark) .dropdownMenu {

@@ -1,14 +1,23 @@
 'use client'
 
-import { Box, Typography } from '@mui/material'
+import {Box, Button, Typography} from '@mui/material'
 import styles from '../../styles/GrowHero.module.css'
+import {router} from "next/client";
+import '@fontsource/orbitron';
 
 export default function GrowHero() {
     return (
         <Box
             className={styles.hero}
         >
-            <Typography variant="h2" className={styles.glow} gutterBottom>
+            <Typography
+                variant="h3"
+                className={styles.glow}
+                gutterBottom
+                sx={{
+                    fontFamily: '"Orbitron", sans-serif',
+                }}
+            >
                 GrowForever
             </Typography>
             <Typography variant="subtitle1" color="text.secondary" gutterBottom>
@@ -17,6 +26,18 @@ export default function GrowHero() {
             <Typography variant="subtitle2" color="text.secondary" gutterBottom>
                 Ambiguity breeds difficulty; Precision fosters simplicity.
             </Typography>
+
+            <Box className={styles.section}>
+                <Button
+                    variant="contained"
+                    color="success"
+                    size="large"
+                    sx={{ mt: 6 }}
+                    onClick={() => router.push('/graph')}
+                >
+                    开始播种想法
+                </Button>
+            </Box>
         </Box>
     )
 }

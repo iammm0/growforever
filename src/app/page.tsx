@@ -1,13 +1,13 @@
 'use client'
 
-import {Box, Button} from '@mui/material'
+import {Box} from '@mui/material'
 import GrowHero from '@/components/app/GrowHero'
 import FeatureCard from '@/components/app/FeatureCard'
-import { useRouter } from 'next/navigation'
 import styles from '@/styles/grow.module.css'
 import MarkdownFeatureSection from "@/components/app/MarkdownFeatureSection";
 import SloganCloud from "@/components/app/SloganCloud";
 import {useTheme} from "@mui/system";
+import TornEdge from "@/components/app/TornEdge";
 
 
 const features = [
@@ -39,11 +39,8 @@ const features = [
 
 
 export default function Home() {
-    const router = useRouter()
-
     const theme = useTheme()
     const isDark = theme.palette.mode === 'dark'
-
 
     return (
         <Box className={styles.page}>
@@ -51,9 +48,14 @@ export default function Home() {
             <Box
                 sx={{
                     ...(isDark
-                        ? {}
+                        ? {
+                            backgroundImage: 'url(/background/background-dark.jpg)',
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
+                        }
                         : {
-                            backgroundImage: 'url(/background/growhero.jpg)',
+                            backgroundImage: 'url(/background/background-light.jpg)',
                             backgroundSize: 'cover',
                             backgroundPosition: 'center',
                             backgroundRepeat: 'no-repeat',
@@ -61,18 +63,7 @@ export default function Home() {
                 }}
             >
                 <GrowHero />
-
-                <Box className={styles.section}>
-                    <Button
-                        variant="contained"
-                        color="success"
-                        size="large"
-                        sx={{ mt: 6 }}
-                        onClick={() => router.push('/graph')}
-                    >
-                        开始播种想法
-                    </Button>
-                </Box>
+                <TornEdge />
             </Box>
 
             <Box className={styles.featureCardSection}>
