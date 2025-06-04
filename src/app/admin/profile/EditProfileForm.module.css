@@ -1,0 +1,25 @@
+.container {
+    padding: 48px;
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.avatarRow {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+/* 🌙 暗色模式适配 */
+:global(.dark) .container {
+    color: #e0e0e0;
+}
+
+:global(.dark) .container {
+    background-color: #1a1a1a;
+}
+
+:global(.dark) .avatarRow {
+    color: #f0f0f0; /* 若头像旁边有文本，可增强可读性 */
+}

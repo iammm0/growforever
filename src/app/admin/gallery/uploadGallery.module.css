@@ -1,0 +1,23 @@
+.container {
+    padding: 48px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.preview {
+    margin-top: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    object-fit: cover;
+    width: 100%;
+    max-height: 300px;
+}
+
+/* 🌙 暗色模式适配 */
+:global(.dark) .container {
+    color: #e0e0e0; /* 提升文本可读性（如果有文字） */
+}
+
+:global(.dark) .preview {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4); /* 加深阴影增强对比 */
+}

@@ -1,0 +1,256 @@
+.page {
+    background-color: #ffffff;
+    color: #000000;
+    min-height: 100vh;
+    padding: 2px 2px;
+    font-family: 'Noto Sans SC', sans-serif;
+}
+
+:global(.dark) .page {
+    background-color: #121212;
+    color: #f0f0f0;
+}
+
+.hero {
+    text-align: center;
+    padding: 100px 20px 60px;
+}
+
+.glow {
+    font-size: 9.5rem;
+    font-weight: 800;
+    color: #292b29;
+    animation: glowPulse 2.5s ease-in-out infinite;
+}
+
+@media (max-width: 768px) {
+    .glow {
+        font-size: 3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .glow {
+        font-size: 2.2rem;
+    }
+}
+
+.title {
+    color: #ccc;
+    font-weight: 400;
+    margin-top: 12px;
+    text-align: center;
+}
+
+@keyframes glowPulse {
+    0% {
+        text-shadow: 0 0 8px #22c55e88;
+    }
+    50% {
+        text-shadow: 0 0 22px #22c55ecc;
+    }
+    100% {
+        text-shadow: 0 0 8px #22c55e88;
+    }
+}
+
+.section {
+    margin: 0 auto;
+    padding-top: 40px;
+    text-align: center;
+}
+
+.featureCardSection {
+    margin-top: 60px;
+    padding-top: 20px;
+    text-align: center;
+    gap: 24px; /* 卡片间距 */
+    justify-items: stretch; /* 让每列撑满 */
+}
+
+.markdownSection {
+    margin-top: 48px;
+    padding-top: 40px;
+    text-align: center;
+}
+
+.cardGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 保证始终3列 */
+    gap: 32px;
+    max-width: 1280px;
+    margin: auto auto;
+    padding: 40px 20px;
+}
+
+@media (max-width: 1024px) {
+    .cardGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .cardGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.featureCard {
+    background-color: #ffffff;
+    color: #000000;
+    border: 2px solid #333;
+    padding: 24px;
+    border-radius: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+
+    grid-column: span 1;
+}
+
+@media (hover: hover) {
+    .featureCard:hover {
+        transform: scale(1.03);
+        border-color: #22c55e;
+        box-shadow: 0 10px 24px rgba(34, 197, 94, 0.25);
+        background-color: #ecfdf5;
+    }
+}
+
+
+.featureCard {
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+}
+
+
+@media (max-width: 1024px) {
+    .featureCardSection {
+        grid-template-columns: repeat(2, 1fr); /* 平板等中等屏幕两列 */
+    }
+}
+
+@media (max-width: 640px) {
+    .featureCardSection {
+        grid-template-columns: 1fr; /* 移动端一列 */
+    }
+}
+
+
+.card {
+    padding: 1rem;
+    width: 16rem;
+    border-radius: 1rem;
+    border: 2px solid;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.default {
+    background-color: #ffffff;
+    color: #000000;
+    border-color: #000000;
+}
+
+.highlighted {
+    background-color: #ecfdf5; /* green-50 */
+    color: #000000;
+    border-color: #22c55e; /* green-500 */
+}
+
+.title {
+    font-size: 1.125rem;
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+}
+
+.summary {
+    font-size: 0.875rem;
+    color: #4b5563; /* gray-600 */
+    margin-bottom: 0.5rem;
+}
+
+.tagContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-top: 0.5rem;
+}
+
+.tag {
+    background-color: #000000;
+    color: #ffffff;
+    font-size: 0.75rem;
+    padding: 0.125rem 0.5rem;
+    border-radius: 9999px;
+}
+
+.handle {
+    width: 0.5rem;
+    height: 0.5rem;
+    background-color: #000000;
+}
+
+/* ---------------------- 🌙 暗色模式支持 ---------------------- */
+
+:global(.dark) .page {
+    background-color: #121212;
+    color: #f5f5f5;
+}
+
+:global(.dark) .glow {
+    color: #f0fdf4;
+}
+
+:global(.dark) .title {
+    color: #d1fae5;
+}
+
+:global(.dark) .subtitle {
+    color: #a3a3a3;
+}
+
+:global(.dark) .featureCard {
+    background-color: #1e1e1e;
+    color: #f0f0f0;
+    border-color: #333;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+:global(.dark) .featureCard:hover {
+    background-color: #14532d;
+    border-color: #22c55e;
+    box-shadow: 0 10px 24px rgba(34, 197, 94, 0.4);
+}
+
+:global(.dark) .card {
+    background-color: #1c1c1c;
+    color: #e5e5e5;
+    border-color: #444;
+}
+
+:global(.dark) .default {
+    background-color: #1c1c1c;
+    color: #f0f0f0;
+    border-color: #999;
+}
+
+:global(.dark) .highlighted {
+    background-color: #064e3b;
+    color: #ffffff;
+    border-color: #22c55e;
+}
+
+:global(.dark) .summary {
+    color: #bbbbbb;
+}
+
+:global(.dark) .tag {
+    background-color: #22c55e;
+    color: #000000;
+}
+
+:global(.dark) .handle {
+    background-color: #22c55e;
+}

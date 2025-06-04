@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 1, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/src/styles/GrowHero.module.css"],"sourcesContent":[".hero {\r\n    text-align: center;\r\n    padding: 80px 20px;\r\n}\r\n\r\n.glow {\r\n    font-weight: 800;\r\n    color: #111; /* 黑色主体 */\r\n    font-size: 10.5rem;\r\n    text-shadow:\r\n            0 0 4px #16a34a,\r\n            0 0 8px #22c55e,\r\n            0 0 12px #22c55e;\r\n\r\n    animation: glowPulse 2.5s ease-in-out infinite;\r\n}\r\n\r\n/* 发光动画 */\r\n@keyframes glowPulse {\r\n    0% {\r\n        text-shadow:\r\n                0 0 4px #16a34a,\r\n                0 0 8px #22c55e,\r\n                0 0 12px #22c55e;\r\n    }\r\n    50% {\r\n        text-shadow:\r\n                0 0 1px #16a34a,\r\n                0 0 3px #22c55e,\r\n                0 0 6px #22c55e;\r\n    }\r\n    100% {\r\n        text-shadow:\r\n                0 0 4px #16a34a,\r\n                0 0 8px #22c55e,\r\n                0 0 12px #22c55e;\r\n    }\r\n}\r\n\r\n\r\n/* 移动端优化 */\r\n@media (max-width: 768px) {\r\n    .glow {\r\n        font-size: 2.4rem;\r\n    }\r\n\r\n    .hero {\r\n        padding: 60px 16px;\r\n    }\r\n}\r\n"],"names":[],"mappings":"AAAA;;;;;AAKA;;;;;;;;AAaA;;;;;;;;;;;;;;AAuBA;EACI;;;;EAIA"}}]
+}

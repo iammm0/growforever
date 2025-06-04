@@ -1,0 +1,201 @@
+.leftButtons {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.rightButtons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* 顶部导航栏容器 */
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    justify-content: space-between;
+    width: 100%;
+    height: 80px;
+    background-color: rgba(61, 156, 94, 0.85);
+    backdrop-filter: blur(2px);
+    box-shadow: 0 2px 10px rgba(35, 108, 110, 0.87);
+}
+
+/* Toolbar布局样式 */
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 32px;
+    min-height: 64px;
+}
+
+/* 下拉按钮文字样式 */
+.menuButton {
+    padding: 8px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    font-family: 'serif';
+    background: linear-gradient(90deg, #43A047, #81C784);
+    color: white;
+    border-radius: 16px;
+    text-transform: none;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.menuButton:hover {
+    transform: scale(1.05);
+    background: linear-gradient(90deg, #388E3C, #66BB6A);
+}
+
+
+/* 下拉菜单样式 */
+.dropdownMenu {
+    background-color: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(10px);
+    border-radius: 14px;
+    padding: 8px 0;
+    animation: fadeIn 0.25s ease-in-out;
+    font-family: 'serif';
+}
+
+.moreIcon {
+    background: transparent;
+    color: white !important;
+    border-radius: 12px;
+    padding: 8px;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.moreIcon:hover {
+    background-color: rgba(255, 255, 255, 0.12); /* 微透明背景 */
+    transform: scale(1.1);
+}
+
+
+/* GitHub图标按钮 */
+.iconButton {
+    background: linear-gradient(135deg, #7acf90, #3aa335);
+    color: white !important;
+    border-radius: 12px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.iconButton:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 14px rgba(76, 175, 80, 0.4);
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+    .toolbar {
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px;
+    }
+
+    .rightButtons {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .leftButtons {
+        justify-content: center;
+    }
+
+    .menuItem {
+        font-size: 14px;
+        padding: 12px 24px;
+    }
+
+    .menuButton {
+        font-size: 16px;
+    }
+}
+
+/* ------------------- 🌙 暗色模式适配 ------------------- */
+
+:global(.dark) .header {
+    background-color: rgba(23, 42, 34, 0.9);
+    box-shadow: 0 2px 10px rgba(10, 255, 168, 0.15);
+}
+
+:global(.dark) .moreIcon:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+:global(.dark) .dropdownMenu {
+    background-color: rgba(40, 60, 52, 0.95);
+    color: #d1fae5;
+}
+
+:global(.dark) .menuItem {
+    color: #a7f3d0;
+}
+
+:global(.dark) .menuItem:hover {
+    background-color: #22c55e;
+    color: #000;
+}
+
+:global(.dark) .iconButton {
+    background: linear-gradient(135deg, #15803d, #065f46);
+    color: #d1fae5 !important;
+}
+
+:global(.dark) .iconButton:hover {
+    box-shadow: 0 4px 14px rgba(34, 197, 94, 0.4);
+}
+
+@media (max-width: 768px) {
+    .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 12px 16px;
+        gap: 8px;
+    }
+
+    .rightButtons, .leftButtons {
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .menuItem {
+        font-size: 14px;
+        padding: 10px 20px;
+    }
+
+    .menuButton {
+        font-size: 15px;
+        padding: 6px 16px;
+        text-align: center;
+    }
+
+    .iconButton {
+        padding: 6px;
+        min-width: 36px;
+        height: 36px;
+    }
+
+    :global(.dark) .dropdownMenu {
+        width: 100vw;
+        max-width: 320px;
+    }
+}

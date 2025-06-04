@@ -1,0 +1,25 @@
+.root {
+    padding: 48px;
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    margin-bottom: 32px;
+}
+
+.bioSection {
+    margin-top: 32px;
+}
+
+/* 🌙 暗色模式适配 */
+:global(.dark) .root {
+    color: #e5e5e5;
+}
+
+:global(.dark) .bioSection {
+    color: #cccccc;
+}
