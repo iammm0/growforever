@@ -1,0 +1,169 @@
+/* [project]/src/app/globals.css [app-client] (css) */
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+:root {
+  --radius: .75rem;
+  --background: #fff;
+  --foreground: #111;
+  --primary: #22c55e;
+  --primary-foreground: #fff;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #111;
+  --muted: #f9fafb;
+  --border: #e5e7eb;
+  --ring: #22c55e33;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.layoutContainer {
+  flex-direction: column;
+  min-height: 100vh;
+  display: flex;
+}
+
+.mainContent {
+  flex: 1;
+}
+
+@layer base {
+  @apply scroll-smooth;
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+
+  @apply font-sans antialiased transition-colors duration-300;
+
+  @apply font-bold text-primary tracking-tight;
+
+  @apply text-primary hover:underline underline-offset-4 transition-colors;
+
+  @apply cursor-pointer transition-all duration-300 ease-in-out;
+
+  @apply text-center text-sm text-gray-500 mt-10;
+}
+
+@layer utilities {
+  .bg-background {
+    background-color: var(--background);
+  }
+
+  .text-foreground {
+    color: var(--foreground);
+  }
+
+  .bg-primary {
+    background-color: var(--primary);
+  }
+
+  .text-primary {
+    color: var(--primary);
+  }
+
+  .bg-secondary {
+    background-color: var(--secondary);
+  }
+
+  .text-secondary {
+    color: var(--secondary-foreground);
+  }
+
+  .border-color {
+    border-color: var(--border);
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: .6s ease-out both fadeInUp;
+}
+
+@keyframes pulseGrow {
+  0%, 100% {
+    box-shadow: 0 0 #22c55e66;
+  }
+
+  50% {
+    box-shadow: 0 0 0 10px #22c55e00;
+  }
+}
+
+.pulse-ring {
+  animation: 2s infinite pulseGrow;
+}
+
+.card {
+  background-color: var(--secondary);
+  color: var(--secondary-foreground);
+  border: 1px solid var(--border);
+}
+
+@apply p-6 rounded-xl shadow-lg transition-all duration-300;
+
+.thought-card {
+  background-color: var(--background);
+  color: var(--foreground);
+  border-color: #000;
+}
+
+@apply p-4 rounded-xl border shadow-md w-56 transition-all duration-300 cursor-pointer select-none;
+
+.thought-card.highlight {
+  border-color: var(--primary);
+  background-color: #22c55e1a;
+}
+
+.react-flow__pane {
+  background: none !important;
+}
+
+.react-flow__handle {
+  background-color: var(--primary);
+  border: 2px solid #fff;
+  border-radius: 999px;
+  width: 10px;
+  height: 10px;
+}
+
+.graph-container {
+  width: 100vw;
+  height: 100vh;
+}
+
+@apply bg-background;
+
+:root.dark {
+  --background: #121212;
+  --foreground: #e5e5e5;
+  --primary: #4ade80;
+  --primary-foreground: #000;
+  --secondary: #1f1f1f;
+  --secondary-foreground: #e5e5e5;
+  --muted: #2c2c2c;
+  --border: #333;
+  --ring: #4ade8033;
+}
+
+
+/*# sourceMappingURL=src_app_globals_b805903d.css.map*/
