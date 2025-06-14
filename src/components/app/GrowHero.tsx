@@ -1,15 +1,15 @@
 'use client'
 
-import {Box, Button, Typography} from '@mui/material'
+import { Box, Button, Typography } from '@mui/material'
 import styles from '../../styles/GrowHero.module.css'
-import {router} from "next/client";
-import '@fontsource/orbitron';
+import '@fontsource/orbitron'
+import { useRouter } from 'next/navigation' // ✅ 这里！
 
 export default function GrowHero() {
+    const router = useRouter() // ✅ 这里！
+
     return (
-        <Box
-            className={styles.hero}
-        >
+        <Box className={styles.hero}>
             <Typography
                 variant="h3"
                 className={styles.glow}
