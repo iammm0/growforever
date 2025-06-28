@@ -2,12 +2,15 @@ services:
   postgres:
     image: postgres:latest
     container_name: growforever-postgres
+    env_file:
+      - .env
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: iammm
-      POSTGRES_DB: growforever
+      # postgres 官方镜像会读取这三个变量来初始化数据库
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT}:5432"
     volumes:
       - growforever_postgres_data:/var/lib/postgresql/data
     networks:
@@ -16,21 +19,16 @@ services:
   neo4j:
     image: neo4j:latest
     container_name: growforever-neo4j
+    env_file:
+      - .env
+    environment:
+      # Neo4j 官方镜像通过 NEO4J_AUTH 来设置用户名/密码
+      NEO4J_AUTH: "${NEO4J_USER}/${NEO4J_PASSWORD}"
     ports:
       - "7474:7474"   # HTTP 界面
       - "7687:7687"   # Bolt 协议
     volumes:
       - growforever_neo4j_data:/data
-    networks:
-      - growforever-api
-
-  qdrant:
-    image: qdrant/qdrant:latest
-    container_name: qdrant
-    ports:
-      - "16333:6333" # Qdrant HTTP & gRPC 默认端口
-    volumes:
-      - growforever-qdrant_data:/qdrant/storage
     networks:
       - growforever-api
 
@@ -41,4 +39,3 @@ networks:
 volumes:
   growforever_postgres_data:
   growforever_neo4j_data:
-  growforever-qdrant_data:
