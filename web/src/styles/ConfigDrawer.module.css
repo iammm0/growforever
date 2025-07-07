@@ -1,0 +1,49 @@
+.drawerPaper {
+  width: 420px;
+  padding: 32px;
+  box-sizing: border-box;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.divider {
+  margin: 24px 0;
+}
+.tabs {
+  margin-bottom: 24px;
+}
+.content {
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 0 24px 32px;
+}
+.modeInfo {
+  margin-top: 24px;
+}
+.caption {
+  color: #6b6b6b;
+  font-size: 0.875rem;
+  display: block;
+  margin-bottom: 4px;
+}
+.subtitle {
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.applyButton {
+  margin-top: 12px;
+  padding: 10px 20px;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.applyButton:hover {
+  background-color: #333;
+}
