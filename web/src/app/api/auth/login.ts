@@ -1,4 +1,4 @@
-import api from '@/lib/axios'
+import api from "@/src/lib/axios"
 
 export interface UserRegisterData {
     username: string

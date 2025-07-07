@@ -10,7 +10,7 @@ import {
     CardMedia,
     Chip
 } from '@mui/material'
-import {Fanwork} from "@/types/Fanwork";
+import {Fanwork} from "../../../types/Fanwork";
 
 export default function FanworksPage() {
     const [form, setForm] = useState<Fanwork>({

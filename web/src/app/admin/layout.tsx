@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { Box, Container, Typography } from '@mui/material'
-import EmotionProvider from "@/components/graph/EmotionProvider";
+import EmotionProvider from "../../components/graph/EmotionProvider";
 
 export default function AdminLayout({
                                         children,

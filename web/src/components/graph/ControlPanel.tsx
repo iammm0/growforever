@@ -2,15 +2,15 @@
 
 import {Button, Stack, Popover, IconButton, Tooltip, Box, Drawer} from '@mui/material'
 import SettingsIcon from '@mui/icons-material/Settings'
-import { useGraphStore } from '@/lib/graphStore'
-import { createThoughtNode } from '@/lib/nodeUtils'
-import { simulateAutoExpand } from '@/lib/simulateAutoExpand'
-import { GrowMode } from '@/types/GrowthNode'
 import { useState } from 'react'
-import ExpandConfigPanel from '@/components/graph/ExpandConfigPanel'
-import ConfigDrawer from "@/components/graph/ConfigDrawer";
 import {useMediaQuery, useTheme} from "@mui/system";
 import {MenuIcon} from "lucide-react";
+import ExpandConfigPanel from "./ExpandConfigPanel";
+import ConfigDrawer from "./ConfigDrawer";
+import {simulateAutoExpand} from "@/src/lib/simulateAutoExpand";
+import {GrowMode} from "@/src/types/GrowthNode";
+import {useGraphStore} from "@/src/lib/graphStore";
+import {createThoughtNode} from "@/src/lib/nodeUtils";
 
 const modeNameMap = {
     manual: '手动模式',

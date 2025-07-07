@@ -2,7 +2,7 @@ import path from 'path'
 import fs from 'fs/promises'
 import Image from 'next/image'
 import styles from './artistModel.module.css'
-import {Fanwork} from "@/types/Fanwork";
+import {Fanwork} from "../../types/Fanwork";
 
 export default async function ArtistModelPage() {
     const filePath = path.join(process.cwd(), 'data/fanworks.json')

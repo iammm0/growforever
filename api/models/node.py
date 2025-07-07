@@ -1,6 +1,8 @@
 from sqlalchemy import Column, Integer, String, DateTime, Enum, JSON, func
-from core.database import Base
 import enum
+
+from api.core.database import Base
+
 
 class NodeType(enum.Enum):
     IDEA = "idea"

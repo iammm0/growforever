@@ -11,7 +11,7 @@ import {
     CardMedia,
 } from '@mui/material'
 import Masonry from '@mui/lab/Masonry'
-import {Fanwork} from "@/types/Fanwork";
+import {Fanwork} from "../../types/Fanwork";
 
 interface Props {
     allWorks: Fanwork[]
