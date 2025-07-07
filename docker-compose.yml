@@ -6,9 +6,9 @@ services:
       - .env
     environment:
       # postgres 官方镜像会读取这三个变量来初始化数据库
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: iammm
+      POSTGRES_DB: growforever
     ports:
       - "${POSTGRES_PORT}:5432"
     volumes:
@@ -19,11 +19,6 @@ services:
   neo4j:
     image: neo4j:latest
     container_name: growforever-neo4j
-    env_file:
-      - .env
-    environment:
-      # Neo4j 官方镜像通过 NEO4J_AUTH 来设置用户名/密码
-      NEO4J_AUTH: "${NEO4J_USER}/${NEO4J_PASSWORD}"
     ports:
       - "7474:7474"   # HTTP 界面
       - "7687:7687"   # Bolt 协议

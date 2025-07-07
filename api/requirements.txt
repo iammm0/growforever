@@ -1,19 +1,35 @@
+# —— 如果你有 CUDA（示例：CUDA 12.1）——
+--extra-index-url https://download.pytorch.org/whl/cu121
+
+# PyTorch 基础包（务必先安装 torch 本体）
+torch>=2.1.0
+torchvision>=0.17
+torchaudio>=2.2
+
+# PyTorch Geometric 生态（都依赖 torch 本体，所以紧随其后）
+# torch-scatter>=2.1.2
+# torch-sparse>=0.6.18
+torch-geometric>=2.4
+
+# Transformer / Datasets
+transformers>=4.39
+datasets>=2.18
+
+# FastAPI + ASGI server
 fastapi>=0.115.12,<0.116.0
 uvicorn>=0.34.0,<0.35.0
+
+# 数据库及驱动
 sqlalchemy>=2.0
 psycopg2-binary>=2.9
 neo4j>=5.15
+
+# 配置与数据验证
 python-dotenv>=1.0.1
 pydantic>=2.6
 pydantic-settings>=2.2.1
-torch>=2.2
-torchvision>=0.17
-torchaudio>=2.2
+
+# 科学计算与数据分析
 scikit-learn>=1.4
 numpy>=1.26
 pandas>=2.2
-torch-geometric>=2.4
-torch-sparse>=0.6.18
-torch-scatter>=2.1.2
-transformers>=4.39
-datasets>=2.18
