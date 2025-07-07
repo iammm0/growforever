@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 
-from api.core.postgres import get_db
+from api.core.database import get_db
 from api.models.node import Node
 from api.schemas.node_schema import NodeResponse, NodeCreate, NodeUpdate
 
