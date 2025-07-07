@@ -1,8 +1,8 @@
 'use client'
-import GraphCanvas from '@/components/graph/GraphCanvas'
-import ControlPanel from '@/components/graph/ControlPanel'
+import GraphCanvas from '../../components/graph/GraphCanvas'
 import {AppBar, Box, Toolbar} from '@mui/material'
 import {ReactFlowProvider} from "reactflow";
+import ControlPanel from "../../components/graph/ControlPanel";
 
 export default function GraphPage() {
     return (

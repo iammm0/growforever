@@ -1,12 +1,12 @@
 'use client'
 
 import './globals.css'
-import EmotionProvider from '@/components/graph/EmotionProvider'
 import React from "react";
-import Footer from "@/components/app/Footer";
-import Header from "@/components/app/Header";
 import {usePathname} from "next/navigation";
-import CustomThemeProvider from "@/context/ThemeContext";
+import CustomThemeProvider from "@/src/context/ThemeContext";
+import Header from "@/src/components/app/Header";
+import EmotionProvider from '../components/graph/EmotionProvider';
+import Footer from "@/src/components/app/Footer";
 
 
 

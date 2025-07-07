@@ -3,7 +3,7 @@
 import { Handle, NodeProps, Position } from 'reactflow'
 import { motion } from 'framer-motion'
 import React from 'react'
-import styles from '../../styles/grow.module.css'
+import styles from '../../styles/Grow.module.css'
 
 export default function ThoughtCard({ data }: NodeProps) {
     const highlight = !!data?.highlight

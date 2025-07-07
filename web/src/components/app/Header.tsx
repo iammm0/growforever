@@ -5,14 +5,16 @@ import styles from '../../styles/Header.module.css';
 import { AppBar, Toolbar, IconButton, Menu, MenuItem, Tooltip } from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import { useRouter } from 'next/navigation';
-import ThemeToggleButton from "@/components/app/ThemeToggleButton";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import ThemeToggleButton from "@/src/components/app/ThemeToggleButton";
 
 const Header: React.FC = () => {
     const router = useRouter();
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    {/*
     const menuOpen = Boolean(anchorEl);
+    */}
 
     const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -28,7 +30,7 @@ const Header: React.FC = () => {
     };
 
     const handleGitHubClick = () => {
-        window.open('https://github.com/iammm0/growforever-main.git', '_blank');
+        window.open('https://github.com/iammm0/growforever.git', '_blank');
     };
 
     return (
@@ -50,6 +52,7 @@ const Header: React.FC = () => {
 
                 {/* 右侧：文字下拉菜单 */}
                 <div className={styles.rightButtons}>
+                    {/*
                     <Tooltip title="更多内容" arrow placement="bottom">
                         <IconButton
                             onClick={handleMenuOpen}
@@ -59,8 +62,10 @@ const Header: React.FC = () => {
                             <MoreVertIcon />
                         </IconButton>
                     </Tooltip>
+                    */}
                     {/* 切换主题按钮 */}
                     <ThemeToggleButton />
+                    {/*
                     <Menu
                         anchorEl={anchorEl}
                         open={menuOpen}
@@ -85,6 +90,7 @@ const Header: React.FC = () => {
                             其他作品集
                         </MenuItem>
                     </Menu>
+                    */}
                 </div>
             </Toolbar>
         </AppBar>

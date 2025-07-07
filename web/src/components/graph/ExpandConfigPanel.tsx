@@ -3,10 +3,10 @@
 import {
     Box, Typography, Slider, Switch, FormControlLabel, InputLabel, Stack
 } from '@mui/material'
-import { useGraphStore } from '@/lib/graphStore'
-import {GrowMode} from "@/types/GrowthNode";
-import LayoutPresetSelector from "@/components/graph/LayoutPresetSelector";
 import {useMediaQuery, useTheme} from "@mui/system";
+import {useGraphStore} from "@/src/lib/graphStore";
+import {GrowMode} from "@/src/types/GrowthNode";
+import LayoutPresetSelector from "@/src/components/graph/LayoutPresetSelector";
 
 type ExpandConfigPanelProps = {
     mode?: GrowMode

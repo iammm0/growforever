@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import text
-from core.database import get_db
-from core.neo4jConfig import get_neo4j
-from neo4j import Session as NeoSession
+
+from api.core.database import get_db
+from api.core.neo4jConfig import get_neo4j
 
 router = APIRouter(prefix="/test", tags=["Health Check"])
 

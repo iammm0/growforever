@@ -9,8 +9,8 @@ import {
     Avatar,
     Typography
 } from '@mui/material'
-import { ArtistProfile } from '@/types/ArtistProfile'
 import styles from './EditProfileForm.module.css'
+import {ArtistProfile} from "../../../types/ArtistProfile";
 
 const defaultProfile: ArtistProfile = {
     name: '',

@@ -1,4 +1,4 @@
-import axios from 'web/src/lib/axios'
+import axios from "axios";
 
 const api = axios.create({
     baseURL: 'http://localhost:8000', // 根据你的后端地址调整
@@ -16,4 +16,3 @@ api.interceptors.request.use((config) => {
 })
 
 export default api
-

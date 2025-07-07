@@ -10,10 +10,10 @@ import {
     Tab,
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
-import ExpandConfigPanel from '@/components/graph/ExpandConfigPanel'
 import {useState} from 'react'
-import {GrowMode} from '@/types/GrowthNode'
-import {useGraphStore} from '@/lib/graphStore'
+import { useGraphStore } from '@/src/lib/graphStore'
+import {GrowMode} from "@/src/types/GrowthNode";
+import ExpandConfigPanel from "@/src/components/graph/ExpandConfigPanel";
 
 type Props = {
     open: boolean,

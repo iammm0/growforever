@@ -1,5 +1,5 @@
 import {Card, Typography} from '@mui/material'
-import styles from '@/styles/grow.module.css'
+import styles from '../../styles/Grow.module.css'
 
 export default function FeatureCard({ title, description }: { title: string; description: string }) {
     return (

@@ -2,6 +2,7 @@
 
 import { CacheProvider } from '@emotion/react'
 import React from 'react'
+import createEmotionCache from "@/src/lib/emotionCache";
 
 const clientSideEmotionCache = createEmotionCache()
 

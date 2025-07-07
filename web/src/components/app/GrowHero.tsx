@@ -3,10 +3,10 @@
 import { Box, Button, Typography } from '@mui/material'
 import styles from '../../styles/GrowHero.module.css'
 import '@fontsource/orbitron'
-import { useRouter } from 'next/navigation' // ✅ 这里！
+import { useRouter } from 'next/navigation'
 
 export default function GrowHero() {
-    const router = useRouter() // ✅ 这里！
+    const router = useRouter()
 
     return (
         <Box className={styles.hero}>
