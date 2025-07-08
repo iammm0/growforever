@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from routers import gpts, tests, nodes, users
+from api.routers import users, nodes, gpts, tests
 from utils.lifespan import lifespan
 
 app = FastAPI(lifespan=lifespan)
