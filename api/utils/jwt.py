@@ -1,8 +1,6 @@
-# utils/jwt.py
-
 from datetime import datetime, timedelta, timezone
 
-from jose import jwt
+import jwt
 
 SECRET_KEY = "your-secret-key"
 ALGORITHM = "HS256"
