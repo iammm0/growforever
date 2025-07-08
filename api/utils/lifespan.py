@@ -2,24 +2,34 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from core.database import Base, engine
-from core.neo4jConfig import neo4j_db
+from api.core.neo4j import neo4j_db
+from api.core.postgres import Base, engine
+from api.core.qdrant import qdrant_db
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # 🚀 启动阶段
-    print("📦 创建 PostgreSQL 表结构中...")
+    # 启动阶段
+    print("创建 PostgreSQL 表结构中...")
     Base.metadata.create_all(bind=engine)
-    print("✅ PostgreSQL 表已就绪")
+    print("PostgreSQL 表已就绪")
 
-    print("🔌 初始化 Neo4j 连接中...")
+    print("初始化 Neo4j 连接中...")
     app.state.neo4j_driver = neo4j_db._driver
-    print("✅ Neo4j 驱动连接完成")
+    print("Neo4j 驱动连接完成")
 
-    yield  # 🔁 让 FastAPI 启动
+    print("初始化 Qdrant 客户端连接中...")
+    # 如果你的 QdrantSession 提供了 get_client() 方法：
+    app.state.qdrant_client = qdrant_db.get_client()
+    print("Qdrant 客户端连接完成")
 
-    # 🛑 关闭阶段
-    print("🧹 应用关闭中，断开 Neo4j 驱动...")
+    yield  # 让 FastAPI 启动
+
+    # 关闭阶段
+    print("应用关闭中，断开 Neo4j 驱动...")
     neo4j_db.close()
-    print("🔌 Neo4j 驱动关闭完成")
+    print("Neo4j 驱动关闭完成")
+
+    print("应用关闭中，清理 Qdrant 客户端...")
+    # QdrantClient 通常无需显式关闭；如有 cleanup 逻辑可以放这里
+    print("Qdrant 客户端关闭完成")

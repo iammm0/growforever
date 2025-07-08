@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic_settings import BaseSettings
 
 
@@ -13,6 +15,11 @@ class Settings(BaseSettings):
     NEO4J_URI: str
     NEO4J_USER: str
     NEO4J_PASSWORD: str
+
+    # Qdrant 配置
+    QDRANT_URL: str
+    QDRANT_API_KEY: Optional[str] = None
+    QDRANT_PREFER_GRPC: bool = False  # 如果想用 gRPC 通道可设为 True
 
     class Config:
         env_file = ".env"

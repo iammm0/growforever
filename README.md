@@ -23,7 +23,7 @@ GrowForever 通过 GPT+GNN 混合模型与 Neo4j 图数据库，将用户输入�
 
 ## 技术栈
 
-- **前端**：Next.js 15 (App Router), Tailwind CSS, MUI
+- **前端**：Next.js 15 (App Router), MUI
 - **AI 模型**：PyTorch（GPT & GNN）
 - **数据库**：Neo4j 图数据库
 - **可视化**：ReactFlow, Framer Motion

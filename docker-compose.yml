@@ -2,15 +2,12 @@ services:
   postgres:
     image: postgres:latest
     container_name: growforever-postgres
-    env_file:
-      - .env
     environment:
-      # postgres 官方镜像会读取这三个变量来初始化数据库
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: iammm
       POSTGRES_DB: growforever
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - "5432:5432"
     volumes:
       - growforever_postgres_data:/var/lib/postgresql/data
     networks:
@@ -27,6 +24,16 @@ services:
     networks:
       - growforever-api
 
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: qdrant
+    ports:
+      - "16333:6333" # Qdrant HTTP & gRPC 默认端口
+    volumes:
+      - growforever-qdrant_data:/qdrant/storage
+    networks:
+      - growforever-api
+
 networks:
   growforever-api:
     driver: bridge
@@ -34,3 +41,4 @@ networks:
 volumes:
   growforever_postgres_data:
   growforever_neo4j_data:
+  growforever-qdrant_data:
