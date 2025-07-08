@@ -1,7 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, func
 
-from api.core.database import Base
-
+from api.core.postgres import Base
 
 class User(Base):
     __tablename__ = "users"
