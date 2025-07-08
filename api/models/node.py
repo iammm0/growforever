@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, DateTime, Enum, JSON, func
 import enum
 
-from api.core.database import Base
+from api.core.postgres import Base
 
 
 class NodeType(enum.Enum):
