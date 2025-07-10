@@ -45,7 +45,6 @@ export default function Home() {
 
     return (
         <Box className={styles.page}>
-
             <Box
                 sx={{
                     ...(isDark

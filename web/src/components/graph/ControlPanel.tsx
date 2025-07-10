@@ -87,7 +87,7 @@ export default function ControlPanel() {
                                     disabled={growMode === 'manual'}
                                     sx={{ mb: 1 }}
                                 >
-                                    🚀 自动扩展（{modeNameMap[growMode]}）
+                                    自动扩展（{modeNameMap[growMode]}）
                                 </Button>
                                 <Button variant="text" fullWidth onClick={handleToggleMode} sx={{ mb: 1 }}>
                                     切换为{' '}
@@ -117,10 +117,10 @@ export default function ControlPanel() {
                         sx={{ mb: 2 }}
                     >
                         <Button variant="contained" onClick={handleAdd}>
-                            ➕ 添加节点
+                            添加节点
                         </Button>
                         <Button variant="outlined" color="error" onClick={reset}>
-                            🗑️ 清空画布
+                            清空画布
                         </Button>
                         <Button
                             variant="contained"
@@ -128,7 +128,7 @@ export default function ControlPanel() {
                             onClick={handleAutoGrow}
                             disabled={growMode === 'manual'}
                         >
-                            🚀 自动扩展（{modeNameMap[growMode]}）
+                            自动扩展（{modeNameMap[growMode]}）
                         </Button>
                         <Button variant="text" onClick={handleToggleMode}>
                             切换为{' '}

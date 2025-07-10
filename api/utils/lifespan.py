@@ -1,3 +1,4 @@
+import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -9,6 +10,8 @@ from api.core.qdrant import qdrant_db
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    os.environ.pop("HTTP_PROXY", None)
+    os.environ.pop("HTTPS_PROXY", None)
     # 启动阶段
     print("创建 PostgreSQL 表结构中...")
     Base.metadata.create_all(bind=engine)

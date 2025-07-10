@@ -1,0 +1,32 @@
+/* ExpandConfigPanel.module.css */
+.container {
+  padding: 24px;
+  border-radius: 8px;
+  width: 320px;
+  max-width: 100%;
+  /* 对应 MUI Box 的 boxShadow={2} */
+  box-shadow:
+    0px 3px 5px -1px rgba(0, 0, 0, 0.2),
+    0px 6px 10px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 18px 0px rgba(0, 0, 0, 0.12);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.light {
+  background-color: #f9f9f9;
+  color: #000;
+}
+
+.dark {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+}
+
+/* 响应式：小屏幕时整体缩放 & 内边距变小 */
+@media (max-width: 600px) {
+  .container {
+    transform: scale(0.94);
+    transform-origin: top center;
+    padding: 16px;
+  }
+}

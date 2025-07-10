@@ -2,12 +2,14 @@ services:
   postgres:
     image: postgres:latest
     container_name: growforever-postgres
+    env_file:
+      - .env
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: iammm
-      POSTGRES_DB: growforever
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT}:5432"
     volumes:
       - growforever_postgres_data:/var/lib/postgresql/data
     networks:
@@ -16,9 +18,15 @@ services:
   neo4j:
     image: neo4j:latest
     container_name: growforever-neo4j
+    # 不再使用 env_file，改为手动配置
+    environment:
+      # Docker 官方要求的认证格式：用户名/密码
+      NEO4J_AUTH: "${NEO4J_USER}/${NEO4J_PASSWORD}"
+      # 如果想关 strict 验证也可以加这行：
+      # NEO4J_server_config_strict_validation_enabled: "false"
     ports:
-      - "7474:7474"   # HTTP 界面
-      - "7687:7687"   # Bolt 协议
+      - "7474:7474"
+      - "7687:7687"
     volumes:
       - growforever_neo4j_data:/data
     networks:
@@ -26,9 +34,9 @@ services:
 
   qdrant:
     image: qdrant/qdrant:latest
-    container_name: qdrant
+    container_name: growforever-qdrant
     ports:
-      - "16333:6333" # Qdrant HTTP & gRPC 默认端口
+      - "16333:6333"
     volumes:
       - growforever-qdrant_data:/qdrant/storage
     networks:

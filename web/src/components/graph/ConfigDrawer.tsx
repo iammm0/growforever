@@ -1,86 +1,73 @@
 'use client'
 
-import {
-    Drawer,
-    Box,
-    Typography,
-    IconButton,
-    Divider,
-    Tabs,
-    Tab,
-} from '@mui/material'
+import React, { useState } from 'react'
+import { Drawer, Divider, Tabs, Tab, Box, Typography, IconButton } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
-import {useState} from 'react'
 import { useGraphStore } from '@/src/lib/graphStore'
-import {GrowMode} from "@/src/types/GrowthNode";
-import ExpandConfigPanel from "@/src/components/graph/ExpandConfigPanel";
+import ExpandConfigPanel from '@/src/components/graph/ExpandConfigPanel'
+import styles from '../../styles/ConfigDrawer.module.css'
+import { GrowMode } from '@/src/types/GrowthNode'
 
 type Props = {
-    open: boolean,
-    closeAction: () => void,
+  open: boolean
+  closeAction: () => void
 }
 
-const modeLabelMap = {
-    manual: '手动模式',
-    free: '自由模式',
-    fury: '狂暴模式',
+const modeLabelMap: Record<GrowMode, string> = {
+  manual: '手动模式',
+  free: '自由模式',
+  fury: '狂暴模式',
 }
 
-export default function ConfigDrawer({open, closeAction}: Props) {
-    const [tab, setTab] = useState<GrowMode>('manual')
-    const setMode = useGraphStore((s) => s.setGrowMode)
+export default function ConfigDrawer({ open, closeAction }: Props) {
+  const [tab, setTab] = useState<GrowMode>('manual')
+  const setMode = useGraphStore((s) => s.setGrowMode)
 
-    return (
-        <Drawer anchor="right" open={open} onClose={closeAction}>
-            <Box sx={{width: 400, p: 3}}>
-                <Box display="flex" justifyContent="space-between" alignItems="center">
-                    <Typography variant="h6">高级配置</Typography>
-                    <IconButton onClick={closeAction}>
-                        <CloseIcon/>
-                    </IconButton>
-                </Box>
+  return (
+    <Drawer
+      anchor="right"
+      open={open}
+      onClose={closeAction}
+      classes={{ paper: styles.drawerPaper }}
+    >
+      <div className={styles.header}>
+        <Typography variant="h6">高级配置</Typography>
+        <IconButton onClick={closeAction} size="small">
+          <CloseIcon />
+        </IconButton>
+      </div>
 
-                <Divider sx={{my: 2}}/>
+      <Divider className={styles.divider} />
 
-                <Tabs
-                    value={tab}
-                    onChange={(_, val) => setTab(val)}
-                    textColor="secondary"
-                    indicatorColor="secondary"
-                >
-                    <Tab value="manual" label="手动"/>
-                    <Tab value="free" label="自由"/>
-                    <Tab value="fury" label="狂暴"/>
-                </Tabs>
+      <Tabs
+        value={tab}
+        onChange={(_, val) => setTab(val as GrowMode)}
+        textColor="secondary"
+        indicatorColor="secondary"
+        className={styles.tabs}
+      >
+        <Tab value="manual" label="手动" />
+        <Tab value="free" label="自由" />
+        <Tab value="fury" label="狂暴" />
+      </Tabs>
 
-                <Box
-                    sx={{
-                        width: '100%',
-                        maxWidth: 400,
-                        mx: 'auto',
-                        px: 2,
-                        py: 3,
-                    }}
-                >
-                    <ExpandConfigPanel mode={tab}/>
-                    <Box mt={2}>
-                        <Typography variant="caption" color="textSecondary">
-                            当前配置模式：
-                        </Typography>
-                        <Typography variant="subtitle2" fontWeight="bold">
-                            {modeLabelMap[tab]}
-                        </Typography>
-                        <Box mt={1}>
-                            <button
-                                onClick={() => setMode(tab)}
-                                className="bg-black text-white py-1 px-4 rounded"
-                            >
-                                应用此模式
-                            </button>
-                        </Box>
-                    </Box>
-                </Box>
-            </Box>
-        </Drawer>
-    )
+      <div className={styles.content}>
+        <ExpandConfigPanel mode={tab} />
+        <div className={styles.modeInfo}>
+          <Typography className={styles.caption} variant="caption">
+            当前配置模式：
+          </Typography>
+          <Typography className={styles.subtitle} variant="subtitle2">
+            {modeLabelMap[tab]}
+          </Typography>
+          <button
+            onClick={() => setMode(tab)}
+            className={styles.applyButton}
+          >
+            应用此模式
+          </button>
+        </div>
+      </div>
+    </Drawer>
+  )
 }
