@@ -1,24 +1,32 @@
-FROM python:3.10-slim
+# Stage 1: Miniconda + 环境创建
+FROM continuumio/miniconda3 AS base
 
-# 避免 Python 输出缓冲，方便查看日志
-ENV PYTHONUNBUFFERED=1
+# 创建并激活名为 growforever 的 conda 环境
+COPY api/environment.yml /tmp/environment.yml
+RUN conda env create -f /tmp/environment.yml -n growforever && \
+    conda clean -afy
 
-# 创建并激活虚拟环境
-RUN python -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
+# Stage 2: 应用镜像
+FROM continuumio/miniconda3
 
-# 设置工作目录
+# 把上一步创建的环境复制过来
+COPY --from=base /opt/conda/envs/growforever /opt/conda/envs/growforever
+
+# 激活环境，并设置环境变量
+ENV PATH=/opt/conda/envs/growforever/bin:$PATH \
+    CONDA_DEFAULT_ENV=growforever \
+    PYTHONUNBUFFERED=1
+
 WORKDIR /app
 
-# 先拷贝依赖文件，利用 Docker 缓存
-COPY requirements.txt .
+# 复制后端代码
+COPY api /app
 
-# 安装依赖
-RUN pip install --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt
+# 安装 uvicorn
+RUN pip install uvicorn
 
-# 拷贝应用源代码
-COPY app/ ./app/
+# 暴露端口
+EXPOSE 8000
 
-# 默认监听 0.0.0.0:8000
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# 启动命令
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
