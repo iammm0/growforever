@@ -1,31 +1,55 @@
-def parse_text_to_graph(text: str) -> dict:
-    """
-    将生成的长文本拆分成句子，并构造一个简单的图结构。
+from abc import ABC, abstractmethod
+from typing import Any, Dict
 
-    每个句子作为一个节点，前后句之间建立 "follows" 关系。
+import requests
+from transformers import AutoModel, AutoTokenizer
 
-    Args:
-        text (str): GPT 生成的长文本
+from api.core.config import settings
 
-    Returns:
-        dict: 包含 nodes 与 edges 的图结构数据
-    """
-    # 根据句号分句，并过滤空句子
-    sentences = [s.strip() for s in text.split('.') if s.strip()]
+SERVICE_TYPES = ["default", "remote"]                  # GNN
 
-    nodes = []
-    edges = []
+class GNNService(ABC):
+    @abstractmethod
+    def encode(self, graph: Dict[str, Any]) -> Dict[str, Any]:
+        """对图做编码，返回可能附带的 embeddings 或预测结果"""
+        pass
 
-    for idx, sentence in enumerate(sentences):
-        nodes.append({
-            "id": idx + 1,
-            "label": sentence,
-            "type": "generated"
-        })
-        if idx > 0:
-            edges.append({
-                "from": idx,
-                "to": idx + 1,
-                "label": "follows"
-            })
-    return {"nodes": nodes, "edges": edges}
+
+class DefaultGNNService(GNNService):
+    """本地 Graph Transformer 编码器"""
+
+    def __init__(self):
+        self._tokenizer = AutoTokenizer.from_pretrained(settings.GNN_MODEL_PATH)
+        self._model = AutoModel.from_pretrained(settings.GNN_MODEL_PATH).to(
+            "cuda" if settings.USE_CUDA else "cpu"
+        )
+
+    def encode(self, graph: Dict[str, Any]) -> Dict[str, Any]:
+        # 假设模型接受 JSON 序列化的图
+        inputs = self._tokenizer(
+            str(graph), return_tensors="pt", truncation=True, padding=True
+        ).to(self._model.device)
+        outs = self._model(**inputs)
+        # 返回最后一层 hidden state 平均池化作为图向量
+        emb = outs.last_hidden_state.mean(dim=1).detach().cpu().tolist()
+        return {"embedding": emb}
+
+
+class RemoteGNNService(GNNService):
+    """调用外部 HTTP GNN 服务"""
+
+    def __init__(self):
+        self._url = settings.GNN_API_URL
+        self._headers = {"Authorization": f"Bearer {settings.GNN_API_KEY}"} if settings.GNN_API_KEY else {}
+
+    def encode(self, graph: Dict[str, Any]) -> Dict[str, Any]:
+        resp = requests.post(self._url, json={"graph": graph}, headers=self._headers, timeout=20)
+        resp.raise_for_status()
+        return resp.json()
+
+
+def get_gnn_service() -> GNNService:
+    t = settings.GNN_SERVICE_TYPE.lower()
+    if t == "remote":
+        return RemoteGNNService()
+    return DefaultGNNService()
