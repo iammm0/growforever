@@ -55,26 +55,58 @@ GrowForever/
 
 1. 克隆仓库并进入目录：
 ```bash
-git clone [https://github.com/iammm0/growforever-main.git](https://github.com/iammm0/growforever-main.git)
-cd growforever-main
+git clone [https://github.com/iammm0/growforever.git](https://github.com/iammm0/growforever.git)
+cd growforever
 ```
 
 
 2. 配置环境变量（.env）：
 ```dotenv
-# Postgres
-env POSTGRES_HOST=postgres
-# Neo4j
-NEO4J_URI=bolt://neo4j:7687
-# Qdrant
-QDRANT_URL=http://qdrant:16333
-# GPT/GNN
+# PostgreSQL 配置
+POSTGRES_HOST=127.0.0.1
+POSTGRES_PORT=25432
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=iammm
+POSTGRES_DB=growforever
+
+# Neo4j 配置
+NEO4J_URI=bolt://127.0.0.1:7687
+NEO4J_USER=neo4j
+NEO4J_PASSWORD=your_password
+
+# Qdrant 配置
+QDRANT_URL=http://127.0.0.1:16333
+QDRANT_API_KEY=
+QDRANT_PREFER_GRPC=false
+
+# GPT 可选: default | hf | openai | remote
 GPT_SERVICE_TYPE=default
+HF_GPT_MODEL=gpt2
+OPENAI_API_KEY=your-openai-key
+OPENAI_ENGINE=text-davinci-003
+GPT_API_URL=http://your-remote-gpt/api
+GPT_API_KEY=remote-gpt-key
+
+# GNN 可选: default | remote
 GNN_SERVICE_TYPE=default
-# JWT
-SECRET_KEY=your-secret
+GNN_MODEL_PATH=microsoft/graphormer
+GNN_API_URL=http://your-remote-gnn/api
+GNN_API_KEY=remote-gnn-key
+
+# 是否用 GPU
+USE_CUDA=true
+
+# —— 用户认证 & JWT 配置 —— #
+# 用于对称签名 JWT 的密钥，请生产环境用高熵字符串
+SECRET_KEY=your-very-secret-key
+
+# 可选：如果你想把算法也放到环境变量里
 ALGORITHM=HS256
+
+# Access Token 过期时间（分钟）
 ACCESS_TOKEN_EXPIRE_MINUTES=15
+
+# Refresh Token 过期时间（天）
 REFRESH_TOKEN_EXPIRE_DAYS=7
 ```
 
@@ -103,9 +135,13 @@ uvicorn main\:app --reload
 
 ## 前端开发
 
-- `/src/app`：主要页面组件
-- ReactFlow 拖拽图谱界面
-- Zustand 管理全局应用状态
+- `/src/app`：主要页面组件，基于 Next.js App Router 组织页面与布局。  
+- **GraphCanvas**：基于 ReactFlow 实现图结构的渲染与交互，支持节点拖拽、缩放、选中与自定义样式。  
+- **PromptPanel**：提示词输入区域，支持历史提示记录、模板选择与一键发送。  
+- **Sidebar**：侧边栏展示选中节点详情（标题、描述、媒体、元数据），可编辑、删除、扩展节点。  
+- **状态管理**：使用 Zustand 管理全局状态（图数据、用户信息、服务配置），并可持久化少量缓存。  
+- **样式与主题**：采用 MUI 定制主题（深绿/白/黑）并结合 CSS Modules 保持 UI 风格统一，可按需覆盖。  
+- **API 调用**：统一封装在 `lib/fetcher.ts`，处理请求、缓存与错误提示。(尚未封装)
 
 ## 后端开发
 
@@ -119,14 +155,14 @@ uvicorn main\:app --reload
 
 ## 开发计划
 
-| 阶段       | 内容                                    |
-| ---------- | --------------------------------------- | 
-| 1. 用户系统   | 完成 JWT 注册/登录/刷新与用户/Seed 关联   | 
-| 2. TGT 模块  | 集成 text2graph2text 微调模型            |
-| 3. 前端图谱   | 实现 ReactFlow 拖拽式图结构交互           |
-| 4. 存储搭建   | 配置 Neo4j + Qdrant，完成健康检查 API      | 
-| 5. 集成测试   | 端到端测试、性能调优、安全加固           |
-| 6. 部署发布   | Docker 化、CI/CD、文档 & 演示            |
+| 阶段       | 内容                                  |
+| ---------- |-------------------------------------| 
+| 1. 用户系统   | 完成 JWT 注册/登录/刷新与用户/Seed 关联          | 
+| 2. TGT 模块  | 集成 text2graph2text 微调模型             |
+| 3. 前端图谱   | 实现 ReactFlow 拖拽式图结构交互               |
+| 4. 存储搭建   | 配置 Postgresql + Neo4j + Qdrant，完成健康检查 API | 
+| 5. 集成测试   | 端到端测试、性能调优、安全加固                     |
+| 6. 部署发布   | Docker 化、文档 & 演示                    |
 
 ## 许可证
 
