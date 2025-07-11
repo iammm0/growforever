@@ -33,6 +33,10 @@ transformers>=4.39
 datasets>=2.18
 scipy
 qdrant_client
-jwt
 passlib[bcrypt]
 pydantic[email]
+pyjwt
+qdrant_client
+openai
+python-jose[cryptography]
+python-multipart
