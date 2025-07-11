@@ -34,3 +34,6 @@ dependencies:
     - pydantic[email]
     - pyjwt
     - qdrant_client
+    - openai
+    - python-jose[cryptography]
+    - python-multipart
