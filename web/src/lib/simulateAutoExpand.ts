@@ -18,43 +18,32 @@ function generateChildNodes(
     parent: Node,
     count: number,
     radius: number,
-    angleSpread: number,
+    angleOffset: number,
     existingNodes: Node[]
 ): Node[] {
-    const angleStep = angleSpread / count
+    const goldenAngle = (Math.PI * (3 - Math.sqrt(5))) // ~137.5°
     const generated: Node[] = []
 
     for (let i = 0; i < count; i++) {
-        let attempt = 0
-        let x = 0, y = 0
-        let valid = false
+        const angle = angleOffset + i * goldenAngle
+        const offset = radius + i * 25
 
-        while (!valid && attempt < 10) {
-            const angleDeg = -angleSpread / 2 + angleStep * i + (Math.random() - 0.5) * 10
-            const angle = (angleDeg * Math.PI) / 180
-            const offset = radius + (Math.random() - 0.5) * 60
+        const x = parent.position.x + Math.cos(angle) * offset
+        const y = parent.position.y + Math.sin(angle) * offset
 
-            x = parent.position.x + Math.cos(angle) * offset
-            y = parent.position.y + Math.sin(angle) * offset
-
-            valid = [...existingNodes, ...generated].every(
-                (n) => !isTooClose(n.position, { x, y })
-            )
-
-            attempt++
+        if ([...existingNodes, ...generated].every((n) => !isTooClose(n.position, { x, y }))) {
+            generated.push({
+                id: nanoid(),
+                type: 'thought',
+                position: { x, y },
+                data: {
+                    title: '扩展想法',
+                    summary: '自动扩展节点',
+                    tags: ['自动'],
+                    highlight: false,
+                },
+            })
         }
-
-        generated.push({
-            id: nanoid(),
-            type: 'thought',
-            position: { x, y },
-            data: {
-                title: '扩展想法',
-                summary: '自动扩展节点',
-                tags: ['自动'],
-                highlight: false,
-            },
-        })
     }
 
     return generated
