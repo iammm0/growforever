@@ -9,8 +9,8 @@ from api.utils.security import (
     hash_password, verify_password,
     create_access_token, create_refresh_token, decode_token
 )
-from schemas.auth_schema import RefreshRequest
-from schemas.user_schema import Token, UserCreate, UserRead
+from api.schemas.auth_schema import RefreshRequest
+from api.schemas.user_schema import Token, UserCreate, UserRead
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
 
