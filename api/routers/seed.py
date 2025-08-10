@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from core.postgres import get_db
-from models.seed import Seed
-from schemas.seed_schema import SeedResponse, SeedCreate, ExpandResponse, ExpandRequest
-from services.seed_service import SeedService
+from api.core.postgres import get_db
+from api.models.seed import Seed
+from api.schemas.seed_schema import SeedResponse, SeedCreate, ExpandResponse, ExpandRequest
+from api.services.seed_service import SeedService
 
 router = APIRouter(
     prefix="/seeds",

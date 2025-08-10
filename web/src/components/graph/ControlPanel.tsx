@@ -1,11 +1,10 @@
 'use client'
 
-import {Button, Stack, Popover, IconButton, Tooltip, Box, Drawer} from '@mui/material'
+import {Button, Stack, IconButton, Tooltip, Box, Drawer} from '@mui/material'
 import SettingsIcon from '@mui/icons-material/Settings'
 import { useState } from 'react'
 import {useMediaQuery, useTheme} from "@mui/system";
 import {MenuIcon} from "lucide-react";
-import ExpandConfigPanel from "./ExpandConfigPanel";
 import ConfigDrawer from "./ConfigDrawer";
 import {simulateAutoExpand} from "@/src/lib/simulateAutoExpand";
 import {GrowMode} from "@/src/types/GrowthNode";
@@ -46,11 +45,6 @@ export default function ControlPanel() {
         setGrowMode(nextMode)
     }
 
-    // Popover 控制
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-    const handleCloseConfig = () => setAnchorEl(null)
-    const openPopover = Boolean(anchorEl)
-
     // Drawer 控制
     const [drawerOpen, setDrawerOpen] = useState(false)
 
@@ -73,38 +67,39 @@ export default function ControlPanel() {
 
                         <Drawer anchor="right" open={menuOpen} onClose={() => setMenuOpen(false)}>
                             <Box sx={{ width: 260, p: 2 }}>
-                                <Button variant="contained" fullWidth onClick={handleAdd} sx={{ mb: 1 }}>
-                                    ➕ 添加节点
-                                </Button>
-                                <Button variant="outlined" fullWidth color="error" onClick={reset} sx={{ mb: 1 }}>
-                                    🗑️ 清空画布
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    color="secondary"
-                                    fullWidth
-                                    onClick={handleAutoGrow}
-                                    disabled={growMode === 'manual'}
-                                    sx={{ mb: 1 }}
-                                >
-                                    自动扩展（{modeNameMap[growMode]}）
-                                </Button>
-                                <Button variant="text" fullWidth onClick={handleToggleMode} sx={{ mb: 1 }}>
-                                    切换为{' '}
-                                    {modeNameMap[
-                                        growMode === 'manual' ? 'free' : growMode === 'free' ? 'fury' : 'manual'
-                                        ]}
-                                </Button>
-                                <Button
-                                    startIcon={<SettingsIcon />}
-                                    onClick={() => {
-                                        setDrawerOpen(true)
-                                        setMenuOpen(false)
-                                    }}
-                                    fullWidth
-                                >
-                                    打开高级配置
-                                </Button>
+                                <Stack spacing={1}>
+                                    <Button variant="contained" fullWidth onClick={handleAdd}>
+                                        ➕ 添加节点
+                                    </Button>
+                                    <Button variant="outlined" fullWidth color="error" onClick={reset}>
+                                        🗑️ 清空画布
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        fullWidth
+                                        onClick={handleAutoGrow}
+                                        disabled={growMode === 'manual'}
+                                    >
+                                        自动扩展（{modeNameMap[growMode]}）
+                                    </Button>
+                                    <Button variant="text" fullWidth onClick={handleToggleMode}>
+                                        切换为{' '}
+                                        {modeNameMap[
+                                            growMode === 'manual' ? 'free' : growMode === 'free' ? 'fury' : 'manual'
+                                            ]}
+                                    </Button>
+                                    <Button
+                                        startIcon={<SettingsIcon />}
+                                        onClick={() => {
+                                            setDrawerOpen(true)
+                                            setMenuOpen(false)
+                                        }}
+                                        fullWidth
+                                    >
+                                        打开高级配置
+                                    </Button>
+                                </Stack>
                             </Box>
                         </Drawer>
                     </>
@@ -114,7 +109,7 @@ export default function ControlPanel() {
                         spacing={2}
                         alignItems="center"
                         justifyContent="center"
-                        sx={{ mb: 2 }}
+                        sx={{ mb: 2, flexWrap: 'wrap' }}
                     >
                         <Button variant="contained" onClick={handleAdd}>
                             添加节点
@@ -145,23 +140,6 @@ export default function ControlPanel() {
                 )}
 
 
-
-                <Popover
-                    open={openPopover}
-                    anchorEl={anchorEl}
-                    onClose={handleCloseConfig}
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'left',
-                    }}
-                    slotProps={{
-                        paper: {
-                            sx: { mt: 1, p: 1, borderRadius: 2, minWidth: 360 },
-                        },
-                    }}
-                >
-                    <ExpandConfigPanel />
-                </Popover>
 
                 <ConfigDrawer open={drawerOpen} closeAction={() => setDrawerOpen(false)} />
             </>
