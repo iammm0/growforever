@@ -4,15 +4,13 @@ import './globals.css'
 import React from "react";
 import {usePathname} from "next/navigation";
 import CustomThemeProvider from "@/src/context/ThemeContext";
-import Header from "@/src/components/app/Header";
 import EmotionProvider from '../components/graph/EmotionProvider';
 import Footer from "@/src/components/app/Footer";
-
-
+import Header from "@/src/components/overall/Header";
 
 export default function RootLayout({
-                                       children,
-                                   }: {
+   children,
+}: {
     children: React.ReactNode
 }) {
     const pathname = usePathname()
@@ -22,6 +20,11 @@ export default function RootLayout({
 
     return (
         <html lang="zh-CN">
+        <head>
+        {/* Emotion/MUI 样式插入点，确保 SSR/CSR 顺序一致 */}
+            <meta name="emotion-insertion-point" content="mui-insertion-point" />
+            <title>永恒之森</title>
+        </head>
         <body>
         <CustomThemeProvider>
             <EmotionProvider>

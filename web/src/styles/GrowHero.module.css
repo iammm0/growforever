@@ -1,54 +1,123 @@
+/* ====== 布局基础 ====== */
 .hero {
-    text-align: center;
-    padding: 80px 20px;
+  position: relative;
+  text-align: center;
+  /* ↑ 原来是 calc(64px...)，这里加大顶部 padding 让内容下移 */
+  padding: calc(96px + env(safe-area-inset-top, 0)) 20px 56px;
+  min-height: clamp(460px, 70svh, 780px);
+  background: none;
 }
 
+/* 限制正文宽度，避免超宽难读 */
+.heroInner {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/* ====== 大标题（GrowForever） ====== */
 .glow {
-    font-weight: 800;
-    color: #111; /* 黑色主体 */
-    font-size: 8.5rem;
-    text-shadow:
-            0 0 4px #16a34a,
-            0 0 8px #22c55e,
-            0 0 12px #22c55e;
-
-    animation: glowPulse 2.5s ease-in-out infinite;
+  font-family: "Orbitron", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue",
+    Arial, "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-weight: 1000;
+  color: #111;
+  /* ↑ 原来 clamp(2.6rem, 9vw, 3.2rem) → 稍加大上限到 3.6rem */
+  font-size: clamp(3rem, 9.5vw, 3.6rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-shadow:
+    0 0 3px #16a34a,
+    0 0 6px #22c55e,
+    0 0 9px #22c55e;
+  animation: glowPulse 2.5s ease-in-out infinite;
 }
 
-:global(.dark) .glow {
-    color: #f0f0f0;
+/* 小屏专属副标题：永恒之森（桌面隐藏） */
+.mobileSubtitle {
+  display: block;
+  font-weight: 600;
+  /* ↑ 原来 clamp(1.1rem...) → 略加大到 1.25rem 起 */
+  font-size: clamp(1.25rem, 5vw, 1.5rem);
+  margin: 8px 0 4px;
 }
 
-/* 发光动画 */
+/* 通用副标题/kicker 文案 */
+.kicker {
+  max-width: 760px;
+  margin: 0.25rem auto;
+  line-height: 1.45;
+}
+
+/* CTA 区域 */
+.section {
+  margin: 0 auto;
+  padding-top: 28px;
+}
+.cta {
+  padding: 12px 24px;
+  font-size: 1.05rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 520px;
+}
+
+/* ====== 动画 ====== */
 @keyframes glowPulse {
-    0% {
-        text-shadow:
-                0 0 4px #16a34a,
-                0 0 8px #22c55e,
-                0 0 12px #22c55e;
-    }
-    50% {
-        text-shadow:
-                0 0 1px #16a34a,
-                0 0 3px #22c55e,
-                0 0 6px #22c55e;
-    }
-    100% {
-        text-shadow:
-                0 0 4px #16a34a,
-                0 0 8px #22c55e,
-                0 0 12px #22c55e;
-    }
+  0% {
+    text-shadow:
+      0 0 3px #16a34a,
+      0 0 6px #22c55e,
+      0 0 9px #22c55e;
+  }
+  50% {
+    text-shadow:
+      0 0 1px #16a34a,
+      0 0 3px #22c55e,
+      0 0 6px #22c55e;
+  }
+  100% {
+    text-shadow:
+      0 0 3px #16a34a,
+      0 0 6px #22c55e,
+      0 0 9px #22c55e;
+  }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .glow { animation: none; }
+}
 
-/* 移动端优化 */
-@media (max-width: 768px) {
-    .glow {
-        font-size: 2.4rem;
-    }
+/* ====== ≥ 900px 桌面端增强 ====== */
+@media (min-width: 900px) {
+  .hero {
+    background-image: url('/background/background-desktop.jpg');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: min(70vh, 820px);
+    /* 桌面保持原有顶部位置 */
+    padding: calc(72px + env(safe-area-inset-top, 0)) 24px 72px;
+  }
 
-    .hero {
-        padding: 60px 16px;
-    }
+  .mobileSubtitle { display: none; }
+
+  .glow {
+    font-size: clamp(4rem, 8vw, 9.5rem);
+    text-shadow:
+      0 0 4px #16a34a,
+      0 0 8px #22c55e,
+      0 0 12px #22c55e;
+  }
+
+  .cta {
+    width: auto;
+    max-width: none;
+    padding: 12px 28px;
+    font-size: 1.05rem;
+  }
+}
+
+/* ====== 暗色模式 ====== */
+:global(.dark) .glow { color: #f0f0f0; }
+:global(.dark) .hero {
+  background-color: #0d0f0e;
 }

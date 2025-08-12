@@ -1,0 +1,29 @@
+.container {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background-image: var(--bg);
+  background-size: cover;
+  background-position: center; /* 默认 */
+}
+
+/* 移动端焦点裁切 + 缩放 */
+@media (max-width: 900px) {
+  .container {
+    background-position: var(--pos-xs);
+    transform: scale(var(--mobileZoom, 1.08));
+  }
+}
+
+/* 桌面端 */
+@media (min-width: 901px) {
+  .container {
+    background-position: var(--pos-md, center);
+  }
+}
+
+:global(.dark) .container {
+  filter: brightness(0.92) contrast(1.08);
+}
