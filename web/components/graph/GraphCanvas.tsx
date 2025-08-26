@@ -102,8 +102,8 @@ export default function GraphCanvas() {
                     position: { x: 300, y: 150 },
                     data: {
                         title: '🌱 永恒之森 - 种子',
-                        summary: '一切从一个想法开始。',
-                        tags: ['AI', '思维链'],
+                        description: '一切从一个想法开始。',
+                        node_metadata: { tags: ['AI', '思维链'] },
                         highlight: true,
                         role: 'seed'
                     },
@@ -194,8 +194,8 @@ export default function GraphCanvas() {
             position: { x: newX, y: newY },
             data: {
                 title: type === 'new' ? '新想法' : type === 'deep' ? '深入扩展' : '关联概念',
-                summary: mockSummaries[Math.floor(Math.random() * mockSummaries.length)],
-                tags: [type],
+                description: mockSummaries[Math.floor(Math.random() * mockSummaries.length)],
+                node_metadata: { tags: [type] },
                 highlight: false,
             },
         }

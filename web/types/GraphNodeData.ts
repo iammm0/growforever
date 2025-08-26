@@ -1,7 +1,9 @@
+import {NodeMetadata} from '@/lib/node'
+
 export interface GraphNodeData {
     title: string
-    summary?: string
-    tags?: string[]
+    description?: string
+    node_metadata?: NodeMetadata
     highlight?: boolean
     color?: string
     role: string

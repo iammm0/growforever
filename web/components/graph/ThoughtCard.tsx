@@ -18,10 +18,10 @@ export default function ThoughtCard({ data }: NodeProps) {
         >
             <div className={styles.title}>{data.title || '无标题'}</div>
 
-            <div className={styles.summary}>{data.summary || '无描述内容'}</div>
+            <div className={styles.summary}>{data.description || '无描述内容'}</div>
 
             <div className={styles.tagContainer}>
-                {data?.tags?.map((tag: string) => (
+                {data?.node_metadata?.tags?.map((tag: string) => (
                     <span key={tag} className={styles.tag}>
                         #{tag}
                     </span>

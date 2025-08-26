@@ -8,8 +8,8 @@ const initialRootNode: Node = {
     position: { x: 300, y: 150 },
     data: {
         title: '🌱 永恒之森 - 种子',
-        summary: '一切从一个想法开始。',
-        tags: ['AI', '思维链'],
+        description: '一切从一个想法开始。',
+        node_metadata: { tags: ['AI', '思维链'] },
         highlight: true,
         role: 'seed',
     },
