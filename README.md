@@ -46,7 +46,7 @@ GrowForever/
 * **GPT 服务切换**
 
   * 支持本地 HF 模型、OpenAI API、以及远程自定义服务
-  * 内置 DeepSeek、Grok3、GPT-4 异步聊天客户端
+  * 远程聊天：`RemoteGPTService` 可选择 DeepSeek、Grok3 或 GPT-4 提供商
 * **GNN 服务切换**
 
   * 支持本地 Graph Transformer、远程自定义服务
@@ -89,7 +89,7 @@ OPENAI_ENGINE=text-davinci-003
 GPT_API_URL=http://your-remote-gpt/api
 GPT_API_KEY=remote-gpt-key
 
-# API keys for optional remote chat clients
+# API keys for RemoteGPTService providers
 DEEPSEEK_API_KEY=
 GROK3_API_KEY=
 CHATGPT_API_KEY=

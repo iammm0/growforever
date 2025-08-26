@@ -1,12 +1,12 @@
-"""Async chat clients for multiple language models."""
+"""Remote GPT service with selectable model providers."""
 from __future__ import annotations
 
 import json
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Sequence, Dict, Union, List
-from abc import ABC
+from typing import Sequence, Dict, List, Union
+
 
 import httpx
 
@@ -26,28 +26,40 @@ class PromptBuilder:
         messages.append({"role": "user", "content": user_input})
         return messages
 
+_PROVIDER_MAP = {
+    "deepseek": {"model": "deepseek-chat", "api_key_env": "DEEPSEEK_API_KEY"},
+    "grok3": {"model": "grok-3", "api_key_env": "GROK3_API_KEY"},
+    "gpt4": {"model": "gpt-4", "api_key_env": "CHATGPT_API_KEY"},
+}
 
-class GenericChatClient(ABC):
-    """Provide chat completion abstraction for multiple models and endpoints."""
+
+class RemoteGPTService:
+    """Unified remote chat completion service supporting multiple providers."""
 
     def __init__(
         self,
         prompt_builder: PromptBuilder,
-        model: str,
-        api_key: str,
-        base_url: str,
-        endpoint: str,
+        provider: str,
+        *,
+        api_key: str | None = None,
+        base_url: str = "https://jeniya.cn",
+        endpoint: str = "/v1/chat/completions",
         system_prompt_path: Union[str, Path, None] = None,
     ):
+        provider = provider.lower()
+        if provider not in _PROVIDER_MAP:
+            raise ValueError(f"Unsupported provider: {provider}")
+        cfg = _PROVIDER_MAP[provider]
+        self.model = cfg["model"]
+        if api_key is None:
+            api_key = os.getenv(cfg["api_key_env"], "")
         self.prompt_builder = prompt_builder
-        self.model = model
         self.base_url = base_url.rstrip("/")
         self.endpoint = endpoint if endpoint.startswith("/") else f"/{endpoint}"
         self.headers = {
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json",
         }
-        # load system prompt
         if system_prompt_path is None:
             project_root = Path(__file__).resolve().parents[2]
             system_prompt_path = project_root / "prompts" / "system.json"
@@ -59,13 +71,13 @@ class GenericChatClient(ABC):
         if not isinstance(sys_prompt, str):
             raise ValueError("system.json must contain a string `prompt` field")
         self.system_prompt = {"role": "system", "content": sys_prompt}
-
-    async def complete(
+        
+    async def chat_reply(
         self,
         history: Sequence[Message],
         user_input: str,
-        temperature: float = 1.0,
-        max_tokens: int = 256,
+        temperature: float = 1.3,
+        max_tokens: int = 20,
     ) -> str:
         messages = [self.system_prompt]
         messages.extend(self.prompt_builder.build(list(history), user_input))
@@ -80,69 +92,3 @@ class GenericChatClient(ABC):
             resp.raise_for_status()
             data = resp.json()
         return data["choices"][0]["message"]["content"]
-
-    async def chat_reply(
-        self,
-        history: Sequence[Message],
-        user_input: str,
-        temperature: float = 1.3,
-        max_tokens: int = 20,
-    ) -> str:
-        return await self.complete(history, user_input, temperature, max_tokens)
-
-
-class DeepSeekClient(GenericChatClient):
-    """Client for the DeepSeek-R1 model."""
-
-    def __init__(
-        self,
-        prompt_builder: PromptBuilder,
-        api_key: str = os.getenv("DEEPSEEK_API_KEY", "sk-..."),
-        system_prompt_path: Union[str, Path, None] = None,
-    ):
-        super().__init__(
-            prompt_builder=prompt_builder,
-            model="deepseek-chat",
-            api_key=api_key,
-            base_url="https://jeniya.cn",
-            endpoint="/v1/chat/completions",
-            system_prompt_path=system_prompt_path,
-        )
-
-
-class Grok3Client(GenericChatClient):
-    """Client for the Grok3 model."""
-
-    def __init__(
-        self,
-        prompt_builder: PromptBuilder,
-        api_key: str = os.getenv("GROK3_API_KEY", "sk-..."),
-        system_prompt_path: Union[str, Path, None] = None,
-    ):
-        super().__init__(
-            prompt_builder=prompt_builder,
-            model="grok-3",
-            api_key=api_key,
-            base_url="https://jeniya.cn",
-            endpoint="/v1/chat/completions",
-            system_prompt_path=system_prompt_path,
-        )
-
-
-class GPT4Client(GenericChatClient):
-    """Client for the GPT-4 model."""
-
-    def __init__(
-        self,
-        prompt_builder: PromptBuilder,
-        api_key: str = os.getenv("CHATGPT_API_KEY", "sk-..."),
-        system_prompt_path: Union[str, Path, None] = None,
-    ):
-        super().__init__(
-            prompt_builder=prompt_builder,
-            model="grok-3",
-            api_key=api_key,
-            base_url="https://jeniya.cn",
-            endpoint="/v1/chat/completions",
-            system_prompt_path=system_prompt_path,
-        )
