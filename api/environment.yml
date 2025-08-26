@@ -32,4 +32,5 @@ dependencies:
       - qdrant_client
       - openai
       - python-multipart
+      - httpx
 

@@ -23,6 +23,7 @@ GrowForever/
 │   ├── routers/       # API 路由
 │   ├── services/      # GPT, GNN, TGT 服务封装
 │   └── utils/         # 安全、JWT、依赖注入等工具
+├── prompts/          # 系统与场景提示词
 ├── web/               # 前端 (Next.js + React)
 │   ├── src/           # 源码
 │   ├── public/        # 静态资源
@@ -45,6 +46,7 @@ GrowForever/
 * **GPT 服务切换**
 
   * 支持本地 HF 模型、OpenAI API、以及远程自定义服务
+  * 内置 DeepSeek、Grok3、GPT-4 异步聊天客户端
 * **GNN 服务切换**
 
   * 支持本地 Graph Transformer、远程自定义服务
@@ -86,6 +88,11 @@ OPENAI_API_KEY=your-openai-key
 OPENAI_ENGINE=text-davinci-003
 GPT_API_URL=http://your-remote-gpt/api
 GPT_API_KEY=remote-gpt-key
+
+# API keys for optional remote chat clients
+DEEPSEEK_API_KEY=
+GROK3_API_KEY=
+CHATGPT_API_KEY=
 
 # GNN 可选: default | remote
 GNN_SERVICE_TYPE=default
