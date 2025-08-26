@@ -38,8 +38,8 @@ function generateChildNodes(
                 position: { x, y },
                 data: {
                     title: '扩展想法',
-                    summary: '自动扩展节点',
-                    tags: ['自动'],
+                    description: '自动扩展节点',
+                    node_metadata: { tags: ['自动'] },
                     highlight: false,
                 },
             })

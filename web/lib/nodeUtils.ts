@@ -1,16 +1,17 @@
-import {GraphNodeData} from "@/types/GraphNodeData";
+import {GraphNodeData} from '@/types/GraphNodeData'
+import {NodeMetadata} from '@/lib/node'
 
 let nodeCount = 0
 
 export function createThoughtNode(
     x?: number,
     y?: number,
-    data: Partial<GraphNodeData> = {}
+    data: Partial<GraphNodeData> = {},
 ): {
-    id: string;
-    type: string;
-    position: { x: number; y: number };
-    data: { title: string; summary: string; tags: string[]; color: string; highlight: boolean; role: string }
+    id: string
+    type: string
+    position: { x: number; y: number }
+    data: { title: string; description: string; node_metadata: NodeMetadata; color: string; highlight: boolean; role: string }
 } {
     nodeCount++
 
@@ -23,8 +24,8 @@ export function createThoughtNode(
         },
         data: {
             title: data.title ?? `新想法 #${nodeCount}`,
-            summary: data.summary ?? '点击展开思维分支',
-            tags: data.tags ?? ['默认'],
+            description: data.description ?? '点击展开思维分支',
+            node_metadata: { tags: data.node_metadata?.tags ?? ['默认'], ...data.node_metadata },
             color: data.color ?? '#000000',
             highlight: false,
             role: data.role ?? 'normal',

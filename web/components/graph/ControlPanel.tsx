@@ -27,8 +27,8 @@ export default function ControlPanel() {
     const handleAdd = () => {
         const node = createThoughtNode(Math.random() * 600, Math.random() * 400, {
             title: '手动节点',
-            summary: '用户手动添加',
-            tags: ['手动'],
+            description: '用户手动添加',
+            node_metadata: { tags: ['手动'] },
             color: '#4ade80',
         })
         addNode(node)
