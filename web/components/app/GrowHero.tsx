@@ -4,9 +4,9 @@ import { Box, Button, Typography } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import '@fontsource/orbitron'
 import styles from '../../styles/GrowHero.module.css'
-import BackgroundThemeCarousel from "@/src/components/app/BackgroundThemeStatic";
-import BackgroundThemeStatic from "@/src/components/app/BackgroundThemeStatic";
-import TornEdge from "@/src/components/app/TornEdge";
+import BackgroundThemeCarousel from "@/components/app/BackgroundThemeStatic";
+import BackgroundThemeStatic from "@/components/app/BackgroundThemeStatic";
+import TornEdge from "@/components/app/TornEdge";
 
 export default function GrowHero() {
   const router = useRouter()

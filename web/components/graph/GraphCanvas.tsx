@@ -15,9 +15,9 @@ import type { Node } from 'reactflow'
 import 'reactflow/dist/style.css'
 import {Typography} from "@mui/material";
 import {useTheme} from "@mui/system";
-import {useGraphStore} from "@/src/lib/graphStore";
-import {nodeTypes} from "@/src/types/ThoughtNode";
-import ExpandOptionsPopover from "@/src/components/graph/ExpandOptionsPopover";
+import {useGraphStore} from "@/lib/graphStore";
+import {nodeTypes} from "@/types/ThoughtNode";
+import ExpandOptionsPopover from "@/components/graph/ExpandOptionsPopover";
 
 export default function GraphCanvas() {
     const {

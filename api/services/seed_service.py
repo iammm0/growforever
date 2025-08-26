@@ -1,15 +1,16 @@
 from typing import List
-from sqlalchemy.orm import Session
 
+from api.core.postgres import get_db
+from api.models.edge import Edge
+from api.models.node import Node
+from api.models.seed import Seed
+from api.schemas.edge_schema import EdgeCreate
+from api.schemas.node_schema import NodeCreate
 from api.services.tgt_model import get_tgt_service
 from api.services.gpt_service import get_gpt_service
 from api.services.gnn_service import get_gnn_service
-from core.postgres import get_db
-from models.edge import Edge
-from models.node import Node
-from models.seed import Seed
-from schemas.edge_schema import EdgeCreate
-from schemas.node_schema import NodeCreate
+from fastapi import Depends, HTTPException
+from sqlalchemy.orm import Session
 
 
 class SeedService:
@@ -56,8 +57,6 @@ class SeedService:
         self.db.commit()
         return new_ids
 
-from fastapi import Depends, HTTPException
-from sqlalchemy.orm import Session
 
 def get_seed_service(
     seed_id: int,

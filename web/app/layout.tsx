@@ -3,10 +3,10 @@
 import './globals.css'
 import React from "react";
 import {usePathname} from "next/navigation";
-import CustomThemeProvider from "@/src/context/ThemeContext";
+import CustomThemeProvider from "@/context/ThemeContext";
 import EmotionProvider from '../components/graph/EmotionProvider';
-import Footer from "@/src/components/app/Footer";
-import Header from "@/src/components/overall/Header";
+import Footer from "@/components/app/Footer";
+import Header from "@/components/overall/Header";
 
 export default function RootLayout({
    children,

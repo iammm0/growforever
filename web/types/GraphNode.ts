@@ -1,4 +1,4 @@
 import { Node } from 'reactflow'
-import {GraphNodeData} from "@/src/types/GraphNodeData";
+import {GraphNodeData} from "@/types/GraphNodeData";
 
 export type GraphNode = Node<GraphNodeData>

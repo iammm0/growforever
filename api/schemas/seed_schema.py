@@ -2,7 +2,6 @@ from typing import List
 
 from pydantic import BaseModel, Field
 
-
 class SeedCreate(BaseModel):
     title: str = Field(..., description="种子标题")
     description: str | None = Field(None, description="种子描述")

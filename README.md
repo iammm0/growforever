@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="web/src/app/favicon.ico" alt="GrowForever Logo" width="200" />
+  <img src="web/app/favicon.ico" alt="GrowForever Logo" width="200" />
 </p>
 
 # GrowForever（永恒之森）

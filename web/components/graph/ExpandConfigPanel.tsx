@@ -13,9 +13,9 @@ import {
 import { useMediaQuery, useTheme } from '@mui/system'
 import clsx from 'clsx'
 
-import { useGraphStore } from '@/src/lib/graphStore'
-import { GrowMode } from '@/src/types/GrowthNode'
-import LayoutPresetSelector from '@/src/components/graph/LayoutPresetSelector'
+import { useGraphStore } from '@/lib/graphStore'
+import { GrowMode } from '@/types/GrowthNode'
+import LayoutPresetSelector from '@/components/graph/LayoutPresetSelector'
 
 import styles from '../../styles/ExpandConfigPanel.module.css'
 

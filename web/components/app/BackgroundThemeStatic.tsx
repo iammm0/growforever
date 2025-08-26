@@ -2,7 +2,7 @@
 
 import { useTheme } from '@mui/material/styles'
 import styles from '../../styles/BackgroundThemeStatic.module.css'
-import TornEdge from "@/src/components/app/TornEdge";
+import TornEdge from "@/components/app/TornEdge";
 
 type Pos = `${number}% ${number}%` | 'center' | string
 

@@ -6,10 +6,10 @@ import { useState } from 'react'
 import {useMediaQuery, useTheme} from "@mui/system";
 import {MenuIcon} from "lucide-react";
 import ConfigDrawer from "./ConfigDrawer";
-import {simulateAutoExpand} from "@/src/lib/simulateAutoExpand";
-import {GrowMode} from "@/src/types/GrowthNode";
-import {useGraphStore} from "@/src/lib/graphStore";
-import {createThoughtNode} from "@/src/lib/nodeUtils";
+import {simulateAutoExpand} from "@/lib/simulateAutoExpand";
+import {GrowMode} from "@/types/GrowthNode";
+import {useGraphStore} from "@/lib/graphStore";
+import {createThoughtNode} from "@/lib/nodeUtils";
 
 const modeNameMap = {
     manual: '手动模式',

@@ -5,7 +5,7 @@ import styles from '../../styles/Header.module.css'
 import { AppBar, Toolbar, IconButton, Menu, MenuItem, Tooltip, useMediaQuery } from '@mui/material'
 import GitHubIcon from '@mui/icons-material/GitHub'
 import { useRouter } from 'next/navigation'
-import ThemeToggleButton from '@/src/components/app/ThemeToggleButton'
+import ThemeToggleButton from '@/components/app/ThemeToggleButton'
 
 const Header: React.FC = () => {
   const router = useRouter()

@@ -2,7 +2,7 @@
 
 import { Node } from 'reactflow'
 import { nanoid } from 'nanoid'
-import {useGraphStore} from "@/src/lib/graphStore";
+import {useGraphStore} from "@/lib/graphStore";
 
 function getRandomInt(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1)) + min

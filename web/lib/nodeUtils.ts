@@ -1,4 +1,4 @@
-import {GraphNodeData} from "@/src/types/GraphNodeData";
+import {GraphNodeData} from "@/types/GraphNodeData";
 
 let nodeCount = 0
 
