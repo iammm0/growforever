@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from api.core.postgres import get_db
+from api.core.postgres_connection import get_db
 from api.models.seed import Seed
 from api.schemas.seed_schema import SeedResponse, SeedCreate, ExpandResponse, ExpandRequest
 from api.services.seed_service import SeedService

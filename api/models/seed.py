@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, DateTime, func
 from sqlalchemy.orm import relationship
 
-from api.core.postgres import Base
+from api.core.postgres_connection import Base
 
 
 class Seed(Base):

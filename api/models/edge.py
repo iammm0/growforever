@@ -11,7 +11,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship
 
-from api.core.postgres import Base
+from api.core.postgres_connection import Base
 
 
 class EdgeType(enum.Enum):

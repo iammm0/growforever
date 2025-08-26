@@ -83,5 +83,4 @@ def get_gpt_service() -> GPTService:
         return HFTextGenService()
     if t == "remote":
         return RemoteGPTService()
-    # fallback to default
     return DefaultGPTService()

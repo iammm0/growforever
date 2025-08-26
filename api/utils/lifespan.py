@@ -3,9 +3,9 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from api.core.neo4j import neo4j_db
-from api.core.postgres import Base, engine
-from api.core.qdrant import qdrant_db
+from api.core.neo4j_connection import neo4j_db
+from api.core.postgres_connection import Base, engine
+from api.core.qdrant_connection import qdrant_db
 
 
 @asynccontextmanager

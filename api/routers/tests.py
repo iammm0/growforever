@@ -3,9 +3,9 @@ from qdrant_client import QdrantClient
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 
-from api.core.postgres import get_db
-from api.core.neo4j import get_neo4j, Neo4jSession
-from api.core.qdrant import get_qdrant
+from api.core.postgres_connection import get_db
+from api.core.neo4j_connection import get_neo4j, Neo4jSession
+from api.core.qdrant_connection import get_qdrant
 
 router = APIRouter(prefix="/test", tags=["Health Check"])
 

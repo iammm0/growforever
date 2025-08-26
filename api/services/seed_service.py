@@ -1,6 +1,6 @@
 from typing import List
 
-from api.core.postgres import get_db
+from api.core.postgres_connection import get_db
 from api.models.edge import Edge
 from api.models.node import Node
 from api.models.seed import Seed
