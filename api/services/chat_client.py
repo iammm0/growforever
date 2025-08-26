@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Sequence, Dict, List, Union
 
+
 import httpx
 
 
@@ -24,7 +25,6 @@ class PromptBuilder:
         messages = [{"role": m.role, "content": m.content} for m in history]
         messages.append({"role": "user", "content": user_input})
         return messages
-
 
 _PROVIDER_MAP = {
     "deepseek": {"model": "deepseek-chat", "api_key_env": "DEEPSEEK_API_KEY"},
@@ -71,7 +71,7 @@ class RemoteGPTService:
         if not isinstance(sys_prompt, str):
             raise ValueError("system.json must contain a string `prompt` field")
         self.system_prompt = {"role": "system", "content": sys_prompt}
-
+        
     async def chat_reply(
         self,
         history: Sequence[Message],
