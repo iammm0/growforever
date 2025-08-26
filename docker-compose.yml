@@ -45,6 +45,6 @@ networks:
     driver: bridge
 
 volumes:
-  pgr_data:
+  pg_data:
   neo4j_data:
   qdrant_data:

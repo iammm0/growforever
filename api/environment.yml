@@ -6,7 +6,6 @@ channels:
   - defaults
 dependencies:
   - python=3.10
-  - psycopg2
   - pytorch=2.1.0
   - pytorch-cuda=11.8
   - torchvision=0.16.0
@@ -35,5 +34,4 @@ dependencies:
     - pyjwt
     - qdrant_client
     - openai
-    - python-jose[cryptography]
     - python-multipart

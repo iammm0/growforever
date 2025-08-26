@@ -1,11 +1,9 @@
 import os
+import jwt_util
 from datetime import datetime, timedelta
 from typing import Optional, Dict, Any
-
-from jose import jwt, JWTError
 from passlib.context import CryptContext
 
-# 这些可以从 env 或 config.py 里加载
 SECRET_KEY = os.getenv("SECRET_KEY", "CHANGEME_IN_PROD")
 ALGORITHM  = "HS256"
 ACCESS_EXPIRE_MINUTES  = 15
@@ -37,5 +35,5 @@ def decode_token(token: str) -> Optional[Dict[str, Any]]:
     """
     try:
         return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-    except JWTError:
+    except (ExpiredSignatureError, InvalidTokenError):
         return None
