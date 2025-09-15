@@ -35,6 +35,10 @@ class Settings(BaseSettings):
     GNN_API_URL: str | None = None
     GNN_API_KEY: str | None = None
 
+    DEEPSEEK_API_KEY: str
+    GROK3_API_KEY: str
+    CHATGPT_API_KEY: str
+
     # —— 其他全局配置 —— #
     USE_CUDA: bool = True
 

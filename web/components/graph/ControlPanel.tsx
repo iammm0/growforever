@@ -82,16 +82,6 @@ export default function ControlPanel() {
                                     <Button variant="outlined" fullWidth color="error" onClick={reset}>
                                         🗑️ 清空画布
                                     </Button>
-                                    <Button
-                                        startIcon={<SettingsIcon />}
-                                        onClick={() => {
-                                            setDrawerOpen(true)
-                                            setMenuOpen(false)
-                                        }}
-                                        fullWidth
-                                    >
-                                        打开高级配置
-                                    </Button>
                                 </Stack>
                             </Box>
                         </Drawer>
@@ -132,11 +122,6 @@ export default function ControlPanel() {
                         <Button variant="outlined" color="error" onClick={reset}>
                             清空画布
                         </Button>
-                        <Tooltip title="打开高级配置">
-                            <IconButton onClick={() => setDrawerOpen(true)}>
-                                <SettingsIcon />
-                            </IconButton>
-                        </Tooltip>
                     </Stack>
                 )}
 
