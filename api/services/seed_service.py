@@ -1,3 +1,5 @@
+"""Seed 扩展与节点生成相关的服务逻辑。"""
+
 from typing import List
 
 from api.core.postgres_connection import get_db
@@ -14,6 +16,8 @@ from sqlalchemy.orm import Session
 
 
 class SeedService:
+    """封装围绕 Seed 的图扩展逻辑"""
+
     def __init__(self, db: Session, seed_id: int):
         self.db = db
         self.seed = db.query(Seed).get(seed_id)
@@ -24,6 +28,8 @@ class SeedService:
         self.gnn = get_gnn_service()
 
     def expand_seed(self, prompt: str) -> int:
+        """根据用户提示生成根节点及其边"""
+
         graph_json = self.tgt.text_to_graph(prompt)
         # 假设第一个节点是根节点
         root = graph_json["nodes"][0]
@@ -40,6 +46,8 @@ class SeedService:
         return node_model.id
 
     def expand_node(self, node_id: int, prompt: str) -> List[int]:
+        """扩展指定节点，返回新节点 ID 列表"""
+
         graph_json = self.tgt.text_to_graph(prompt)
         new_ids: List[int] = []
         for nd in graph_json["nodes"]:
@@ -62,6 +70,8 @@ def get_seed_service(
     seed_id: int,
     db: Session = Depends(get_db),
 ) -> SeedService:
+    """FastAPI 依赖，按 ID 获取 SeedService"""
+
     try:
         return SeedService(db, seed_id)
     except ValueError:

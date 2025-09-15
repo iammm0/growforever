@@ -1,4 +1,4 @@
-"""Remote GPT service with selectable model providers."""
+"""支持多种模型提供商的远程 GPT 聊天服务封装。"""
 from __future__ import annotations
 
 import json
@@ -13,19 +13,21 @@ import httpx
 
 @dataclass
 class Message:
-    """Simple chat message."""
+    """简易聊天消息结构"""
+
     role: str
     content: str
 
 
 class PromptBuilder:
-    """Minimal prompt builder that appends user input to history."""
+    """简单的 Prompt 构造器，将用户输入追加到历史中"""
 
     def build(self, history: List[Message], user_input: str) -> List[Dict[str, str]]:
         messages = [{"role": m.role, "content": m.content} for m in history]
         messages.append({"role": "user", "content": user_input})
         return messages
 
+# 支持的远程模型提供商映射表
 _PROVIDER_MAP = {
     "deepseek": {"model": "deepseek-chat", "api_key_env": "DEEPSEEK_API_KEY"},
     "grok3": {"model": "grok-3", "api_key_env": "GROK3_API_KEY"},
@@ -34,7 +36,7 @@ _PROVIDER_MAP = {
 
 
 class RemoteGPTService:
-    """Unified remote chat completion service supporting multiple providers."""
+    """统一的远程聊天补全服务，可切换不同提供商"""
 
     def __init__(
         self,
@@ -79,6 +81,8 @@ class RemoteGPTService:
         temperature: float = 1.3,
         max_tokens: int = 20,
     ) -> str:
+        """根据聊天历史与用户输入获取模型回复"""
+
         messages = [self.system_prompt]
         messages.extend(self.prompt_builder.build(list(history), user_input))
         payload: Dict[str, Union[str, int, float, List[Dict[str, str]]]] = {

@@ -1,3 +1,5 @@
+"""SQLAlchemy Node 模型，表示图中的节点。"""
+
 from sqlalchemy import Column, Integer, String, DateTime, Enum, JSON, func, ForeignKey
 import enum
 
@@ -6,6 +8,8 @@ from api.core.postgres_connection import Base
 
 
 class NodeType(enum.Enum):
+    """节点类型枚举"""
+
     IDEA         = "idea"
     MEMORY       = "memory"
     EMOTION      = "emotion"
@@ -15,6 +19,8 @@ class NodeType(enum.Enum):
 
 
 class Node(Base):
+    """图中的基础信息单元"""
+
     __tablename__ = "nodes"
 
     id            = Column(Integer, primary_key=True, index=True, autoincrement=True)
