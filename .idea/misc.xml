@@ -4,4 +4,7 @@
     <option name="sdkName" value="text2graph2text" />
   </component>
   <component name="ProjectRootManager" version="2" project-jdk-name="growforever" project-jdk-type="Python SDK" />
+  <component name="PythonCompatibilityInspectionAdvertiser">
+    <option name="version" value="3" />
+  </component>
 </project>
