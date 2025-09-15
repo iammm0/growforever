@@ -17,4 +17,3 @@ class Seed(Base):
 
     # 与节点一对多
     nodes = relationship("Node", back_populates="seed", cascade="all, delete-orphan",)
-
