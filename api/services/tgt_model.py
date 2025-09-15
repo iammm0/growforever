@@ -1,8 +1,13 @@
+"""封装 text2graph2text 模型的加载与推理接口。"""
+
 import json
 
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 
+
 class Text2Graph2Text:
+    """负责文本与图结构之间的互转"""
+
     def __init__(self, model_name_or_path: str):
         # 加载 tokenizer 和模型
         self.tokenizer = AutoTokenizer.from_pretrained(model_name_or_path)
@@ -23,11 +28,15 @@ class Text2Graph2Text:
         outs    = self.model.generate(**inputs, max_length=256)
         return self.tokenizer.batch_decode(outs, skip_special_tokens=True)[0]
 
+
 # 创建单例
 tgt_service: Text2Graph2Text | None = None
 
+
 # 在 lifespan 中调用一次 get_tgt_service()，模型就会被加载到 GPU
 def get_tgt_service() -> Text2Graph2Text:
+    """获取全局唯一的 text2graph2text 实例"""
+
     global tgt_service
     if tgt_service is None:
         tgt_service = Text2Graph2Text("iammm0/text2graph2text")

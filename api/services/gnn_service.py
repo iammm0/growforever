@@ -1,3 +1,5 @@
+"""图神经网络(GNN) 编码服务接口与实现。"""
+
 from abc import ABC, abstractmethod
 from typing import Any, Dict
 
@@ -6,9 +8,13 @@ from transformers import AutoModel, AutoTokenizer
 
 from api.core.config import settings
 
+# 可选服务类型列表，便于通过配置切换实现
 SERVICE_TYPES = ["default", "remote"]                  # GNN
 
+
 class GNNService(ABC):
+    """GNN 编码服务抽象基类"""
+
     @abstractmethod
     def encode(self, graph: Dict[str, Any]) -> Dict[str, Any]:
         """对图做编码，返回可能附带的 embeddings 或预测结果"""
@@ -49,6 +55,8 @@ class RemoteGNNService(GNNService):
 
 
 def get_gnn_service() -> GNNService:
+    """根据配置返回对应的 GNN 服务实现"""
+
     t = settings.GNN_SERVICE_TYPE.lower()
     if t == "remote":
         return RemoteGNNService()

@@ -1,3 +1,5 @@
+"""Seed 模型，表示知识图谱的主题或根节点。"""
+
 from sqlalchemy import Column, Integer, String, DateTime, func
 from sqlalchemy.orm import relationship
 
@@ -5,6 +7,8 @@ from api.core.postgres_connection import Base
 
 
 class Seed(Base):
+    """一篇思维种子的基本信息"""
+
     __tablename__ = "seeds"
     id         = Column(Integer, primary_key=True, index=True, autoincrement=True)
     title      = Column(String(255), nullable=False)

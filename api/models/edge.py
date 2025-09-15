@@ -1,4 +1,7 @@
+"""SQLAlchemy Edge 模型，描述节点之间的关系。"""
+
 import enum
+
 from sqlalchemy import (
     Column,
     Integer,
@@ -15,13 +18,18 @@ from api.core.postgres_connection import Base
 
 
 class EdgeType(enum.Enum):
+    """边的类型枚举"""
+
     RELATION     = "relation"
     CAUSAL       = "causal"
     SEQUENTIAL   = "sequential"
     ASSOCIATION  = "association"
     USER_DEFINED = "user_defined"
 
+
 class Edge(Base):
+    """表示图中节点之间的关联关系"""
+
     __tablename__ = "edges"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)

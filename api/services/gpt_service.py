@@ -1,3 +1,5 @@
+"""GPT 文本生成服务接口及多种实现。"""
+
 from abc import ABC, abstractmethod
 from typing import Any
 
@@ -8,9 +10,13 @@ from transformers import pipeline
 from api.core.config import settings
 from api.services.tgt_model import get_tgt_service, Text2Graph2Text
 
+# 可切换的 GPT 服务类型
 SERVICE_TYPES = ["default", "hf", "openai", "remote"]  # GPT
 
+
 class GPTService(ABC):
+    """GPT 生成服务抽象基类"""
+
     @abstractmethod
     def generate(self, prompt: str, **kwargs: Any) -> str:
         """根据 prompt 生成文本"""
@@ -76,6 +82,8 @@ class RemoteGPTService(GPTService):
 
 
 def get_gpt_service() -> GPTService:
+    """根据配置返回对应的 GPT 服务实现"""
+
     t = settings.GPT_SERVICE_TYPE.lower()
     if t == "openai":
         return OpenAIService()
