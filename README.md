@@ -35,29 +35,21 @@ GrowForever/
 ```
 
 ## 核心模块
-
-* **用户与权限**（FastAPI + PostgreSQL）
-
-  * JWT 登录/刷新、OAuth2 密码模式
-  * 用户、Seed 关联管理
 * **循环文本-图结构**（TGT 模块）
-
   * `tgt_model`: Text→Graph→Text
 * **GPT 服务切换**
-
   * 支持本地 HF 模型、OpenAI API、以及远程自定义服务
   * 远程聊天：`RemoteGPTService` 可选择 DeepSeek、Grok3 或 GPT-4 提供商
 * **GNN 服务切换**
-
   * 支持本地 Graph Transformer、远程自定义服务
-* **图数据存储**（Neo4j + Qdrant）
+* **图数据存储**（Neo4j）
 * **前端交互**（Next.js 15 + ReactFlow + Framer Motion）
 
 ## 快速启动
 
 1. 克隆仓库并进入目录：
 ```bash
-git clone [https://github.com/iammm0/growforever.git](https://github.com/iammm0/growforever.git)
+git clone https://github.com/iammm0/growforever.git
 cd growforever
 ```
 
@@ -102,19 +94,6 @@ GNN_API_KEY=remote-gnn-key
 
 # 是否用 GPU
 USE_CUDA=true
-
-# —— 用户认证 & JWT 配置 —— #
-# 用于对称签名 JWT 的密钥，请生产环境用高熵字符串
-SECRET_KEY=your-very-secret-key
-
-# 可选：如果你想把算法也放到环境变量里
-ALGORITHM=HS256
-
-# Access Token 过期时间（分钟）
-ACCESS_TOKEN_EXPIRE_MINUTES=15
-
-# Refresh Token 过期时间（天）
-REFRESH_TOKEN_EXPIRE_DAYS=7
 ```
 
 3. 启动依赖服务：
@@ -162,14 +141,13 @@ uvicorn main\:app --reload
 
 ## 开发计划
 
-| 阶段       | 内容                                  |
-| ---------- |-------------------------------------| 
-| 1. 用户系统   | 完成 JWT 注册/登录/刷新与用户/Seed 关联          | 
-| 2. TGT 模块  | 集成 text2graph2text 微调模型             |
-| 3. 前端图谱   | 实现 ReactFlow 拖拽式图结构交互               |
-| 4. 存储搭建   | 配置 Postgresql + Neo4j + Qdrant，完成健康检查 API | 
-| 5. 集成测试   | 端到端测试、性能调优、安全加固                     |
-| 6. 部署发布   | Docker 化、文档 & 演示                    |
+| 阶段        | 内容                                  |
+|-----------|-------------------------------------|
+| 1. TGT 模块 | 集成 text2graph2text 微调模型             |
+| 2. 前端图谱   | 实现 ReactFlow 拖拽式图结构交互               |
+| 3. 存储搭建   | 配置 Postgresql + Neo4j + Qdrant，完成健康检查 API | 
+| 4. 集成测试   | 端到端测试、性能调优、安全加固                     |
+| 5. 部署发布   | Docker 化、文档 & 演示                    |
 
 ## 许可证
 
