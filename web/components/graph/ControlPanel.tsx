@@ -95,25 +95,25 @@ export default function ControlPanel() {
                         sx={{ mb: 2, flexWrap: 'wrap' }}
                     >
                         <FormControl sx={{ minWidth: 120 }} size="small">
-                            <InputLabel>GPT 服务</InputLabel>
+                            <InputLabel>GPT 服务选项</InputLabel>
                             <Select
                                 value={gptService}
                                 label="GPT 服务"
                                 onChange={(e) => setGptService(e.target.value)}
                             >
-                                <MenuItem value="default">默认</MenuItem>
-                                <MenuItem value="gpt-4">GPT-4</MenuItem>
+                                <MenuItem value="default">TGT-TextGeneration</MenuItem>
+                                <MenuItem value="gpt-4">自定义</MenuItem>
                             </Select>
                         </FormControl>
                         <FormControl sx={{ minWidth: 120 }} size="small">
-                            <InputLabel>GNN 服务</InputLabel>
+                            <InputLabel>GNN 服务选项</InputLabel>
                             <Select
                                 value={gnnService}
                                 label="GNN 服务"
                                 onChange={(e) => setGnnService(e.target.value)}
                             >
-                                <MenuItem value="default">默认</MenuItem>
-                                <MenuItem value="gnn-advanced">高级</MenuItem>
+                                <MenuItem value="default">TGT-Text2Graph</MenuItem>
+                                <MenuItem value="gnn-advanced">Microsoft Graphormer</MenuItem>
                             </Select>
                         </FormControl>
                         <Button variant="contained" onClick={() => setPromptOpen(true)}>

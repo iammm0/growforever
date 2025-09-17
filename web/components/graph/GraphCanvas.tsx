@@ -101,9 +101,9 @@ export default function GraphCanvas() {
                     type: 'thought',
                     position: { x: 300, y: 150 },
                     data: {
-                        title: '🌱 永恒之森 - 种子',
+                        title: '种子',
                         description: '一切从一个想法开始。',
-                        node_metadata: { tags: ['AI', '思维链'] },
+                        node_metadata: { tags: ['开心', '兴奋'] },
                         highlight: true,
                         role: 'seed'
                     },
