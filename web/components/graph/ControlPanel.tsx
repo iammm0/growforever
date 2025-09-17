@@ -4,21 +4,22 @@ import {
     Button,
     Stack,
     IconButton,
-    Tooltip,
     Box,
     Drawer,
     FormControl,
     InputLabel,
     Select,
     MenuItem,
+    TextField,
+    FormHelperText,
 } from '@mui/material'
-import SettingsIcon from '@mui/icons-material/Settings'
 import { useState } from 'react'
 import {useMediaQuery, useTheme} from "@mui/system";
 import {MenuIcon} from "lucide-react";
 import ConfigDrawer from "./ConfigDrawer";
 import {useGraphStore} from "@/lib/graphStore";
 import PromptDialog from "./PromptDialog";
+import {useServiceConfigStore} from "@/lib/serviceConfigStore";
 
 export default function ControlPanel() {
     const theme = useTheme()
@@ -28,8 +29,16 @@ export default function ControlPanel() {
     const { reset } = useGraphStore()
 
     const [promptOpen, setPromptOpen] = useState(false)
-    const [gptService, setGptService] = useState('default')
-    const [gnnService, setGnnService] = useState('default')
+    const {
+        gptService,
+        gptEndpoint,
+        gnnService,
+        gnnEndpoint,
+        setGptService,
+        setGptEndpoint,
+        setGnnService,
+        setGnnEndpoint,
+    } = useServiceConfigStore()
 
     // Drawer 控制
     const [drawerOpen, setDrawerOpen] = useState(false)
@@ -62,9 +71,20 @@ export default function ControlPanel() {
                                             onChange={(e) => setGptService(e.target.value)}
                                         >
                                             <MenuItem value="default">默认</MenuItem>
-                                            <MenuItem value="gpt-4">GPT-4</MenuItem>
+                                            <MenuItem value="custom">自定义</MenuItem>
                                         </Select>
+                                        <FormHelperText>支持配置远程 GPT 推理地址</FormHelperText>
                                     </FormControl>
+                                    <TextField
+                                        label="GPT 服务地址"
+                                        value={gptEndpoint}
+                                        onChange={(e) => setGptEndpoint(e.target.value)}
+                                        size="small"
+                                        fullWidth
+                                        placeholder="https://your-gpt-service/api"
+                                        sx={{ mt: 1 }}
+                                        disabled={gptService !== 'custom'}
+                                    />
                                     <FormControl fullWidth>
                                         <InputLabel>GNN 服务</InputLabel>
                                         <Select
@@ -73,9 +93,20 @@ export default function ControlPanel() {
                                             onChange={(e) => setGnnService(e.target.value)}
                                         >
                                             <MenuItem value="default">默认</MenuItem>
-                                            <MenuItem value="gnn-advanced">高级</MenuItem>
+                                            <MenuItem value="custom">自定义</MenuItem>
                                         </Select>
+                                        <FormHelperText>允许连接自托管的图网络服务</FormHelperText>
                                     </FormControl>
+                                    <TextField
+                                        label="GNN 服务地址"
+                                        value={gnnEndpoint}
+                                        onChange={(e) => setGnnEndpoint(e.target.value)}
+                                        size="small"
+                                        fullWidth
+                                        placeholder="https://your-gnn-service/api"
+                                        sx={{ mt: 1 }}
+                                        disabled={gnnService !== 'custom'}
+                                    />
                                     <Button variant="contained" fullWidth onClick={() => setPromptOpen(true)}>
                                         打开提示词
                                     </Button>
@@ -94,7 +125,7 @@ export default function ControlPanel() {
                         justifyContent="center"
                         sx={{ mb: 2, flexWrap: 'wrap' }}
                     >
-                        <FormControl sx={{ minWidth: 120 }} size="small">
+                        <FormControl sx={{ minWidth: 160 }} size="small">
                             <InputLabel>GPT 服务选项</InputLabel>
                             <Select
                                 value={gptService}
@@ -102,10 +133,19 @@ export default function ControlPanel() {
                                 onChange={(e) => setGptService(e.target.value)}
                             >
                                 <MenuItem value="default">TGT-TextGeneration</MenuItem>
-                                <MenuItem value="gpt-4">自定义</MenuItem>
+                                <MenuItem value="custom">自定义</MenuItem>
                             </Select>
                         </FormControl>
-                        <FormControl sx={{ minWidth: 120 }} size="small">
+                        <TextField
+                            label="GPT 服务地址"
+                            value={gptEndpoint}
+                            onChange={(e) => setGptEndpoint(e.target.value)}
+                            size="small"
+                            sx={{ minWidth: 200 }}
+                            placeholder="https://your-gpt-service/api"
+                            disabled={gptService !== 'custom'}
+                        />
+                        <FormControl sx={{ minWidth: 160 }} size="small">
                             <InputLabel>GNN 服务选项</InputLabel>
                             <Select
                                 value={gnnService}
@@ -113,9 +153,18 @@ export default function ControlPanel() {
                                 onChange={(e) => setGnnService(e.target.value)}
                             >
                                 <MenuItem value="default">TGT-Text2Graph</MenuItem>
-                                <MenuItem value="gnn-advanced">Microsoft Graphormer</MenuItem>
+                                <MenuItem value="custom">自定义</MenuItem>
                             </Select>
                         </FormControl>
+                        <TextField
+                            label="GNN 服务地址"
+                            value={gnnEndpoint}
+                            onChange={(e) => setGnnEndpoint(e.target.value)}
+                            size="small"
+                            sx={{ minWidth: 200 }}
+                            placeholder="https://your-gnn-service/api"
+                            disabled={gnnService !== 'custom'}
+                        />
                         <Button variant="contained" onClick={() => setPromptOpen(true)}>
                             打开提示词
                         </Button>
