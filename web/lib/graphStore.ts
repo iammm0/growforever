@@ -6,12 +6,17 @@ const initialRootNode: Node = {
     id: 'root',
     type: 'thought',
     position: { x: 300, y: 150 },
+    draggable: false,
     data: {
         title: '种子',
         description: '一切从一个想法开始。',
         node_metadata: { tags: ['AI', '思维链'] },
         highlight: true,
         role: 'seed',
+        depth: 0,
+        prompt: '',
+        order: 0,
+        magnified: false,
     },
 }
 
