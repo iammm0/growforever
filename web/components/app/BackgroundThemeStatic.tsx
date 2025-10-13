@@ -6,9 +6,10 @@ import TornEdge from "@/components/app/TornEdge";
 
 type Pos = `${number}% ${number}%` | 'center' | string
 
+// 这里才是实际控制背景的代码
 export default function BackgroundThemeStatic({
-  darkSrc = '/background/background-dark.jpg',
-  lightSrc = '/background/background-light.jpg',
+  darkSrc = '/background/background-dark-v2.jpg',
+  lightSrc = '/background/background-light-v2.jpg',
   mobilePosDark = '80% 35%',
   mobilePosLight = '80% 35%',
   desktopPosDark = 'center',
