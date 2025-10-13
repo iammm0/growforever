@@ -26,13 +26,6 @@ export default function Home() {
       <Box
         sx={{
           position: 'relative',
-          ...(isDark
-            ? {
-                backgroundImage: 'url(/background/background-dark.jpg)',
-              }
-            : {
-                backgroundImage: 'url(/background/background-light.jpg)',
-              }),
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
