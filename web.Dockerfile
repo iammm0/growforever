@@ -3,8 +3,8 @@ FROM node:22-alpine AS deps
 WORKDIR /app
 
 # 单独拷贝 package.json 和 package-lock.json，确保都存在
-COPY web/package.json ./package.json
-COPY web/package-lock.json ./package-lock.json
+COPY package.json ./package.json
+COPY package-lock.json ./package-lock.json
 
 # 安装生产依赖
 RUN npm ci --omit=dev

@@ -1,158 +1,37 @@
-<p align="center">
-  <img src="web/app/favicon.ico" alt="GrowForever Logo" width="200" />
-</p>
+# 前端模块说明
 
-# GrowForever（永恒之森）
+本文档详尽描述 GrowForever 前端的目录结构与模块间的联系，便于快速理解各部分职责与数据流。
 
-[![version](https://img.shields.io/badge/version-v0.2.0-blue.svg)](https://github.com/iammm0/growforever-main/releases/tag/v0.2.0)
-[![license](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+## 目录结构
 
-> 用图结构 AI 将个人创意与心理语义有机构建为认知森林
-
-## 简介
-
-GrowForever 是一个基于 GPT+GNN 的交互式软件系统，利用图神经网络和语言模型，将用户的想法、记忆与情感结构化存储并以可视化图谱呈现，帮助用户持续探索与管理个人认知网络。
-
-## 技术架构
-
-```plaintext
-GrowForever/
-├── api/               # 后端服务 (FastAPI)
-│   ├── core/          # 核心配置与数据库连接
-│   ├── models/        # SQLAlchemy 模型定义 (User, Seed, Node, Edge)
-│   ├── routers/       # API 路由
-│   ├── services/      # GPT, GNN, TGT 服务封装
-│   └── utils/         # 安全、JWT、依赖注入等工具
-├── prompts/          # 系统与场景提示词
-├── web/               # 前端 (Next.js + React)
-│   ├── src/           # 源码
-│   ├── public/        # 静态资源
-│   └── package.json   # 前端依赖
-├── docker-compose.yml # 本地环境 (Postgres, Neo4j, Qdrant)
-├── environment.yml    # Conda 环境 (学术模型)
-├── LICENSE
-└── README.md
+```
+web/
+├── app/              # Next.js App Router 页面与布局
+├── components/       # UI 组件，按功能划分为 app/、graph/、overall/
+├── context/          # React 上下文，如主题切换等全局状态
+├── hooks/            # 自定义 Hook，与后端 API 和业务逻辑交互
+├── lib/              # 通用库：HTTP 封装、图状态管理、数据模型与算法
+├── public/           # 静态资源（图片、图标等）
+├── styles/           # CSS Modules 与全局样式
+├── types/            # TypeScript 类型定义，描述图节点、边及应用状态
+└── package.json      # 前端依赖与脚本
 ```
 
-## 核心模块
-* **循环文本-图结构**（TGT 模块）
-  * `tgt_model`: Text→Graph→Text
-* **GPT 服务切换**
-  * 支持本地 HF 模型、OpenAI API、以及远程自定义服务
-  * 远程聊天：`RemoteGPTService` 可选择 DeepSeek、Grok3 或 GPT-4 提供商
-* **GNN 服务切换**
-  * 支持本地 Graph Transformer、远程自定义服务
-* **图数据存储**（Neo4j）
-* **前端交互**（Next.js 15 + ReactFlow + Framer Motion）
+## 模块关系
 
-## 快速启动
+- **app**：作为入口层，组合各类组件并连接全局状态。
+- **components**：提供页面可复用的 UI 单元；`graph/GraphCanvas` 读取 `lib/graphStore` 中的节点与边渲染图谱。
+- **hooks**：如 `useSeedApi`，内部使用 `lib/api.ts` 与后端交互，供组件触发数据请求。
+- **context**：例如 `ThemeContext`，向全局提供主题信息，供组件调用以实现暗/亮模式切换。
+- **lib**：封装核心逻辑；`graphStore` 基于 Zustand 管理图状态，`node.ts`、`edge.ts` 等定义数据结构与辅助函数。
+- **types**：集中定义 `GraphNode`、`GraphEdge` 等接口，确保模块间数据类型一致。
+- **styles** 与 **public**：分别存放样式与静态资源，被组件按需引用。
 
-1. 克隆仓库并进入目录：
-```bash
-git clone https://github.com/iammm0/growforever.git
-cd growforever
-```
+## 数据流概述
 
+1. 用户在 `app/graph/page.tsx` 打开图谱页面，`GraphCanvas` 组件加载。
+2. `GraphCanvas` 通过 `useGraphStore` 读取/更新图节点与边。
+3. 组件触发操作时调用 `useSeedApi`，该 Hook 使用 `lib/api.ts` 请求后端并更新状态。
+4. 全局主题由 `ThemeContext` 提供，所有组件可订阅以响应模式切换。
 
-2. 配置环境变量（.env）：
-```dotenv
-# PostgreSQL 配置
-POSTGRES_HOST=127.0.0.1
-POSTGRES_PORT=25432
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=iammm
-POSTGRES_DB=growforever
-
-# Neo4j 配置
-NEO4J_URI=bolt://127.0.0.1:7687
-NEO4J_USER=neo4j
-NEO4J_PASSWORD=your_password
-
-# Qdrant 配置
-QDRANT_URL=http://127.0.0.1:16333
-QDRANT_API_KEY=
-QDRANT_PREFER_GRPC=false
-
-# GPT 可选: default | hf | openai | remote
-GPT_SERVICE_TYPE=default
-HF_GPT_MODEL=gpt2
-OPENAI_API_KEY=your-openai-key
-OPENAI_ENGINE=text-davinci-003
-GPT_API_URL=http://your-remote-gpt/api
-GPT_API_KEY=remote-gpt-key
-
-# API keys for RemoteGPTService providers
-DEEPSEEK_API_KEY=
-GROK3_API_KEY=
-CHATGPT_API_KEY=
-
-# GNN 可选: default | remote
-GNN_SERVICE_TYPE=default
-GNN_MODEL_PATH=microsoft/graphormer
-GNN_API_URL=http://your-remote-gnn/api
-GNN_API_KEY=remote-gnn-key
-
-# 是否用 GPU
-USE_CUDA=true
-```
-
-3. 启动依赖服务：
-```bash
-docker-compose up -d
-```
-
-
-4. 安装前端依赖并启动：
-```bash
-cd web
-npm install
-npm run dev
-````
-
-5. 启动后端 API：
-```bash
-cd api
-conda activate growforever
-conda env create -f api/environment.yml
-conda env update -f api/environment.yml --prune
-pip install -r requirements.txt
-uvicorn main\:app --reload
-```
-
-## 前端开发
-
-- `/src/app`：主要页面组件，基于 Next.js App Router 组织页面与布局。  
-- **GraphCanvas**：基于 ReactFlow 实现图结构的渲染与交互，支持节点拖拽、缩放、选中与自定义样式。  
-- **PromptPanel**：提示词输入区域，支持历史提示记录、模板选择与一键发送。  
-- **Sidebar**：侧边栏展示选中节点详情（标题、描述、媒体、元数据），可编辑、删除、扩展节点。  
-- **状态管理**：使用 Zustand 管理全局状态（图数据、用户信息、服务配置），并可持久化少量缓存。  
-- **样式与主题**：采用 MUI 定制主题（深绿/白/黑）并结合 CSS Modules 保持 UI 风格统一，可按需覆盖。  
-- **API 调用**：统一封装在 `lib/fetcher.ts`，处理请求、缓存与错误提示。(尚未封装)
-
-## 后端开发
-
-- `/core/config.py`：Pydantic 设置读取 `.env`
-- `/core/postgres.py`：SQLAlchemy 初始化
-- `/core/neo4j.py` & `/core/qdrant.py`：图存储客户端
-- `/models/graph.py`：Seed, Node, Edge, User 模型
-- `/routers`：各模块路由（auth, seed, nodes, services, tests）
-- `/services`：GPT, GNN, TGT 服务实现
-- `/utils`: 安全、JWT、依赖注入
-
-## 开发计划
-
-| 阶段        | 内容                                  |
-|-----------|-------------------------------------|
-| 1. TGT 模块 | 集成 text2graph2text 微调模型             |
-| 2. 前端图谱   | 实现 ReactFlow 拖拽式图结构交互               |
-| 3. 存储搭建   | 配置 Postgresql + Neo4j + Qdrant，完成健康检查 API | 
-| 4. 集成测试   | 端到端测试、性能调优、安全加固                     |
-| 5. 部署发布   | Docker 化、文档 & 演示                    |
-
-## 许可证
-
-本项目采用 MIT 许可，详情见 [LICENSE](LICENSE)。
-
----
-
-*作者：Mingjun Zhao*
+以上结构使前端各层职责清晰：页面 <-> 组件 <-> Hook/Context <-> Lib/Store，共同构建图谱交互体验。
