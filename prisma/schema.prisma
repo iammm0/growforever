@@ -8,7 +8,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/** ==== Enums ==== */
 enum EdgeType {
   RELATION
   CAUSAL
@@ -25,8 +24,6 @@ enum NodeType {
   EVENT
   USER_DEFINED
 }
-
-/** ==== Models ==== */
 
 // 一篇思维种子（根主题）
 model Seed {
