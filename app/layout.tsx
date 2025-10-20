@@ -3,10 +3,10 @@
 import './globals.css'
 import React from "react";
 import {usePathname} from "next/navigation";
-import CustomThemeProvider from "../context/ThemeContext";
-import EmotionProvider from '../components/graph/EmotionProvider';
-import Footer from "../components/app/Footer";
-import Header from "../components/overall/Header";
+import CustomThemeProvider from "../context/theme-context";
+import EmotionProvider from '../components/graph/emotion-provider';
+import Footer from "@/components/ui/footer";
+import Navigation from "@/components/ui/navigation";
 
 export default function RootLayout({
    children,
@@ -15,7 +15,7 @@ export default function RootLayout({
 }) {
     const pathname = usePathname()
 
-    // 你可以在这里定义要隐藏 Header/Footer 的路径
+    // 你可以在这里定义要隐藏 Navigation/Footer 的路径
     const hideHeaderFooter = pathname?.startsWith('/graph')
 
     return (
@@ -29,7 +29,7 @@ export default function RootLayout({
         <CustomThemeProvider>
             <EmotionProvider>
                 <div className="layoutContainer">
-                    {!hideHeaderFooter && <Header />}
+                    {!hideHeaderFooter && <Navigation />}
                     <main className="mainContent">{children}</main>
                     {!hideHeaderFooter && <Footer />}
                 </div>

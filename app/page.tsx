@@ -1,11 +1,11 @@
 'use client'
 
 import { Box } from '@mui/material'
-import GrowHero from '../components/app/GrowHero'
-import FeatureCard from '../components/app/FeatureCard'
+import GrowHero from '@/components/ui/grow-hero'
+import FeatureCard from '@/components/ui/feature-card'
 import { useTheme } from '@mui/system'
-import TornEdge from '../components/app/TornEdge'
-import styles from '../styles/Grow.module.css'
+import TornEdge from '@/components/ui/torn-edge'
+import styles from '../styles/grow.module.css'
 
 const features = [
   { title: '从一个想法开始', description: '每一次点击，都是一颗思维的种子——GrowForever 自动为你展开思维的枝叶。' },

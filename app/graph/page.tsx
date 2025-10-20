@@ -1,9 +1,9 @@
 'use client'
-import GraphCanvas from '../../components/graph/GraphCanvas'
+import GraphCanvas from '../../components/graph/graph-canvas'
 import {AppBar, Box, Toolbar} from '@mui/material'
 import {ReactFlowProvider} from "reactflow";
-import ControlPanel from "../../components/graph/ControlPanel";
-import MobileDesktopSuggest from "../../components/app/MobileDesktopSuggest";
+import ControlPanel from "../../components/graph/control-panel";
+import MobileDesktopSuggest from "@/components/ui/mobile-desktop-suggest";
 
 export default function GraphPage() {
     const desktopUrl =
