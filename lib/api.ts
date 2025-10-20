@@ -1,6 +1,6 @@
 import axios from 'axios'
-import {Seed, SeedCreateRequest, ExpandRequest, ExpandResponse} from './seed'
-import {NodeCreateRequest, Node} from './node'
+import {Seed, SeedCreateRequest, ExpandRequest, ExpandResponse} from '../algo/seed'
+import {NodeCreateRequest, Node} from '../algo/node'
 
 const api = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000',

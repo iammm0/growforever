@@ -15,7 +15,7 @@ import type { Node } from 'reactflow'
 import 'reactflow/dist/style.css'
 import {Typography} from "@mui/material";
 import {useTheme} from "@mui/system";
-import {useGraphStore} from "@/lib/graph-store";
+import {useGraphStore} from "@/algo/graph-store";
 import {nodeTypes} from "@/components/graph/thought-card";
 import ExpandOptionsPopover from "@/components/graph/expand-options-popover";
 

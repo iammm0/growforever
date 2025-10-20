@@ -2,7 +2,7 @@
 
 import { CacheProvider } from '@emotion/react'
 import React from 'react'
-import createEmotionCache from "../../lib/emotion-cache";
+import createEmotionCache from "../../algo/emotion-cache";
 
 const clientSideEmotionCache = createEmotionCache()
 

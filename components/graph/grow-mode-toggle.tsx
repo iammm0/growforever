@@ -2,7 +2,7 @@
 
 import { ToggleButton, ToggleButtonGroup, Typography, Stack } from '@mui/material'
 import React from 'react'
-import {useGraphStore} from "@/lib/graph-store";
+import {useGraphStore} from "@/algo/graph-store";
 import {GrowMode} from "@/types/grow-mode";
 
 export default function GrowModeToggle() {

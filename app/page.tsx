@@ -22,33 +22,8 @@ export default function Home() {
   return (
     <Box className={styles.page}>
       {/* 顶部 Hero 背景：增加渐变遮罩，提升可读性 */}
-      <Box
-        sx={{
-          position: 'relative',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          // 移动端避免背景滚动卡顿
-          '@media (max-width: 768px)': {
-            backgroundAttachment: 'scroll',
-          },
-          // 叠加一个从顶部到底部的透明黑/白渐变，避免文字被背景干扰
-          '&::after': {
-            content: '""',
-            position: 'absolute',
-            inset: 0,
-            background:
-              isDark
-                ? 'linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.35) 40%, rgba(0,0,0,0.15) 100%)'
-                : 'linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.25) 40%, rgba(255,255,255,0.1) 100%)',
-            pointerEvents: 'none',
-          },
-        }}
-      >
-        {/* 内容必须在渐变之上 */}
-        <Box sx={{ position: 'relative', zIndex: 1 }}>
+      <Box>
           <GrowHero />
-        </Box>
       </Box>
 
       {/* Feature 列表 */}

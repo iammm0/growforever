@@ -1,7 +1,7 @@
 import {useCallback} from 'react'
-import {createSeed, expandSeed, expandNode, createNode} from '../lib/api'
-import {SeedCreateRequest, ExpandRequest} from '../lib/seed'
-import {NodeCreateRequest} from '../lib/node'
+import {createSeed, expandSeed, expandNode, createNode} from '@/lib/api'
+import {SeedCreateRequest, ExpandRequest} from '@/algo/seed'
+import {NodeCreateRequest} from '@/algo/node'
 
 export function useSeedApi() {
     const create = useCallback((data: SeedCreateRequest) => createSeed(data), [])

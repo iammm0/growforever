@@ -1,0 +1,84 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/** ==== Enums ==== */
+enum EdgeType {
+  RELATION
+  CAUSAL
+  SEQUENTIAL
+  ASSOCIATION
+  USER_DEFINED
+}
+
+enum NodeType {
+  IDEA
+  MEMORY
+  EMOTION
+  FEATURE
+  EVENT
+  USER_DEFINED
+}
+
+/** ==== Models ==== */
+
+// 一篇思维种子（根主题）
+model Seed {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(255)
+  description String?  @db.VarChar(1000)
+  createdAt   DateTime @default(now())
+
+  // 关系
+  nodes       Node[]
+}
+
+// 图中的基础信息单元
+model Node {
+  id            Int       @id @default(autoincrement())
+  seedId        Int
+  parentId      Int?
+  title         String    @db.VarChar(255)
+  description   String?   @db.VarChar(1000)
+  type          NodeType  @default(IDEA)
+  content       Json?
+  nodeMetadata  Json?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // 关系
+  seed          Seed      @relation(fields: [seedId], references: [id], onDelete: Cascade)
+  parent        Node?     @relation("NodeToChildren", fields: [parentId], references: [id], onDelete: SetNull)
+  children      Node[]    @relation("NodeToChildren")
+
+  outEdges      Edge[]    @relation("FromNode")
+  inEdges       Edge[]    @relation("ToNode")
+
+  @@index([seedId])
+  @@index([parentId])
+}
+
+// 节点之间的边
+model Edge {
+  id         Int       @id @default(autoincrement())
+  sourceId   Int
+  targetId   Int
+  type       EdgeType  @default(RELATION)
+  label      String?   @db.VarChar(255)
+  properties Json?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  // 关系
+  source     Node      @relation("FromNode", fields: [sourceId], references: [id], onDelete: Cascade)
+  target     Node      @relation("ToNode", fields: [targetId], references: [id], onDelete: Cascade)
+
+  @@index([sourceId])
+  @@index([targetId])
+}

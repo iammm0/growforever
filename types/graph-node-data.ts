@@ -1,4 +1,4 @@
-import {NodeMetadata} from '@/lib/node'
+import {NodeMetadata} from '@/algo/node'
 
 export interface GraphNodeData {
     title: string

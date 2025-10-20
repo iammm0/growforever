@@ -3,7 +3,7 @@ import GraphCanvas from '../../components/graph/graph-canvas'
 import {AppBar, Box, Toolbar} from '@mui/material'
 import {ReactFlowProvider} from "reactflow";
 import ControlPanel from "../../components/graph/control-panel";
-import MobileDesktopSuggest from "@/components/ui/mobile-desktop-suggest";
+import Suggest from "@/components/ui/suggest";
 
 export default function GraphPage() {
     const desktopUrl =
@@ -11,7 +11,7 @@ export default function GraphPage() {
 
     return (
         <>
-        <MobileDesktopSuggest desktopUrl={desktopUrl} />
+        <Suggest desktopUrl={desktopUrl} />
         <Box display="flex" flexDirection="column" height="100vh">
             <AppBar position="static" color="default" elevation={1}>
                 <Toolbar>
