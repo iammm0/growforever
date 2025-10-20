@@ -15,9 +15,9 @@ import type { Node } from 'reactflow'
 import 'reactflow/dist/style.css'
 import {Typography} from "@mui/material";
 import {useTheme} from "@mui/system";
-import {useGraphStore} from "../../lib/graphStore";
-import {nodeTypes} from "../../types/ThoughtNode";
-import ExpandOptionsPopover from "./ExpandOptionsPopover";
+import {useGraphStore} from "@/lib/graph-store";
+import {nodeTypes} from "@/components/graph/thought-card";
+import ExpandOptionsPopover from "@/components/graph/expand-options-popover";
 
 const VERTICAL_SPACING = 220
 const HORIZONTAL_SPACING = 260

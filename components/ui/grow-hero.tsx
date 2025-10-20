@@ -3,10 +3,10 @@
 import { Box, Button, Typography } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import '@fontsource/orbitron'
-import styles from '../../styles/GrowHero.module.css'
-import BackgroundThemeCarousel from "./BackgroundThemeStatic";
-import BackgroundThemeStatic from "./BackgroundThemeStatic";
-import TornEdge from "./TornEdge";
+import styles from '../../styles/grow-hero.module.css'
+import BackgroundThemeCarousel from "./static-background";
+import StaticBackground from "./static-background";
+import TornEdge from "./torn-edge";
 
 export default function GrowHero() {
   const router = useRouter()
@@ -15,7 +15,7 @@ export default function GrowHero() {
     <>
     <Box className={styles.hero} sx={{ position: 'relative' }}>
       {/* 背景淡入淡出 */}
-      <BackgroundThemeStatic
+      <StaticBackground
           mobilePosDark="82% 28%"
           mobilePosLight="82% 28%"
           mobileZoom={1.12}

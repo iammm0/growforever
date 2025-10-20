@@ -1,9 +1,9 @@
 'use client'
 
-import { Handle, NodeProps, Position } from 'reactflow'
+import {Handle, NodeProps, NodeTypes, Position} from 'reactflow'
 import { motion } from 'framer-motion'
 import React from 'react'
-import styles from '../../styles/Grow.module.css'
+import styles from '../../styles/grow.module.css'
 
 export default function ThoughtCard({ data }: NodeProps) {
     const highlight = !!data?.highlight
@@ -35,4 +35,8 @@ export default function ThoughtCard({ data }: NodeProps) {
             <Handle type="source" position={Position.Right} className={styles.handle} />
         </motion.div>
     )
+}
+
+export const nodeTypes: NodeTypes = {
+    thought: ThoughtCard,
 }

@@ -1,13 +1,13 @@
 'use client'
 
 import React, { useState } from 'react'
-import styles from '../../styles/Header.module.css'
+import styles from '../../styles/navigation.module.css'
 import { AppBar, Toolbar, IconButton, Menu, MenuItem, Tooltip, useMediaQuery } from '@mui/material'
 import GitHubIcon from '@mui/icons-material/GitHub'
 import { useRouter } from 'next/navigation'
-import ThemeToggleButton from '../app/ThemeToggleButton'
+import ThemeToggle from './theme-toggle'
 
-const Header: React.FC = () => {
+const Navigation: React.FC = () => {
   const router = useRouter()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const menuOpen = Boolean(anchorEl)
@@ -53,7 +53,7 @@ const Header: React.FC = () => {
 
         {/* 右侧：主题切换 + 更多（可按需启用） */}
         <div className={styles.rightButtons}>
-          <ThemeToggleButton />
+          <ThemeToggle />
 
           {/* 如需更多菜单，去掉注释即可 */}
           {/* <Tooltip title="更多内容" arrow placement="bottom">
@@ -93,4 +93,4 @@ const Header: React.FC = () => {
   )
 }
 
-export default Header
+export default Navigation

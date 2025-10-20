@@ -1,13 +1,13 @@
 'use client'
 
 import { useTheme } from '@mui/material/styles'
-import styles from '../../styles/BackgroundThemeStatic.module.css'
-import TornEdge from "./TornEdge";
+import styles from '../../styles/static-background.module.css'
+import TornEdge from "./torn-edge";
 
 type Pos = `${number}% ${number}%` | 'center' | string
 
 // 这里才是实际控制背景的代码
-export default function BackgroundThemeStatic({
+export default function StaticBackground({
   darkSrc = '/background/background-dark-v2.jpg',
   lightSrc = '/background/background-light-v2.jpg',
   mobilePosDark = '80% 35%',

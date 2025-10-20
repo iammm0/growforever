@@ -1,4 +1,4 @@
-import {NodeMetadata} from '@/web/lib/node'
+import {NodeMetadata} from '@/lib/node'
 
 export interface GraphNodeData {
     title: string

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import ConfigDrawer from './ConfigDrawer'
+import ConfigDrawer from './config-drawer'
 import SettingsIcon from '@mui/icons-material/Settings'
 import { IconButton } from '@mui/material'
 

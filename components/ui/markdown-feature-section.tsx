@@ -6,14 +6,14 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import classes from '../../styles/AboutGrowForever.module.css'
+import classes from '../../styles/about-growforever.module.css'
 import clsx from 'clsx'
 
 const markdownFiles = {
-    inspiration: '/content/app/inspiration.md',
-    techStack: '/content/app/techStack.md',
-    architecture: '/content/app/architecture.md',
-    future: '/content/app/future.md',
+    inspiration: '/content/ui/inspiration.md',
+    techStack: '/content/ui/techStack.md',
+    architecture: '/content/ui/architecture.md',
+    future: '/content/ui/future.md',
 }
 
 const sections = [

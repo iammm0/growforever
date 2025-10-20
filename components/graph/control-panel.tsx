@@ -16,10 +16,10 @@ import {
 import { useState } from 'react'
 import {useMediaQuery, useTheme} from "@mui/system";
 import {MenuIcon} from "lucide-react";
-import ConfigDrawer from "./ConfigDrawer";
-import {useGraphStore} from "../../lib/graphStore";
-import PromptDialog from "./PromptDialog";
-import {useServiceConfigStore} from "../../lib/serviceConfigStore";
+import ConfigDrawer from "./config-drawer";
+import {useGraphStore} from "../../lib/graph-store";
+import PromptDialog from "./prompt-dialog";
+import {useServiceConfigStore} from "../../lib/service-config-store";
 
 export default function ControlPanel() {
     const theme = useTheme()
