@@ -40,7 +40,7 @@ function useLocalStorage<T>(key: string, initialValue: T) {
  * 在小屏（≤ 900px）时提示用户去桌面端体验更好。
  * 支持“本次不再提示/一周内不再提示”，可复制链接在桌面打开。
  */
-export default function MobileDesktopSuggest({
+export default function Suggest({
   storageKey = 'graph_mobile_hint',
 }: {
   desktopUrl?: string
