@@ -21,7 +21,6 @@ web/
 
 - **app**：作为入口层，组合各类组件并连接全局状态。
 - **components**：提供页面可复用的 UI 单元；`graph/GraphCanvas` 读取 `lib/graphStore` 中的节点与边渲染图谱。
-- **hooks**：如 `useSeedApi`，内部使用 `lib/api.ts` 与后端交互，供组件触发数据请求。
 - **context**：例如 `ThemeContext`，向全局提供主题信息，供组件调用以实现暗/亮模式切换。
 - **lib**：封装核心逻辑；`graphStore` 基于 Zustand 管理图状态，`node.ts`、`edge.ts` 等定义数据结构与辅助函数。
 - **types**：集中定义 `GraphNode`、`GraphEdge` 等接口，确保模块间数据类型一致。
