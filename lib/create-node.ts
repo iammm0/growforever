@@ -1,4 +1,4 @@
-import {GraphNodeData} from '../types/graph-node-data'
+import {GraphNodeData} from '@/types/graph-node-data'
 import {NodeMetadata} from './node'
 
 let nodeCount = 0

@@ -10,7 +10,7 @@ import {
     Button,
     Stack,
 } from '@mui/material'
-import { useSeedApi } from '../../hooks/useSeed'
+import { useSeedApi } from '@/hooks/useSeed'
 
 interface PromptDialogProps {
     open: boolean

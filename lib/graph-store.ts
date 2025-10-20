@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { Node, Edge } from 'reactflow'
-import {GrowMode} from "../types/grow-mode";
+import {GrowMode} from "@/types/grow-mode";
 
 const initialRootNode: Node = {
     id: 'root',

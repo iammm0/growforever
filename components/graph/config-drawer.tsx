@@ -3,10 +3,10 @@
 import React, { useState } from 'react'
 import { Drawer, Divider, Tabs, Tab, Box, Typography, IconButton } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
-import { useGraphStore } from '../../lib/graph-store'
+import { useGraphStore } from '@/lib/graph-store'
 import ExpandConfigPanel from './expand-config-panel'
 import styles from '../../styles/config-drawer.module.css'
-import { GrowMode } from '../../types/grow-mode'
+import { GrowMode } from '@/types/grow-mode'
 
 type Props = {
   open: boolean

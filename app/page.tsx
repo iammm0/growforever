@@ -4,7 +4,6 @@ import { Box } from '@mui/material'
 import GrowHero from '@/components/ui/grow-hero'
 import FeatureCard from '@/components/ui/feature-card'
 import { useTheme } from '@mui/system'
-import TornEdge from '@/components/ui/torn-edge'
 import styles from '../styles/grow.module.css'
 
 const features = [

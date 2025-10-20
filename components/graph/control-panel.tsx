@@ -17,9 +17,9 @@ import { useState } from 'react'
 import {useMediaQuery, useTheme} from "@mui/system";
 import {MenuIcon} from "lucide-react";
 import ConfigDrawer from "./config-drawer";
-import {useGraphStore} from "../../lib/graph-store";
+import {useGraphStore} from "@/lib/graph-store";
 import PromptDialog from "./prompt-dialog";
-import {useServiceConfigStore} from "../../lib/service-config-store";
+import {useServiceConfigStore} from "@/lib/service-config-store";
 
 export default function ControlPanel() {
     const theme = useTheme()
