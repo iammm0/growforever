@@ -7,9 +7,6 @@ import CustomThemeProvider from "../context/theme-context";
 import EmotionProvider from '../components/graph/emotion-provider';
 import Footer from "@/components/ui/footer";
 import Navigation from "@/components/ui/navigation";
-import { initApp } from '@/lib/init';
-
-initApp()
 
 export default function RootLayout({
    children,
