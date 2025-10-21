@@ -1,39 +1,49 @@
+/* Config Drawer 样式 */
 .drawerPaper {
   width: 420px;
   padding: 32px;
   box-sizing: border-box;
+  transition: width 0.3s ease; /* 平滑宽度变化 */
 }
+
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
 }
+
 .divider {
   margin: 24px 0;
 }
+
 .tabs {
   margin-bottom: 24px;
 }
+
 .content {
   width: 100%;
   max-width: 440px;
   margin: 0 auto;
   padding: 0 24px 32px;
 }
+
 .modeInfo {
   margin-top: 24px;
 }
+
 .caption {
   color: #6b6b6b;
   font-size: 0.875rem;
   display: block;
   margin-bottom: 4px;
 }
+
 .subtitle {
   font-weight: 600;
   margin-bottom: 12px;
 }
+
 .applyButton {
   margin-top: 12px;
   padding: 10px 20px;
@@ -42,8 +52,40 @@
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, transform 0.1s ease;
 }
+
 .applyButton:hover {
   background-color: #333;
+  transform: scale(1.05); /* 增加轻微放大的悬停效果 */
+}
+
+/* 响应式：小屏幕时调整内边距和宽度 */
+@media (max-width: 768px) {
+  .drawerPaper {
+    width: 320px;  /* 小屏幕时缩小宽度 */
+    padding: 16px;  /* 缩小内边距 */
+  }
+}
+
+@media (max-width: 600px) {
+  .drawerPaper {
+    width: 280px;  /* 更小屏幕时进一步缩小宽度 */
+    padding: 12px;  /* 进一步减少内边距 */
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+
+  .content {
+    max-width: 100%;  /* 小屏幕下使内容充满宽度 */
+    padding: 0 16px 16px;  /* 调整内边距 */
+  }
+
+  .applyButton {
+    padding: 8px 16px;  /* 缩小按钮的内边距 */
+  }
 }
