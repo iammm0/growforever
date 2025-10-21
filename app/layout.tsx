@@ -5,8 +5,8 @@ import React from "react";
 import {usePathname} from "next/navigation";
 import CustomThemeProvider from "../context/theme-context";
 import EmotionProvider from '../components/graph/emotion-provider';
-import Footer from "@/components/ui/footer";
-import Navigation from "@/components/ui/navigation";
+import Footer from "@/components/presentation/footer";
+import Navigation from "@/components/presentation/navigation";
 
 export default function RootLayout({
    children,

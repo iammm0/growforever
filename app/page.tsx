@@ -1,8 +1,8 @@
 'use client'
 
 import { Box } from '@mui/material'
-import GrowHero from '@/components/ui/grow-hero'
-import FeatureCard from '@/components/ui/feature-card'
+import GrowHero from '@/components/presentation/grow-hero'
+import FeatureCard from '@/components/presentation/feature-card'
 import { useTheme } from '@mui/system'
 import styles from '../styles/grow.module.css'
 
