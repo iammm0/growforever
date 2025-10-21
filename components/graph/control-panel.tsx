@@ -1,182 +1,245 @@
 'use client'
+import { Button, Stack, IconButton, Box, FormControl, InputLabel, Select, MenuItem, TextField, FormHelperText, Typography, Badge } from '@mui/material';
+import { useState, useRef, useEffect } from 'react';
+import { useMediaQuery, useTheme } from "@mui/system";
+import { MenuIcon, SettingsIcon, ChevronLeft, ChevronRight, X, Trash2, MessageSquare, Cog } from "lucide-react";
+import { useGraphStore } from "@/core/store/graph-store";
+import { useServiceConfigStore } from "@/core/store/service-store";
+import { cn } from '@/lib/utils';
+import styles from '@/styles/floating-control-panel.module.css';
 
-import {
-    Button,
-    Stack,
-    IconButton,
-    Box,
-    Drawer,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    TextField,
-    FormHelperText,
-} from '@mui/material'
-import { useState } from 'react'
-import {useMediaQuery, useTheme} from "@mui/system";
-import {MenuIcon} from "lucide-react";
-import ConfigDrawer from "./config-drawer";
-import {useGraphStore} from "@/algo/graph-store";
-import PromptDialog from "./prompt-dialog";
-import {useServiceConfigStore} from "@/algo/service-config-store";
+interface ControlPanelProps {
+  onPromptOpen?: () => void
+  onConfigOpen?: () => void
+}
 
-export default function ControlPanel() {
-    const theme = useTheme()
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
-    const [menuOpen, setMenuOpen] = useState(false)
+export default function ControlPanel({ onPromptOpen, onConfigOpen }: ControlPanelProps) {
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const [expanded, setExpanded] = useState(false); // 控制是否展开
+    const [isVisible, setIsVisible] = useState(true); // 控制面板是否可见
+    const [isDragging, setIsDragging] = useState(false); // 拖拽状态
+    const [position, setPosition] = useState({ x: 20, y: 20 }); // 面板位置
+    const [dragStart, setDragStart] = useState({ x: 0, y: 0 }); // 拖拽起始位置
+    const panelRef = useRef<HTMLDivElement>(null);
 
-    const { reset } = useGraphStore()
+    const { reset, growMode } = useGraphStore();
+    const { gptService, gptEndpoint, gnnService, gnnEndpoint, setGptService, setGptEndpoint, setGnnService, setGnnEndpoint } = useServiceConfigStore();
 
-    const [promptOpen, setPromptOpen] = useState(false)
-    const {
-        gptService,
-        gptEndpoint,
-        gnnService,
-        gnnEndpoint,
-        setGptService,
-        setGptEndpoint,
-        setGnnService,
-        setGnnEndpoint,
-    } = useServiceConfigStore()
+    // 拖拽功能
+    const handleMouseDown = (e: React.MouseEvent) => {
+        if (e.target === e.currentTarget || (e.target as HTMLElement).closest('[data-drag-handle]')) {
+            setIsDragging(true);
+            setDragStart({
+                x: e.clientX - position.x,
+                y: e.clientY - position.y
+            });
+        }
+    };
 
-    // Drawer 控制
-    const [drawerOpen, setDrawerOpen] = useState(false)
+    useEffect(() => {
+        const handleMouseMove = (e: MouseEvent) => {
+            if (isDragging) {
+                const newX = e.clientX - dragStart.x;
+                const newY = e.clientY - dragStart.y;
+                
+                // 限制在视窗内
+                const maxX = window.innerWidth - (expanded ? 320 : 60);
+                const maxY = window.innerHeight - 60;
+                
+                setPosition({
+                    x: Math.max(0, Math.min(newX, maxX)),
+                    y: Math.max(0, Math.min(newY, maxY))
+                });
+            }
+        };
+
+        const handleMouseUp = () => {
+            setIsDragging(false);
+        };
+
+        if (isDragging) {
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+        }
+
+        return () => {
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+        };
+    }, [isDragging, dragStart, expanded]);
+
+    // 键盘快捷键
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.ctrlKey && e.key === 'b') {
+                e.preventDefault();
+                setIsVisible(!isVisible);
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [isVisible]);
+
+    if (!isVisible) {
+        return (
+            <button
+                onClick={() => setIsVisible(true)}
+                className={styles.hideButton}
+            >
+                <MenuIcon className={styles.icon} />
+            </button>
+        );
+    }
 
     return (
-        <Box
-            sx={{
-                px: isMobile ? 1.5 : 3,
-                py: isMobile ? 1 : 2,
-                width: '100%',
+        <div
+            ref={panelRef}
+            className={cn(
+                styles.panel,
+                theme.palette.mode === 'dark' ? styles.dark : styles.light,
+                expanded ? styles.expanded : styles.collapsed,
+                isDragging && styles.dragging
+            )}
+            style={{
+                left: position.x,
+                top: position.y,
             }}
+            onMouseDown={handleMouseDown}
         >
-            <>
-                {isMobile ? (
-                    <>
-                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-                            <IconButton onClick={() => setMenuOpen(true)} color="primary">
-                                <MenuIcon />
-                            </IconButton>
-                        </Box>
+            {/* 拖拽句柄 */}
+            <div 
+                className={cn(styles.dragHandle, !expanded && styles.collapsed)}
+                data-drag-handle
+            >
+                {expanded && (
+                    <h3 className={styles.title}>控制面板</h3>
+                )}
+                <div className={styles.controls}>
+                    <button
+                        className={styles.controlButton}
+                        onClick={() => setExpanded(!expanded)}
+                        title={expanded ? '收起' : '展开'}
+                    >
+                        {expanded ? (
+                            <ChevronLeft className={styles.icon} />
+                        ) : (
+                            <ChevronRight className={styles.icon} />
+                        )}
+                    </button>
+                    <button
+                        className={styles.controlButton}
+                        onClick={() => setIsVisible(false)}
+                        title="隐藏面板"
+                    >
+                        <X className={styles.icon} />
+                    </button>
+                </div>
+            </div>
 
-                        <Drawer anchor="right" open={menuOpen} onClose={() => setMenuOpen(false)}>
-                            <Box sx={{ width: 260, p: 2 }}>
-                                <Stack spacing={1}>
-                                    <FormControl fullWidth>
-                                        <InputLabel>GPT 服务</InputLabel>
-                                        <Select
-                                            value={gptService}
-                                            label="GPT 服务"
-                                            onChange={(e) => setGptService(e.target.value)}
-                                        >
-                                            <MenuItem value="default">默认</MenuItem>
-                                            <MenuItem value="custom">自定义</MenuItem>
-                                        </Select>
-                                        <FormHelperText>支持配置远程 GPT 推理地址</FormHelperText>
-                                    </FormControl>
-                                    <TextField
-                                        label="GPT 服务地址"
-                                        value={gptEndpoint}
-                                        onChange={(e) => setGptEndpoint(e.target.value)}
-                                        size="small"
-                                        fullWidth
-                                        placeholder="https://your-gpt-service/api"
-                                        sx={{ mt: 1 }}
-                                        disabled={gptService !== 'custom'}
-                                    />
-                                    <FormControl fullWidth>
-                                        <InputLabel>GNN 服务</InputLabel>
-                                        <Select
-                                            value={gnnService}
-                                            label="GNN 服务"
-                                            onChange={(e) => setGnnService(e.target.value)}
-                                        >
-                                            <MenuItem value="default">默认</MenuItem>
-                                            <MenuItem value="custom">自定义</MenuItem>
-                                        </Select>
-                                        <FormHelperText>允许连接自托管的图网络服务</FormHelperText>
-                                    </FormControl>
-                                    <TextField
-                                        label="GNN 服务地址"
-                                        value={gnnEndpoint}
-                                        onChange={(e) => setGnnEndpoint(e.target.value)}
-                                        size="small"
-                                        fullWidth
-                                        placeholder="https://your-gnn-service/api"
-                                        sx={{ mt: 1 }}
-                                        disabled={gnnService !== 'custom'}
-                                    />
-                                    <Button variant="contained" fullWidth onClick={() => setPromptOpen(true)}>
-                                        打开提示词
-                                    </Button>
-                                    <Button variant="outlined" fullWidth color="error" onClick={reset}>
-                                        🗑️ 清空画布
-                                    </Button>
-                                </Stack>
-                            </Box>
-                        </Drawer>
+            {/* 面板内容 */}
+            <div className={cn(styles.content, !expanded && styles.collapsed)}>
+                {expanded ? (
+                    <>
+                        {/* 当前模式显示 */}
+                        <div className={styles.modeSection}>
+                            <div className={styles.modeInfo}>
+                                <span className={styles.modeLabel}>当前模式</span>
+                                <Badge className={styles.modeBadge}>
+                                    {growMode === 'manual' ? '手动' : growMode === 'free' ? '自由' : '狂暴'}
+                                </Badge>
+                            </div>
+                        </div>
+
+                        <div className={styles.separator} />
+
+                        {/* GPT 服务配置 */}
+                        <div className={styles.configSection}>
+                            <label className={styles.label}>GPT 服务</label>
+                            <FormControl fullWidth size="small">
+                                <Select
+                                    value={gptService}
+                                    onChange={(e) => setGptService(e.target.value)}
+                                    className={styles.select}
+                                >
+                                    <MenuItem value="default">默认</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </div>
+
+                        {/* GNN 服务配置 */}
+                        <div className={styles.configSection}>
+                            <label className={styles.label}>GNN 服务</label>
+                            <FormControl fullWidth size="small">
+                                <Select
+                                    value={gnnService}
+                                    onChange={(e) => setGnnService(e.target.value)}
+                                    className={styles.select}
+                                >
+                                    <MenuItem value="default">默认</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </div>
+
+                        <div className={styles.separator} />
+
+                        {/* 操作按钮 */}
+                        <div className={styles.actions}>
+                            <button
+                                onClick={onPromptOpen}
+                                className={styles.actionButton}
+                            >
+                                <MessageSquare className={styles.icon} />
+                                打开提示词
+                            </button>
+                            <button
+                                onClick={onConfigOpen}
+                                className={styles.actionButton}
+                            >
+                                <Cog className={styles.icon} />
+                                高级配置
+                            </button>
+                            <button
+                                onClick={reset}
+                                className={cn(styles.actionButton, styles.destructive)}
+                            >
+                                <Trash2 className={styles.icon} />
+                                清空画布
+                            </button>
+                        </div>
+
+                        {/* 快捷键提示 */}
+                        <div className={styles.shortcutHint}>
+                            按 Ctrl+B 隐藏面板
+                        </div>
                     </>
                 ) : (
-                    <Stack
-                        direction="row"
-                        spacing={2}
-                        alignItems="center"
-                        justifyContent="center"
-                        sx={{ mb: 2, flexWrap: 'wrap' }}
-                    >
-                        <FormControl sx={{ minWidth: 160 }} size="small">
-                            <InputLabel>GPT 服务选项</InputLabel>
-                            <Select
-                                value={gptService}
-                                label="GPT 服务"
-                                onChange={(e) => setGptService(e.target.value)}
-                            >
-                                <MenuItem value="default">TGT-TextGeneration</MenuItem>
-                                <MenuItem value="custom">自定义</MenuItem>
-                            </Select>
-                        </FormControl>
-                        <TextField
-                            label="GPT 服务地址"
-                            value={gptEndpoint}
-                            onChange={(e) => setGptEndpoint(e.target.value)}
-                            size="small"
-                            sx={{ minWidth: 200 }}
-                            placeholder="https://your-gpt-service/api"
-                            disabled={gptService !== 'custom'}
-                        />
-                        <FormControl sx={{ minWidth: 160 }} size="small">
-                            <InputLabel>GNN 服务选项</InputLabel>
-                            <Select
-                                value={gnnService}
-                                label="GNN 服务"
-                                onChange={(e) => setGnnService(e.target.value)}
-                            >
-                                <MenuItem value="default">TGT-Text2Graph</MenuItem>
-                                <MenuItem value="custom">自定义</MenuItem>
-                            </Select>
-                        </FormControl>
-                        <TextField
-                            label="GNN 服务地址"
-                            value={gnnEndpoint}
-                            onChange={(e) => setGnnEndpoint(e.target.value)}
-                            size="small"
-                            sx={{ minWidth: 200 }}
-                            placeholder="https://your-gnn-service/api"
-                            disabled={gnnService !== 'custom'}
-                        />
-                        <Button variant="contained" onClick={() => setPromptOpen(true)}>
-                            打开提示词
-                        </Button>
-                        <Button variant="outlined" color="error" onClick={reset}>
-                            清空画布
-                        </Button>
-                    </Stack>
+                    <div className={cn(styles.actions, styles.collapsed)}>
+                        <button
+                            className={cn(styles.actionButton, styles.collapsed)}
+                            onClick={onPromptOpen}
+                            title="打开提示词"
+                        >
+                            <MessageSquare className={styles.icon} />
+                        </button>
+                        {/*<button*/}
+                        {/*    className={cn(styles.actionButton, styles.collapsed)}*/}
+                        {/*    onClick={onConfigOpen}*/}
+                        {/*    title="高级配置"*/}
+                        {/*>*/}
+                        {/*    <Cog className={styles.icon} />*/}
+                        {/*</button>*/}
+                        <button
+                            className={cn(styles.actionButton, styles.collapsed)}
+                            onClick={reset}
+                            title="清空画布"
+                        >
+                            <Trash2 className={styles.icon} />
+                        </button>
+                    </div>
                 )}
-
-                <PromptDialog open={promptOpen} onClose={() => setPromptOpen(false)} />
-                <ConfigDrawer open={drawerOpen} closeAction={() => setDrawerOpen(false)} />
-            </>
-        </Box>
+            </div>
+        </div>
     )
 }
