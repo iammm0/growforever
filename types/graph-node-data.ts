@@ -1,4 +1,4 @@
-import {NodeMetadata} from '@/algo/node'
+import {NodeMetadata} from '@/core/model/node'
 
 export interface GraphNodeData {
     title: string
@@ -7,4 +7,9 @@ export interface GraphNodeData {
     highlight?: boolean
     color?: string
     role: string
+    depth?: number
+    prompt?: string
+    order?: number | string
+    magnified?: boolean
+    expandedText?: string
 }
