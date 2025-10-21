@@ -1,175 +1,309 @@
-# GrowForever 前端
+# GrowForever - 永恒之森
 
-**GrowForever** 是一个基于知识图谱的可视化与交互平台，前端部分使用 **Next.js** 构建。当前版本的前端功能聚焦于图谱渲染、种子与节点的管理、图结构的扩展等核心功能。
+> 模糊意味着复杂，精确意味着简单。  
+> Ambiguity breeds difficulty; Precision fosters simplicity.
 
-## 目录
+一个基于 AI 的思维图谱构建工具，通过图结构管理和大模型生成能力，打造类人智能认知体验。从一颗想法的种子开始，让思维在永恒之森中自由生长。
 
-- [项目结构](#项目结构)
-- [模块概述](#模块概述)
-- [数据流概述](#数据流概述)
-- [已实现功能](#已实现功能)
-- [如何运行](#如何运行)
-- [贡献指南](#贡献指南)
+## 🌟 项目特色
 
-------
+### 核心功能
+- **思维种子播种**：从一个想法开始，自动展开思维的枝叶
+- **多维连接探索**：探索一个事物与多个领域的交汇点，让复杂变清晰
+- **三种成长模式**：自由、狂暴、手动模式，模拟不同的思维节奏
+- **实时视觉反馈**：每个节点都是认知的一部分，实时可视化思考路径
+- **AI 文本扩展**：结合大模型生成能力与结构化思维管理
 
-## 项目结构
+### 技术亮点
+- **图结构 AI**：融合 GPT 与图神经网络，智能拆解心理活动
+- **多数据库架构**：PostgreSQL + Neo4j + Qdrant 三重存储
+- **现代前端技术栈**：Next.js 15 + ReactFlow + Framer Motion
+- **响应式设计**：支持桌面端和移动端，优雅的黑白主题
 
-项目采用模块化结构，旨在将各个功能区域清晰分离，便于开发和维护。
+## 🚀 快速开始
 
-```
-web/
-├── app/              # Next.js App Router 页面与布局
-├── components/       # 可复用 UI 组件，按功能划分为不同模块
-├── context/          # React Contexts（例如主题管理）
-├── hooks/            # 自定义 Hook，处理与后端 API 的交互
-├── lib/              # 核心库：HTTP 封装、图状态管理、数据模型与算法
-├── public/           # 静态资源（图片、图标等）
-├── styles/           # CSS Modules 和全局样式
-├── types/            # TypeScript 类型定义，描述图节点、边和应用状态
-└── package.json      # 前端依赖与脚本
-```
+### 环境要求
+- Node.js 18+ 
+- Docker & Docker Compose
+- PostgreSQL 数据库
+- Neo4j 图数据库
+- Qdrant 向量数据库
 
-------
+### 安装步骤
 
-## 模块概述
-
-### `app/`
-
-该目录包含 Next.js 页面和布局组件，作为应用的入口点。
-
-- `app/graph/page.tsx`：图谱的主要页面，加载 `GraphCanvas` 组件来展示图谱。
-
-### `components/`
-
-包含可复用的 UI 组件，按功能分成不同的目录：
-
-- `graph/`：与图谱渲染相关的组件，如 `GraphCanvas` 用于显示节点和边的可视化图谱。
-- `overall/`：应用中的通用 UI 组件，例如 `Dialog`、`Button` 等。
-
-### `context/`
-
-包含 **React Contexts**，用于管理全局状态（例如主题切换）。它们可以跨组件传递数据，如全局的主题设置。
-
-- `ThemeContext`：提供应用的主题信息（例如暗模式和亮模式），供所有组件订阅。
-
-### `hooks/`
-
-自定义 React Hook，用于与后端 API 和业务逻辑交互。
-
-- `useSeedApi`：处理与后端的交互，用于创建和扩展种子、节点等。
-
-### `lib/`
-
-核心库，封装了与图状态、API 请求和图谱算法相关的逻辑。
-
-- `graphStore`：通过 Zustand 管理图谱的节点和边状态。
-- `api.ts`：封装了与后端的 HTTP 请求逻辑。
-- `node.ts`、`edge.ts`：这些文件定义了图谱中节点和边的数据结构与辅助函数。
-
-### `types/`
-
-包含 TypeScript 类型定义，确保数据结构的一致性和类型安全。
-
-- `GraphNode`：定义节点的结构。
-- `GraphEdge`：定义边的结构。
-
-### `styles/`
-
-包含 CSS 模块和全局样式，每个组件都有自己的样式文件，并且也包含了一些全局的样式（例如主题相关样式）。
-
-### `public/`
-
-存放静态资源，如图片、图标、字体等。这些资源可以在应用中直接引用。
-
-------
-
-## 数据流概述
-
-GrowForever 前端的模块通过以下方式进行交互和数据更新：
-
-1. **图谱可视化**：
-   - 用户访问图谱页面（`app/graph/page.tsx`），`GraphCanvas` 组件读取并渲染图数据。
-   - 图谱的数据通过 `useGraphStore` 从全局状态中获取，显示节点和边的可视化效果。
-2. **状态管理**：
-   - `GraphCanvas` 使用 `useGraphStore` 来读取和更新图节点和边的状态。
-   - 图谱的状态被集中管理，当用户执行某些操作时，图状态会更新并重新渲染 UI。
-3. **API 交互**：
-   - 用户操作（如创建种子、扩展节点）会触发 `useSeedApi` Hook，它会调用后端 API，并更新图谱的状态。
-   - 后端返回的数据会触发全局状态更新，从而重新渲染图谱。
-4. **全局主题管理**：
-   - `ThemeContext` 管理全局主题（例如暗模式/亮模式），它为所有组件提供统一的主题信息，并且在主题切换时进行响应。
-
-------
-
-## 已实现功能
-
-### 1. **种子与节点管理**
-
-- **创建种子**：通过 UI 提供种子标题和描述，并与后端 API 交互，成功后生成新种子并显示在 UI 上。
-- **扩展种子**：根据用户输入的提示词，通过扩展逻辑生成更多信息，并将其关联到相应的种子上。
-- **节点操作**：用户可以在图谱中创建节点，进行扩展、编辑等操作，并通过状态管理实时更新视图。
-
-### 2. **图谱交互**
-
-- **图谱渲染**：`GraphCanvas` 组件负责根据图谱数据动态渲染图节点和图边，并支持交互式操作。
-- **图状态管理**：通过 Zustand 管理图的状态（节点、边和图谱的其他元素），确保各个组件的数据同步。
-
-### 3. **主题管理**
-
-- **暗/亮模式切换**：全局主题设置（暗/亮模式）由 `ThemeContext` 提供，所有页面和组件自动响应主题变化。
-
-------
-
-## 如何运行
-
-### 前提条件
-
-- **Node.js**（v16.x 或更高版本）
-- **Npm**（可选，推荐使用）
-
-### 安装依赖
-
-运行以下命令安装项目依赖：
-
+1. **克隆项目**
 ```bash
-yarn install
-# 或者使用 npm
+git clone <repository-url>
+cd growforever-web
+```
+
+2. **安装依赖**
+```bash
 npm install
 ```
 
-### 启动开发服务器
+3. **配置环境变量**
+创建 `.env.local` 文件：
+```env
+# 数据库配置
+DATABASE_URL="postgresql://postgres:password@localhost:5432/growforever"
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=password
+POSTGRES_DB=growforever
+POSTGRES_PORT=5432
 
-要启动开发服务器，运行：
+# Neo4j 配置
+NEO4J_URI="bolt://localhost:7687"
+NEO4J_USER=neo4j
+NEO4J_PASSWORD=password
 
+# Qdrant 配置
+QDRANT_URL="http://localhost:6333"
+QDRANT_COLLECTION="growforever"
+QDRANT_VECTOR_SIZE=1536
+QDRANT_DISTANCE=Cosine
+
+# 其他配置
+NODE_ENV=development
+```
+
+4. **启动数据库服务**
 ```bash
-yarn dev
-# 或者使用 npm
+docker-compose up -d
+```
+
+5. **初始化数据库**
+```bash
+# 生成 Prisma 客户端
+npx prisma generate
+
+# 运行数据库迁移
+npx prisma db push
+```
+
+6. **启动开发服务器**
+```bash
 npm run dev
 ```
 
-开发服务器将在 `http://localhost:3000` 启动。
+访问 [http://localhost:3000](http://localhost:3000) 开始使用！
 
-------
+## 📁 项目结构
 
-## 贡献指南
+```
+growforever-web/
+├── algo/                    # 算法核心
+│   ├── edge.ts            # 边关系处理
+│   ├── emotion-cache.ts   # 情感缓存
+│   ├── graph-store.ts     # 图状态管理
+│   ├── node.ts            # 节点处理
+│   ├── seed.ts            # 种子管理
+│   └── simulate-auto-expand.ts  # 自动扩展模拟
+├── app/                    # Next.js App Router
+│   ├── api/               # API 路由
+│   │   ├── edges/        # 边操作 API
+│   │   ├── expand/       # 扩展 API
+│   │   ├── infra/        # 基础设施 API
+│   │   ├── nodes/        # 节点操作 API
+│   │   ├── search/       # 搜索 API
+│   │   └── seeds/        # 种子管理 API
+│   ├── graph/            # 图谱页面
+│   ├── expand/           # 文本扩展页面
+│   └── layout.tsx        # 根布局
+├── components/            # React 组件
+│   ├── graph/            # 图谱相关组件
+│   │   ├── graph-canvas.tsx      # 主画布
+│   │   ├── thought-card.tsx     # 思维卡片
+│   │   ├── control-panel.tsx    # 控制面板
+│   │   └── expand-options-popover.tsx  # 扩展选项
+│   └── ui/               # 通用 UI 组件
+├── lib/                  # 工具库
+│   ├── db.ts            # 数据库连接
+│   ├── neo4j.ts         # Neo4j 操作
+│   ├── qdrant.ts        # Qdrant 向量数据库
+│   └── embedding.ts     # 向量嵌入
+├── hooks/               # 自定义 Hooks
+├── types/               # TypeScript 类型定义
+├── styles/              # CSS 模块样式
+└── prisma/              # 数据库模式
+```
 
-我们欢迎大家为 **GrowForever** 项目贡献代码！如果你有兴趣参与， 请按照以下步骤：
+## 🎯 核心功能详解
 
-1. Fork 该仓库。
-2. 创建一个新分支 (`git checkout -b feature-name`)。
-3. 完成你的修改。
-4. 进行测试。
-5. 提交 PR，说明你的修改内容和原因。
+### 1. 思维图谱构建
 
-------
+**种子创建**
+- 用户输入一个想法作为根节点
+- 系统自动分析并生成相关概念
+- 支持多种节点类型：想法、记忆、情感、特征、事件
 
-**GrowForever** 的前端项目结构已经通过模块化的方式进行了清晰的划分，确保了各层之间的职责清晰。在团队开发中，模块化的设计有助于快速开发和维护。如果你有任何问题或建议，欢迎提交 Issue 或直接与我们联系。
+**自动扩展**
+- **自由模式**：温和的自动扩展，适合深度思考
+- **狂暴模式**：快速爆发式扩展，适合脑暴
+- **手动模式**：完全手动控制，精确操作
 
-------
+**节点关系**
+- 因果关系：A 导致 B
+- 时序关系：A 在 B 之前
+- 关联关系：A 与 B 相关
+- 用户自定义关系
 
-### ✨ **未来改进**
+### 2. AI 文本扩展
 
-- **实时更新**：集成 WebSocket 或服务器推送事件（SSE）以实现实时图谱更新。
-- **用户认证**：实现用户认证和授权，支持个人图谱存储和协作功能。
-- **性能优化**：提升大规模图谱渲染性能，支持更复杂的数据操作。
+**多种模式**
+- **改写模式**：保持原意，优化表达
+- **续写模式**：延续风格，扩展内容
+- **摘要模式**：提炼要点，精简表达
+
+**高级功能**
+- 流式输出：实时显示生成过程
+- 参数调节：温度、最大长度等
+- 提示词优化：智能提示词生成
+- 批量处理：支持大量文本处理
+
+### 3. 数据存储架构
+
+**PostgreSQL (Prisma)**
+- 存储基础数据：种子、节点、边
+- 支持复杂查询和事务
+- 数据一致性和完整性
+
+**Neo4j 图数据库**
+- 存储图结构关系
+- 高效的图遍历算法
+- 支持复杂图查询
+
+**Qdrant 向量数据库**
+- 存储文本向量嵌入
+- 语义相似度搜索
+- 支持高维向量操作
+
+## 🛠️ 技术栈
+
+### 前端技术
+- **Next.js 15**：React 全栈框架，App Router
+- **React 19**：最新 React 版本
+- **TypeScript**：类型安全的 JavaScript
+- **Tailwind CSS**：原子化 CSS 框架
+- **Material-UI**：React 组件库
+- **ReactFlow**：图可视化库
+- **Framer Motion**：动画库
+- **Zustand**：轻量级状态管理
+
+### 后端技术
+- **Next.js API Routes**：服务端 API
+- **Prisma**：数据库 ORM
+- **PostgreSQL**：关系型数据库
+- **Neo4j**：图数据库
+- **Qdrant**：向量数据库
+
+### 开发工具
+- **ESLint**：代码质量检查
+- **Prettier**：代码格式化
+- **Docker**：容器化部署
+- **Turbopack**：快速构建工具
+
+## 🎨 界面设计
+
+### 设计理念
+- **极简主义**：清晰的视觉层次，减少认知负担
+- **响应式设计**：适配各种设备尺寸
+- **暗色模式**：支持系统主题切换
+- **流畅动画**：提升用户体验
+
+### 主要页面
+1. **首页**：产品介绍和功能展示
+2. **图谱页面**：主要的思维图谱构建界面
+3. **扩展页面**：AI 文本扩展工具
+4. **设置页面**：个性化配置选项
+
+## 🔧 开发指南
+
+### 本地开发
+```bash
+# 安装依赖
+npm install
+
+# 启动开发服务器
+npm run dev
+
+# 构建生产版本
+npm run build
+
+# 启动生产服务器
+npm start
+
+# 代码检查
+npm run lint
+```
+
+### 数据库操作
+```bash
+# 查看数据库状态
+npx prisma studio
+
+# 重置数据库
+npx prisma db push --force-reset
+
+# 生成 Prisma 客户端
+npx prisma generate
+```
+
+### Docker 部署
+```bash
+# 构建镜像
+docker build -t growforever-web .
+
+# 运行容器
+docker run -p 3000:3000 growforever-web
+```
+
+## 📊 性能优化
+
+### 前端优化
+- **代码分割**：按需加载组件
+- **图片优化**：WebP 格式，懒加载
+- **缓存策略**：合理的缓存配置
+- **Bundle 分析**：优化打包体积
+
+### 后端优化
+- **数据库索引**：优化查询性能
+- **连接池**：复用数据库连接
+- **缓存机制**：减少重复计算
+- **异步处理**：提升响应速度
+
+## 🤝 贡献指南
+
+### 开发流程
+1. Fork 项目
+2. 创建功能分支
+3. 提交代码
+4. 创建 Pull Request
+
+### 代码规范
+- 使用 TypeScript 严格模式
+- 遵循 ESLint 规则
+- 编写单元测试
+- 更新文档
+
+## 📝 更新日志
+
+### v1.0.0 (2025-10-21)
+- 🎉 初始版本发布
+- ✨ 思维图谱构建功能
+- ✨ AI 文本扩展工具
+- ✨ 三种成长模式
+- ✨ 响应式设计
+- ✨ 暗色模式支持
+
+## 📄 许可证
+
+本项目采用 [MIT 许可证](LICENSE)。
+
+## 🙏 致谢
+
+感谢所有为这个项目做出贡献的开发者和用户！
+
+---
+
+**GrowForever** - 让思维在永恒之森中自由生长 🌱
