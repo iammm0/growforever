@@ -2,7 +2,7 @@
 
 import { Node } from 'reactflow'
 import { nanoid } from 'nanoid'
-import {useGraphStore} from "./graph-store";
+import {useGraphStore} from "../store/graph-store";
 
 function getRandomInt(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1)) + min
@@ -99,7 +99,7 @@ async function expandRecursively(
     }
 }
 
-export async function simulateAutoExpand(rootId: string) {
+export async function autoExpand(rootId: string) {
     const {
         growMode,
         nodes,

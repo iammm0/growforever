@@ -10,7 +10,7 @@ const initialRootNode: Node = {
     data: {
         title: '种子',
         description: '一切从一个想法开始。',
-        node_metadata: { tags: ['AI', '思维链'] },
+        node_metadata: { tags: ['开心', '兴奋'] },
         highlight: true,
         role: 'seed',
         depth: 0,
@@ -20,7 +20,7 @@ const initialRootNode: Node = {
     },
 }
 
-// 👇 示例初始配置
+// 示例初始配置
 const defaultConfig: Record<GrowMode, AutoExpandConfig> = {
     free: {
         maxDepth: 4,
