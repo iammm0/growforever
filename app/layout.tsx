@@ -3,8 +3,7 @@
 import './globals.css'
 import React from "react";
 import {usePathname} from "next/navigation";
-import CustomThemeProvider from "../context/theme-context";
-import EmotionProvider from '../components/graph/emotion-provider';
+import Providers from "./providers";
 import Footer from "@/components/presentation/footer";
 import Navigation from "@/components/presentation/navigation";
 
@@ -26,15 +25,13 @@ export default function RootLayout({
             <title>永恒之森</title>
         </head>
         <body>
-        <CustomThemeProvider>
-            <EmotionProvider>
-                <div className="layoutContainer">
-                    {!hideHeaderFooter && <Navigation />}
-                    <main className="mainContent">{children}</main>
-                    {!hideHeaderFooter && <Footer />}
-                </div>
-            </EmotionProvider>
-        </CustomThemeProvider>
+        <Providers>
+            <div className="layoutContainer">
+                {!hideHeaderFooter && <Navigation />}
+                <main className="mainContent">{children}</main>
+                {!hideHeaderFooter && <Footer />}
+            </div>
+        </Providers>
         </body>
         </html>
     )
