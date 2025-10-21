@@ -1,7 +1,7 @@
 'use client'
 
 import { Box, Button, Stack, Typography } from '@mui/material'
-import {useGraphStore} from "@/algo/graph-store";
+import {useGraphStore} from "@/core/store/graph-store";
 
 const layoutNames = {
     tree: '🌲 树状',

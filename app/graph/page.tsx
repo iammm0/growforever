@@ -1,30 +1,61 @@
 'use client'
+import { useState } from 'react'
+import { ReactFlowProvider } from 'reactflow'
 import GraphCanvas from '../../components/graph/graph-canvas'
-import {AppBar, Box, Toolbar} from '@mui/material'
-import {ReactFlowProvider} from "reactflow";
-import ControlPanel from "../../components/graph/control-panel";
-import Suggest from "@/components/presentation/suggest";
+import ControlPanel from '../../components/graph/control-panel'
+import ConfigDrawer from '../../components/graph/config-drawer'
+import Suggest from "@/components/presentation/suggest"
+import PromptDialog from '../../components/graph/prompt-dialog' // 导入 PromptDialog
 
 export default function GraphPage() {
-    const desktopUrl =
-    typeof window !== 'undefined' ? window.location.href : 'https://growforver.physicistscard.com/graph'
+    const desktopUrl = typeof window !== 'undefined' ? window.location.href : 'https://growforver.physicistscard.com/graph';
+
+    const [configDrawerOpen, setConfigDrawerOpen] = useState(false);
+    const [openPromptDialog, setOpenPromptDialog] = useState(false); // 新增状态，控制提示词对话框的打开
+
+    const handlePromptOpen = () => {
+        setOpenPromptDialog(true); // 打开提示词对话框
+    };
+
+    const handlePromptClose = () => {
+        setOpenPromptDialog(false); // 关闭提示词对话框
+    };
+
+    const handleConfigOpen = () => {
+        setConfigDrawerOpen(true);
+    };
+
+    const handleConfigClose = () => {
+        setConfigDrawerOpen(false);
+    };
 
     return (
         <>
-        <Suggest desktopUrl={desktopUrl} />
-        <Box display="flex" flexDirection="column" height="100vh">
-            <AppBar position="static" color="default" elevation={1}>
-                <Toolbar>
-                    <ControlPanel />
-                </Toolbar>
-            </AppBar>
-            <Box flex={1} height="100%" width="100%" position="relative" overflow="hidden">
+            <Suggest desktopUrl={desktopUrl} />
+            <div className="relative w-full h-screen overflow-hidden">
+                {/* 浮动控制面板 */}
+                <ControlPanel
+                    onPromptOpen={handlePromptOpen}
+                    onConfigOpen={handleConfigOpen}
+                />
+
+                {/* 配置抽屉 */}
+                <ConfigDrawer
+                    open={configDrawerOpen}
+                    closeAction={handleConfigClose}
+                />
+
+                {/* 图形画布 - 现在占据全屏 */}
                 <ReactFlowProvider>
                     <GraphCanvas />
                 </ReactFlowProvider>
-            </Box>
-        </Box>
+
+                {/* 提示词对话框 */}
+                <PromptDialog
+                    open={openPromptDialog}
+                    onClose={handlePromptClose}
+                />
+            </div>
         </>
     )
 }
-

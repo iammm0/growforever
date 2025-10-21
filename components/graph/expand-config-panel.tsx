@@ -13,7 +13,7 @@ import {
 import { useMediaQuery, useTheme } from '@mui/system'
 import clsx from 'clsx'
 
-import { useGraphStore } from '@/algo/graph-store'
+import { useGraphStore } from '@/core/store/graph-store'
 import { GrowMode } from '@/types/grow-mode'
 import LayoutPresetSelector from './layout-preset-selector'
 
