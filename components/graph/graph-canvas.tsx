@@ -13,32 +13,13 @@ import ReactFlow, {
 } from 'reactflow'
 import type { Node } from 'reactflow'
 import 'reactflow/dist/style.css'
-import {Typography} from "@mui/material";
 import {useTheme} from "@mui/system";
-import {useGraphStore} from "@/algo/graph-store";
+import {useGraphStore} from "@/core/store/graph-store";
 import {nodeTypes} from "@/components/graph/thought-card";
 import ExpandOptionsPopover from "@/components/graph/expand-options-popover";
 
 const VERTICAL_SPACING = 220
 const HORIZONTAL_SPACING = 260
-const AUTO_PROMPT_FALLBACK = '系统自动扩展'
-const MOCK_SUMMARIES = [
-    '系统自动扩展的内容',
-    '与当前主题高度关联的概念',
-    '可能的新领域方向探索',
-    '基于上下文的深度联想',
-    '推演出的潜在逻辑分支',
-    '抽象出的关联元素',
-    '来自AI的启发式推理',
-]
-
-type ExpandActionType = 'related' | 'deep' | 'new'
-
-type ExpandActionPayload = {
-    type: ExpandActionType
-    prompt?: string
-    title?: string
-}
 
 type NodeWithDepth = Node & { data: Node['data'] & { depth?: number; order?: number | string } }
 
@@ -168,129 +149,175 @@ export default function GraphCanvas() {
     const [popoverPosition, setPopoverPosition] = useState<{ x: number; y: number } | null>(null)
     const popoverRef = useRef<HTMLDivElement | null>(null)
     const [hasExpandedSeed, setHasExpandedSeed] = useState(false)
-    const MAX_NODE_COUNT = 100
+    const [isProcessingText, setIsProcessingText] = useState(false)
+    const [isProcessingGNN, setIsProcessingGNN] = useState(false)
     const theme = useTheme()
     const isDark = theme.palette.mode === 'dark'
 
-    const getRandomExpandType = useCallback((): ExpandActionType => {
-        const types: ExpandActionType[] = ['related', 'deep', 'new']
-        return types[Math.floor(Math.random() * types.length)]
-    }, [])
 
-    const handleExpandOption = useCallback(
-        (option: ExpandActionType | ExpandActionPayload) => {
-            if (nodes.length >= MAX_NODE_COUNT) {
-                console.warn('🌪️ 节点数量达到上限，停止自动扩展')
-                return
+    // 文本扩展功能
+    const handleTextExpand = useCallback(async (prompt: string) => {
+        if (!selectedNode) return
+
+        setIsProcessingText(true)
+        try {
+            const response = await fetch('/api/expand', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    mode: 'continue',
+                    input: prompt,
+                    temperature: 0.7,
+                    maxTokens: 1000
+                })
+            })
+
+            if (!response.ok) {
+                throw new Error('文本扩展失败')
             }
 
-            if (!selectedNode) return
+            const data = await response.json()
+            const expandedText = data.text
 
-            const payload: ExpandActionPayload =
-                typeof option === 'string' ? { type: option } : option
-
-            const normalizedPrompt = (payload.prompt ?? '').trim() ||
-                (typeof selectedNode.data?.prompt === 'string' && selectedNode.data.prompt
-                    ? selectedNode.data.prompt
-                    : AUTO_PROMPT_FALLBACK)
-
-            const updatedTitle = payload.title?.trim()
-
-            const newId = `${selectedNode.id}-${Date.now()}`
-
-            const newNode: Node = {
-                id: newId,
-                type: 'thought',
-                position: {
-                    x: selectedNode.position.x,
-                    y: selectedNode.position.y + VERTICAL_SPACING,
-                },
-                data: {
-                    title:
-                        payload.type === 'new'
-                            ? '新想法'
-                            : payload.type === 'deep'
-                            ? '深入扩展'
-                            : '关联概念',
-                    description: MOCK_SUMMARIES[Math.floor(Math.random() * MOCK_SUMMARIES.length)],
-                    node_metadata: { tags: [payload.type] },
-                    highlight: false,
-                    depth: (selectedNode.data?.depth ?? 0) + 1,
-                    prompt: '',
-                    order: Date.now(),
-                    magnified: false,
-                },
-                draggable: false,
-            }
-
-            const newEdge: Edge = {
-                id: `${selectedNode.id}-${newId}`,
-                source: selectedNode.id,
-                target: newId,
-                type: 'default',
-            }
-
-            const updatedEdges = [...edges, newEdge]
-
-            const parentUpdatedNodes = nodes.map((node) => {
+            // 更新节点数据，添加扩展文本
+            const updatedNodes = nodes.map(node => {
                 if (node.id === selectedNode.id) {
                     return {
                         ...node,
-                        draggable: false,
                         data: {
                             ...node.data,
-                            title: updatedTitle || node.data?.title,
-                            prompt: normalizedPrompt,
-                            highlight: true,
-                            magnified: false,
-                        },
+                            expandedText,
+                            prompt,
+                            title: selectedNode.data?.title || '种子'
+                        }
                     }
                 }
-                return {
-                    ...node,
-                    draggable: false,
-                    data: {
-                        ...node.data,
-                        highlight: node.id === 'root' || node.id === selectedNode.id,
-                        magnified: false,
-                    },
-                }
+                return node
             })
 
-            const nodesWithNew = [...parentUpdatedNodes, newNode]
-            const repositionedNodes = repositionNodes(nodesWithNew, updatedEdges)
+            setNodes(updatedNodes)
+            setStoreNodes(() => updatedNodes)
+        } catch (error) {
+            console.error('文本扩展错误:', error)
+            throw error
+        } finally {
+            setIsProcessingText(false)
+        }
+    }, [selectedNode, nodes, setNodes, setStoreNodes])
 
-            setNodes(repositionedNodes)
-            setStoreNodes(() => repositionedNodes)
+    // GNN处理功能
+    const handleGNNProcess = useCallback(async (text: string) => {
+        if (!selectedNode) return
+
+        setIsProcessingGNN(true)
+        try {
+            const response = await fetch('/api/gnn', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    text,
+                    seedId: 1 // 可以从store中获取实际的seedId
+                })
+            })
+
+            if (!response.ok) {
+                throw new Error('GNN处理失败')
+            }
+
+            const gnnData = await response.json()
+            const { nodes: gnnNodes, edges: gnnEdges } = gnnData
+
+            // 转换GNN返回的数据为ReactFlow格式
+            // 先检查现有节点，避免重复ID
+            const existingNodeIds = new Set(nodes.map(node => node.id))
+            const newNodes: Node[] = gnnNodes
+                .filter(gnnNode => !existingNodeIds.has(gnnNode.id)) // 过滤掉已存在的节点
+                .map((gnnNode: any, index: number) => {
+                    // 确保节点ID唯一，如果重复则添加后缀
+                    let nodeId = gnnNode.id
+                    let counter = 1
+                    while (existingNodeIds.has(nodeId)) {
+                        nodeId = `${gnnNode.id}-${counter}`
+                        counter++
+                    }
+                    existingNodeIds.add(nodeId) // 添加到已存在ID集合中
+                    
+                    return {
+                        id: nodeId,
+                        type: 'thought',
+                        position: gnnNode.position || {
+                            x: 300 + (index % 3) * 300,
+                            y: 200 + Math.floor(index / 3) * 200
+                        },
+                        data: {
+                            title: gnnNode.title,
+                            description: gnnNode.description || '',
+                            node_metadata: gnnNode.nodeMetadata || { tags: [gnnNode.type] },
+                            highlight: gnnNode.nodeMetadata?.highlight || false,
+                            depth: 1,
+                            prompt: '',
+                            order: Date.now() + index,
+                            magnified: gnnNode.nodeMetadata?.magnified || false,
+                            role: 'generated'
+                        },
+                        draggable: false,
+                    }
+                })
+
+            // 检查现有边，避免重复边
+            const existingEdgeIds = new Set(edges.map(edge => edge.id))
+            // 创建节点ID映射，用于更新边的source和target
+            const nodeIdMap = new Map<string, string>()
+            newNodes.forEach(node => {
+                // 找到原始ID和实际ID的映射
+                const originalId = node.data.title // 假设title是原始ID
+                nodeIdMap.set(originalId, node.id)
+            })
+            
+            const newEdges: Edge[] = gnnEdges
+                .filter(gnnEdge => !existingEdgeIds.has(gnnEdge.id)) // 过滤掉已存在的边
+                .map((gnnEdge: any) => {
+                    // 更新边的source和target为实际的节点ID
+                    const actualSourceId = nodeIdMap.get(gnnEdge.sourceId) || gnnEdge.sourceId
+                    const actualTargetId = nodeIdMap.get(gnnEdge.targetId) || gnnEdge.targetId
+                    
+                    return {
+                        id: gnnEdge.id,
+                        source: actualSourceId,
+                        target: actualTargetId,
+                        type: 'default',
+                        label: gnnEdge.label,
+                        data: {
+                            type: gnnEdge.type,
+                            properties: gnnEdge.properties
+                        }
+                    }
+                })
+
+            // 更新节点和边
+            const updatedNodes = [...nodes, ...newNodes]
+            const updatedEdges = [...edges, ...newEdges]
+
+            setNodes(updatedNodes)
             setEdges(updatedEdges)
-            addEdgeToStore(newEdge)
+            setStoreNodes(() => updatedNodes)
+            // 逐条加入 store，避免可变参数误用
+            newEdges.forEach((e) => addEdgeToStore(e))
 
+            // 关闭弹窗
             setSelectedNode(null)
             setPopoverPosition(null)
+            setHasExpandedSeed(true)
 
-            if (selectedNode.data?.role === 'seed' && !hasExpandedSeed) {
-                setHasExpandedSeed(true)
-            }
-        },
-        [addEdgeToStore, edges, hasExpandedSeed, nodes, selectedNode, setEdges, setNodes, setStoreNodes],
-    )
+        } catch (error) {
+            console.error('GNN处理错误:', error)
+            throw error
+        } finally {
+            setIsProcessingGNN(false)
+        }
+    }, [selectedNode, nodes, edges, setNodes, setEdges, setStoreNodes, addEdgeToStore])
 
-    useEffect(() => {
-        if (!selectedNode) return
-        if (growMode === 'manual') return
 
-        const interval = setInterval(() => {
-            handleExpandOption({
-                type: getRandomExpandType(),
-                prompt:
-                    typeof selectedNode.data?.prompt === 'string' && selectedNode.data.prompt
-                        ? selectedNode.data.prompt
-                        : AUTO_PROMPT_FALLBACK,
-            })
-        }, growMode === 'fury' ? 200 : 1500)
-
-        return () => clearInterval(interval)
-    }, [getRandomExpandType, growMode, handleExpandOption, selectedNode])
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
@@ -358,9 +385,11 @@ export default function GraphCanvas() {
     const onConnect = useCallback(
         (connection: Connection) => {
             if (!connection.source || !connection.target) return
+            // 生成更唯一的边ID
+            const uniqueId = `${connection.source}-${connection.target}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
             const newEdge: Edge = {
                 ...connection,
-                id: `${connection.source}-${connection.target}-${Date.now()}`,
+                id: uniqueId,
                 source: connection.source,
                 target: connection.target,
                 sourceHandle: connection.sourceHandle ?? undefined,
@@ -381,7 +410,10 @@ export default function GraphCanvas() {
             const latestNode = nodes.find((node) => node.id === clickedNode.id) ?? clickedNode
             setSelectedNode(latestNode)
 
-            if (growMode !== 'manual' && !hasExpandedSeed) {
+            // 对于种子节点，总是显示弹窗
+            const isSeed = latestNode.data?.role === 'seed'
+            
+            if (!isSeed && growMode !== 'manual' && !hasExpandedSeed) {
                 return
             }
 
@@ -397,7 +429,7 @@ export default function GraphCanvas() {
                 ...node,
                 data: {
                     ...node.data,
-                    highlight: node.id === parentId || node.id === 'root',
+                    highlight: node.id === parentId || node.id === 'root' || (isSeed && node.id === latestNode.id),
                 },
             }))
             setNodes(highlighted)
@@ -436,23 +468,6 @@ export default function GraphCanvas() {
             style={{ height: '100vh', width: '100vw', position: 'relative' }}
             className={isDark ? 'dark-flow' : ''}
         >
-            <Typography
-                variant="caption"
-                sx={{
-                    position: 'absolute',
-                    top: 16,
-                    right: 16,
-                    backgroundColor: isDark ? '#1f1f1f' : '#000',
-                    color: isDark ? '#e0e0e0' : '#fff',
-                    padding: '4px 12px',
-                    borderRadius: 4,
-                    fontSize: '12px',
-                    zIndex: 1000,
-                }}
-            >
-                当前模式：{growMode === 'manual' ? '手动模式' : growMode === 'free' ? '自由模式' : '狂暴模式'}
-            </Typography>
-
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
@@ -475,10 +490,12 @@ export default function GraphCanvas() {
                     ref={popoverRef}
                     node={selectedNode}
                     position={popoverPosition}
-                    onExpand={handleExpandOption}
+                    onExpand={() => {}} // 空函数，保持接口兼容
                     onMagnify={handleMagnify}
                     hasExpandedSeed={hasExpandedSeed}
                     isLeaf={selectedNodeIsLeaf}
+                    onTextExpand={handleTextExpand}
+                    onGNNProcess={handleGNNProcess}
                     onClose={() => {
                         setSelectedNode(null)
                         setPopoverPosition(null)
