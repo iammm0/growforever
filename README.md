@@ -98,7 +98,7 @@ growforever-web/
 │   ├── graph-store.ts     # 图状态管理
 │   ├── node.ts            # 节点处理
 │   ├── seed.ts            # 种子管理
-│   └── simulate-auto-expand.ts  # 自动扩展模拟
+│   └── auto-expand.ts  # 自动扩展模拟
 ├── app/                    # Next.js App Router
 │   ├── api/               # API 路由
 │   │   ├── edges/        # 边操作 API
