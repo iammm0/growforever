@@ -16,10 +16,7 @@ const features = [
 ]
 
 export default function Home() {
-  const theme = useTheme()
-  const isDark = theme.palette.mode === 'dark'
-
-  return (
+    return (
     <Box className={styles.page}>
       {/* 顶部 Hero 背景：增加渐变遮罩，提升可读性 */}
       <Box>

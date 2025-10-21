@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+    import { NextResponse } from 'next/server'
 
 // 你也可以换 zod，这里用最小依赖校验以简化落地
 type Body = {
