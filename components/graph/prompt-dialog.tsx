@@ -109,7 +109,7 @@ export default function PromptDialog({ open, onClose, onTextExpand, onGNNProcess
 
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
-            <DialogTitle>种子扩展与知识图谱生成</DialogTitle>
+            <DialogTitle>文本扩展与知识图谱生成</DialogTitle>
             <DialogContent>
                 <Stack spacing={3} sx={{ mt: 1 }}>
                     {error && (
@@ -192,9 +192,9 @@ export default function PromptDialog({ open, onClose, onTextExpand, onGNNProcess
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose}>关闭</Button>
-                <Button onClick={handleCreateSeed} variant="outlined">
-                    新建种子
-                </Button>
+                {/*<Button onClick={handleCreateSeed} variant="outlined">*/}
+                {/*    新建种子*/}
+                {/*</Button>*/}
             </DialogActions>
         </Dialog>
     )
