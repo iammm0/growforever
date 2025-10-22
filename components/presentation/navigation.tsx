@@ -25,7 +25,7 @@ const Navigation: React.FC = () => {
   }
 
   const handleGitHubClick = () => {
-    window.open('https://github.com/iammm0/growforever', '_blank', 'noopener,noreferrer')
+    window.open('https://github.com/iammm0/growforever-web.git', '_blank', 'noopener,noreferrer')
   }
 
   return (
