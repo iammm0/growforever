@@ -17,9 +17,23 @@ import {useTheme} from "@mui/system";
 import {useGraphStore} from "@/core/store/graph-store";
 import {nodeTypes} from "@/components/graph/thought-card";
 import ExpandOptionsPopover from "@/components/graph/expand-options-popover";
+import PromptDialog from "@/components/graph/prompt-dialog";
+import GrowingThoughtNode from './growing-thought-node'
+import GrowingConnectionLine from './growing-connection-line'
 
 const VERTICAL_SPACING = 220
 const HORIZONTAL_SPACING = 260
+
+// 自定义节点和边类型
+const customNodeTypes = {
+  ...nodeTypes,
+  'growing-thought': GrowingThoughtNode,
+  'thought': nodeTypes.thought, // 确保thought类型使用ThoughtCard组件
+}
+
+const customEdgeTypes = {
+  'growing-connection': GrowingConnectionLine,
+}
 
 type NodeWithDepth = Node & { data: Node['data'] & { depth?: number; order?: number | string } }
 
@@ -132,7 +146,17 @@ const repositionNodes = (inputNodes: Node[], inputEdges: Edge[]): Node[] => {
     return Array.from(arranged.values())
 }
 
-export default function GraphCanvas() {
+interface GraphCanvasProps {
+    onPromptDialogOpen?: () => void
+    onPromptDialogClose?: () => void
+    promptDialogOpen?: boolean
+}
+
+export default function GraphCanvas({ 
+    onPromptDialogOpen, 
+    onPromptDialogClose, 
+    promptDialogOpen: externalPromptDialogOpen 
+}: GraphCanvasProps = {}) {
     const {
         nodes: storeNodes,
         edges: storeEdges,
@@ -151,6 +175,15 @@ export default function GraphCanvas() {
     const [hasExpandedSeed, setHasExpandedSeed] = useState(false)
     const [isProcessingText, setIsProcessingText] = useState(false)
     const [isProcessingGNN, setIsProcessingGNN] = useState(false)
+    const [internalPromptDialogOpen, setInternalPromptDialogOpen] = useState(false)
+    const [isProgressiveRendering, setIsProgressiveRendering] = useState(false)
+    const [pendingNodes, setPendingNodes] = useState<any[]>([])
+    const [pendingEdges, setPendingEdges] = useState<any[]>([])
+    const [renderedNodes, setRenderedNodes] = useState<string[]>([])
+    const [renderedEdges, setRenderedEdges] = useState<string[]>([])
+    
+    // 使用外部传入的状态，如果没有则使用内部状态
+    const promptDialogOpen = externalPromptDialogOpen !== undefined ? externalPromptDialogOpen : internalPromptDialogOpen
     const theme = useTheme()
     const isDark = theme.palette.mode === 'dark'
 
@@ -205,6 +238,160 @@ export default function GraphCanvas() {
         }
     }, [selectedNode, nodes, setNodes, setStoreNodes])
 
+    // 渐进式渲染算法
+    const startProgressiveRendering = useCallback(async (gnnNodes: any[], gnnEdges: any[]) => {
+        setIsProgressiveRendering(true)
+        setPendingNodes(gnnNodes)
+        setPendingEdges(gnnEdges)
+        setRenderedNodes([])
+        setRenderedEdges([])
+
+        // 创建节点ID映射和边ID映射
+        const nodeIdMap = new Map<string, string>()
+        const edgeIdMap = new Map<string, string>()
+        const existingNodeIds = new Set(nodes.map(node => node.id))
+        const existingEdgeIds = new Set(edges.map(edge => edge.id))
+        
+        // 转换节点数据，确保ID唯一
+        const processedNodes = gnnNodes.map((gnnNode: any, index: number) => {
+            let nodeId = gnnNode.id
+            let counter = 1
+            while (existingNodeIds.has(nodeId)) {
+                nodeId = `${gnnNode.id}-${counter}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+                counter++
+            }
+            existingNodeIds.add(nodeId)
+            nodeIdMap.set(gnnNode.id, nodeId)
+            
+            return {
+                id: nodeId,
+                originalId: gnnNode.id,
+                type: 'thought', // 使用标准的thought类型，应用ThoughtCard UI
+                position: gnnNode.position || {
+                    x: 300 + (index % 3) * 300,
+                    y: 200 + Math.floor(index / 3) * 200
+                },
+                data: {
+                    title: gnnNode.title,
+                    description: gnnNode.description || `这是通过GNN服务生成的节点：${gnnNode.title}`,
+                    node_metadata: gnnNode.nodeMetadata || { tags: [gnnNode.type] },
+                    highlight: gnnNode.nodeMetadata?.highlight || false,
+                    depth: 1,
+                    prompt: '',
+                    order: Date.now() + index,
+                    magnified: gnnNode.nodeMetadata?.magnified || false,
+                    role: 'generated',
+                    expandedText: gnnNode.description || `节点 "${gnnNode.title}" 的详细信息将在这里显示。`,
+                    isGrowing: true // 标记为生长中
+                },
+                draggable: false,
+            }
+        })
+
+        // 转换边数据，确保ID唯一
+        const processedEdges = gnnEdges.map((gnnEdge: any, index: number) => {
+            let edgeId = gnnEdge.id
+            let counter = 1
+            while (existingEdgeIds.has(edgeId)) {
+                edgeId = `${gnnEdge.id}-${counter}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+                counter++
+            }
+            existingEdgeIds.add(edgeId)
+            edgeIdMap.set(gnnEdge.id, edgeId)
+            
+            return {
+                id: edgeId,
+                originalId: gnnEdge.id,
+                source: nodeIdMap.get(gnnEdge.sourceId) || gnnEdge.sourceId,
+                target: nodeIdMap.get(gnnEdge.targetId) || gnnEdge.targetId,
+                type: 'default', // 使用默认边类型
+                label: gnnEdge.label,
+                data: {
+                    type: gnnEdge.type,
+                    properties: gnnEdge.properties,
+                    isGrowing: true // 标记为生长中
+                }
+            }
+        })
+
+        // 开始渐进式渲染
+        await renderNodesProgressively(processedNodes, processedEdges)
+    }, [nodes, edges, setNodes, setEdges, setStoreNodes, addEdgeToStore])
+
+    // 渐进式渲染节点
+    const renderNodesProgressively = useCallback(async (processedNodes: any[], processedEdges: any[]) => {
+        const RENDER_DELAY = 300 // 每个节点渲染间隔
+        const EDGE_DELAY = 200 // 边渲染延迟
+        const renderedEdgeIds = new Set<string>()
+
+        for (let i = 0; i < processedNodes.length; i++) {
+            const node = processedNodes[i]
+            
+            // 添加节点到画布
+            setNodes(prevNodes => [...prevNodes, node])
+            setStoreNodes(prevNodes => [...prevNodes, node])
+            setRenderedNodes(prev => [...prev, node.id])
+
+            // 等待节点动画完成
+            await new Promise(resolve => setTimeout(resolve, RENDER_DELAY))
+
+            // 渲染与该节点相关的边
+            const relatedEdges = processedEdges.filter(edge => 
+                edge.source === node.id || edge.target === node.id
+            )
+
+            for (const edge of relatedEdges) {
+                if (!renderedEdgeIds.has(edge.id)) {
+                    setEdges(prevEdges => [...prevEdges, edge])
+                    addEdgeToStore(edge)
+                    setRenderedEdges(prev => [...prev, edge.id])
+                    renderedEdgeIds.add(edge.id)
+                    
+                    // 边的渲染延迟
+                    await new Promise(resolve => setTimeout(resolve, EDGE_DELAY))
+                }
+            }
+        }
+
+        // 完成渲染，移除生长标记，并确保生成的节点支持放大查看
+        setNodes(prevNodes => prevNodes.map(node => {
+            // 如果是新生成的节点，确保它们支持放大查看并使用ThoughtCard UI
+            if (node.data?.role === 'generated') {
+                return {
+                    ...node,
+                    type: 'thought', // 确保使用ThoughtCard组件
+                    data: {
+                        ...node.data,
+                        isGrowing: false,
+                        magnified: false, // 初始状态为未放大
+                        // 确保有description和expandedText用于预览
+                        description: node.data.description || `这是通过GNN服务生成的节点：${node.data.title}`,
+                        expandedText: node.data.expandedText || `节点 "${node.data.title}" 的详细信息将在这里显示。`
+                    }
+                }
+            }
+            return {
+                ...node,
+                data: {
+                    ...node.data,
+                    isGrowing: false
+                }
+            }
+        }))
+
+        setEdges(prevEdges => prevEdges.map(edge => ({
+            ...edge,
+            data: {
+                ...edge.data,
+                isGrowing: false
+            }
+        })))
+
+        setIsProgressiveRendering(false)
+        setPendingNodes([])
+        setPendingEdges([])
+    }, [setNodes, setEdges, setStoreNodes, addEdgeToStore])
+
     // GNN处理功能
     const handleGNNProcess = useCallback(async (text: string) => {
         if (!selectedNode) return
@@ -227,82 +414,8 @@ export default function GraphCanvas() {
             const gnnData = await response.json()
             const { nodes: gnnNodes, edges: gnnEdges } = gnnData
 
-            // 转换GNN返回的数据为ReactFlow格式
-            // 先检查现有节点，避免重复ID
-            const existingNodeIds = new Set(nodes.map(node => node.id))
-            const newNodes: Node[] = gnnNodes
-                .filter(gnnNode => !existingNodeIds.has(gnnNode.id)) // 过滤掉已存在的节点
-                .map((gnnNode: any, index: number) => {
-                    // 确保节点ID唯一，如果重复则添加后缀
-                    let nodeId = gnnNode.id
-                    let counter = 1
-                    while (existingNodeIds.has(nodeId)) {
-                        nodeId = `${gnnNode.id}-${counter}`
-                        counter++
-                    }
-                    existingNodeIds.add(nodeId) // 添加到已存在ID集合中
-                    
-                    return {
-                        id: nodeId,
-                        type: 'thought',
-                        position: gnnNode.position || {
-                            x: 300 + (index % 3) * 300,
-                            y: 200 + Math.floor(index / 3) * 200
-                        },
-                        data: {
-                            title: gnnNode.title,
-                            description: gnnNode.description || '',
-                            node_metadata: gnnNode.nodeMetadata || { tags: [gnnNode.type] },
-                            highlight: gnnNode.nodeMetadata?.highlight || false,
-                            depth: 1,
-                            prompt: '',
-                            order: Date.now() + index,
-                            magnified: gnnNode.nodeMetadata?.magnified || false,
-                            role: 'generated'
-                        },
-                        draggable: false,
-                    }
-                })
-
-            // 检查现有边，避免重复边
-            const existingEdgeIds = new Set(edges.map(edge => edge.id))
-            // 创建节点ID映射，用于更新边的source和target
-            const nodeIdMap = new Map<string, string>()
-            newNodes.forEach(node => {
-                // 找到原始ID和实际ID的映射
-                const originalId = node.data.title // 假设title是原始ID
-                nodeIdMap.set(originalId, node.id)
-            })
-            
-            const newEdges: Edge[] = gnnEdges
-                .filter(gnnEdge => !existingEdgeIds.has(gnnEdge.id)) // 过滤掉已存在的边
-                .map((gnnEdge: any) => {
-                    // 更新边的source和target为实际的节点ID
-                    const actualSourceId = nodeIdMap.get(gnnEdge.sourceId) || gnnEdge.sourceId
-                    const actualTargetId = nodeIdMap.get(gnnEdge.targetId) || gnnEdge.targetId
-                    
-                    return {
-                        id: gnnEdge.id,
-                        source: actualSourceId,
-                        target: actualTargetId,
-                        type: 'default',
-                        label: gnnEdge.label,
-                        data: {
-                            type: gnnEdge.type,
-                            properties: gnnEdge.properties
-                        }
-                    }
-                })
-
-            // 更新节点和边
-            const updatedNodes = [...nodes, ...newNodes]
-            const updatedEdges = [...edges, ...newEdges]
-
-            setNodes(updatedNodes)
-            setEdges(updatedEdges)
-            setStoreNodes(() => updatedNodes)
-            // 逐条加入 store，避免可变参数误用
-            newEdges.forEach((e) => addEdgeToStore(e))
+            // 开始渐进式渲染
+            await startProgressiveRendering(gnnNodes, gnnEdges)
 
             // 关闭弹窗
             setSelectedNode(null)
@@ -315,7 +428,7 @@ export default function GraphCanvas() {
         } finally {
             setIsProcessingGNN(false)
         }
-    }, [selectedNode, nodes, edges, setNodes, setEdges, setStoreNodes, addEdgeToStore])
+    }, [selectedNode, startProgressiveRendering])
 
 
 
@@ -410,8 +523,24 @@ export default function GraphCanvas() {
             const latestNode = nodes.find((node) => node.id === clickedNode.id) ?? clickedNode
             setSelectedNode(latestNode)
 
-            // 对于种子节点，总是显示弹窗
+            // 对于种子节点，显示prompt-dialog
             const isSeed = latestNode.data?.role === 'seed'
+            
+            if (isSeed) {
+                if (onPromptDialogOpen) {
+                    onPromptDialogOpen()
+                } else {
+                    setInternalPromptDialogOpen(true)
+                }
+                return
+            }
+
+            // 对于生成的节点，不显示扩展选项，让节点组件自己处理点击事件
+            // 生成的节点会通过ThoughtCard组件的点击事件来显示预览弹窗
+            if (latestNode.data?.role === 'generated') {
+                // 不显示扩展选项弹窗，让节点组件处理点击
+                return
+            }
             
             if (!isSeed && growMode !== 'manual' && !hasExpandedSeed) {
                 return
@@ -435,7 +564,7 @@ export default function GraphCanvas() {
             setNodes(highlighted)
             setStoreNodes(() => highlighted)
         },
-        [edges, growMode, hasExpandedSeed, nodes, setNodes, setStoreNodes],
+        [edges, growMode, hasExpandedSeed, nodes, setNodes, setStoreNodes, onPromptDialogOpen, setInternalPromptDialogOpen],
     )
 
     const handleMagnify = useCallback(
@@ -475,7 +604,8 @@ export default function GraphCanvas() {
                 onEdgesChange={onEdgesChange}
                 onConnect={onConnect}
                 onNodeClick={onNodeClick}
-                nodeTypes={nodeTypes}
+                nodeTypes={customNodeTypes}
+                edgeTypes={customEdgeTypes}
                 fitView
                 panOnDrag
                 zoomOnScroll
@@ -502,6 +632,20 @@ export default function GraphCanvas() {
                     }}
                 />
             )}
+
+            <PromptDialog
+                open={promptDialogOpen}
+                onClose={() => {
+                    if (onPromptDialogClose) {
+                        onPromptDialogClose()
+                    } else {
+                        setInternalPromptDialogOpen(false)
+                    }
+                    setSelectedNode(null)
+                }}
+                onTextExpand={handleTextExpand}
+                onGNNProcess={handleGNNProcess}
+            />
         </div>
     )
 }
