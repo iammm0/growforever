@@ -23,7 +23,7 @@
 ## 🚀 快速开始
 
 ### 环境要求
-- Node.js 18+ 
+- Node.js 22+ 
 - Docker & Docker Compose
 - PostgreSQL 数据库
 - Neo4j 图数据库
