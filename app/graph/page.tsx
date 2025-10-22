@@ -5,7 +5,6 @@ import GraphCanvas from '../../components/graph/graph-canvas'
 import ControlPanel from '../../components/graph/control-panel'
 import ConfigDrawer from '../../components/graph/config-drawer'
 import Suggest from "@/components/presentation/suggest"
-import PromptDialog from '../../components/graph/prompt-dialog' // 导入 PromptDialog
 
 export default function GraphPage() {
     const desktopUrl = typeof window !== 'undefined' ? window.location.href : 'https://growforver.physicistscard.com/graph';
@@ -47,14 +46,12 @@ export default function GraphPage() {
 
                 {/* 图形画布 - 现在占据全屏 */}
                 <ReactFlowProvider>
-                    <GraphCanvas />
+                    <GraphCanvas 
+                        promptDialogOpen={openPromptDialog}
+                        onPromptDialogOpen={handlePromptOpen}
+                        onPromptDialogClose={handlePromptClose}
+                    />
                 </ReactFlowProvider>
-
-                {/* 提示词对话框 */}
-                <PromptDialog
-                    open={openPromptDialog}
-                    onClose={handlePromptClose}
-                />
             </div>
         </>
     )
