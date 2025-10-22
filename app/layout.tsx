@@ -22,7 +22,7 @@ export default function RootLayout({
         <head>
         {/* Emotion/MUI 样式插入点，确保 SSR/CSR 顺序一致 */}
             <meta name="emotion-insertion-point" content="mui-insertion-point" />
-            <title>永恒之森</title>
+            <title>GrowForever-循环生成式知识图谱研究</title>
         </head>
         <body>
         <Providers>
