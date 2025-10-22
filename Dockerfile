@@ -4,7 +4,7 @@ FROM node:22-alpine AS deps
 WORKDIR /app
 
 # 拷贝项目依赖定义文件，利用缓存加速
-COPY ../web/package.json package-lock.json* pnpm-lock.yaml* ./
+COPY ./package.json package-lock.json* pnpm-lock.yaml* ./
 RUN npm install --frozen-lockfile
 
 # 第二步：仅在需要时重建源代码
@@ -36,7 +36,7 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/data ./data
+COPY .env.local ./
 
 # 暴露应用端口
 EXPOSE 3000
