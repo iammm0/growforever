@@ -143,16 +143,16 @@ export default function ControlPanel({ onPromptOpen, onConfigOpen }: ControlPane
                 {expanded ? (
                     <>
                         {/* 当前模式显示 */}
-                        <div className={styles.modeSection}>
-                            <div className={styles.modeInfo}>
-                                <span className={styles.modeLabel}>当前模式</span>
-                                <Badge className={styles.modeBadge}>
-                                    {growMode === 'manual' ? '手动' : growMode === 'free' ? '自由' : '狂暴'}
-                                </Badge>
-                            </div>
-                        </div>
+                        {/*<div className={styles.modeSection}>*/}
+                        {/*    <div className={styles.modeInfo}>*/}
+                        {/*        <span className={styles.modeLabel}>当前模式</span>*/}
+                        {/*        <Badge className={styles.modeBadge}>*/}
+                        {/*            {growMode === 'manual' ? '手动' : growMode === 'free' ? '自由' : '狂暴'}*/}
+                        {/*        </Badge>*/}
+                        {/*    </div>*/}
+                        {/*</div>*/}
 
-                        <div className={styles.separator} />
+                        {/*<div className={styles.separator} />*/}
 
                         {/* GPT 服务配置 */}
                         <div className={styles.configSection}>
@@ -193,13 +193,13 @@ export default function ControlPanel({ onPromptOpen, onConfigOpen }: ControlPane
                                 <MessageSquare className={styles.icon} />
                                 打开提示词
                             </button>
-                            <button
-                                onClick={onConfigOpen}
-                                className={styles.actionButton}
-                            >
-                                <Cog className={styles.icon} />
-                                高级配置
-                            </button>
+                            {/*<button*/}
+                            {/*    onClick={onConfigOpen}*/}
+                            {/*    className={styles.actionButton}*/}
+                            {/*>*/}
+                            {/*    <Cog className={styles.icon} />*/}
+                            {/*    高级配置*/}
+                            {/*</button>*/}
                             <button
                                 onClick={reset}
                                 className={cn(styles.actionButton, styles.destructive)}
