@@ -41,15 +41,6 @@ export default function GrowHero() {
           >
             开始播种想法
           </Button>
-          <Button
-              variant="contained"
-              color="success"
-              size="large"
-              className={styles.cta}
-              onClick={() => router.push('/expand')}
-          >
-            文本扩展
-          </Button>
         </Box>
       </Box>
     </Box>
