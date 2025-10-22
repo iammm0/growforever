@@ -1,0 +1,461 @@
+/* 浮动控制面板容器 */
+.panel {
+  position: fixed;
+  z-index: 50;
+  box-shadow: 
+    0 8px 32px rgba(34, 197, 94, 0.12),
+    0 4px 16px rgba(34, 197, 94, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: grab;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.9);
+  overflow: hidden;
+}
+
+.panel:active {
+  cursor: grabbing;
+}
+
+/* 暗色主题 */
+.panel.dark {
+  background: rgba(18, 18, 18, 0.9);
+  border-color: rgba(74, 222, 128, 0.3);
+  color: rgb(229, 229, 229);
+  box-shadow: 
+    0 8px 32px rgba(74, 222, 128, 0.15),
+    0 4px 16px rgba(74, 222, 128, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 亮色主题 */
+.panel.light {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(34, 197, 94, 0.2);
+  color: rgb(17, 17, 17);
+}
+
+/* 展开状态 */
+.panel.expanded {
+  width: 320px;
+  min-height: 200px;
+}
+
+/* 收起状态 */
+.panel.collapsed {
+  width: 64px;
+  min-height: 120px;
+}
+
+/* 拖拽句柄 */
+.dragHandle {
+  cursor: grab;
+  user-select: none;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(34, 197, 94, 0.1);
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.05), rgba(74, 222, 128, 0.05));
+  opacity: 0.8;
+  transition: all 0.2s ease;
+}
+
+.dragHandle:hover {
+  opacity: 1;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(74, 222, 128, 0.1));
+}
+
+.dragHandle:active {
+  cursor: grabbing;
+}
+
+.dark .dragHandle {
+  border-bottom-color: rgba(74, 222, 128, 0.2);
+  background: linear-gradient(135deg, rgba(74, 222, 128, 0.08), rgba(34, 197, 94, 0.08));
+}
+
+.dark .dragHandle:hover {
+  background: linear-gradient(135deg, rgba(74, 222, 128, 0.15), rgba(34, 197, 94, 0.15));
+}
+
+/* 面板头部 */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-bottom: 1px solid;
+  border-color: inherit;
+  opacity: 0.8;
+}
+
+.header.collapsed {
+  padding: 8px;
+  justify-content: center;
+}
+
+/* 标题 */
+.title {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0;
+  color: rgb(34, 197, 94);
+  text-shadow: 0 0 8px rgba(34, 197, 94, 0.3);
+  transition: all 0.3s ease;
+}
+
+.title.collapsed {
+  display: none;
+}
+
+.dark .title {
+  color: rgb(74, 222, 128);
+  text-shadow: 0 0 8px rgba(74, 222, 128, 0.4);
+}
+
+/* 控制按钮组 */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.controlButton {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  opacity: 0.7;
+  color: rgb(34, 197, 94);
+}
+
+.controlButton:hover {
+  opacity: 1;
+  background: rgba(34, 197, 94, 0.1);
+  transform: scale(1.05);
+}
+
+.dark .controlButton {
+  color: rgb(74, 222, 128);
+}
+
+.dark .controlButton:hover {
+  background: rgba(74, 222, 128, 0.15);
+}
+
+/* 面板内容 */
+.content {
+  padding: 16px;
+  transition: all 0.3s ease;
+}
+
+.content.collapsed {
+  padding: 8px;
+}
+
+/* 模式显示区域 */
+.modeSection {
+  margin-bottom: 16px;
+}
+
+.modeInfo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.08), rgba(74, 222, 128, 0.08));
+  border-radius: 10px;
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  opacity: 0.9;
+  backdrop-filter: blur(4px);
+}
+
+.dark .modeInfo {
+  background: linear-gradient(135deg, rgba(74, 222, 128, 0.1), rgba(34, 197, 94, 0.1));
+  border-color: rgba(74, 222, 128, 0.3);
+}
+
+.modeLabel {
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+.modeBadge {
+  font-size: 10px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-weight: 600;
+  background: linear-gradient(135deg, rgb(34, 197, 94), rgb(74, 222, 128));
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px rgba(34, 197, 94, 0.3);
+}
+
+.dark .modeBadge {
+  background: linear-gradient(135deg, rgb(74, 222, 128), rgb(34, 197, 94));
+  box-shadow: 0 2px 4px rgba(74, 222, 128, 0.3);
+}
+
+/* 配置区域 */
+.configSection {
+  margin-bottom: 16px;
+}
+
+.configSection:last-child {
+  margin-bottom: 0;
+}
+
+/* 标签 */
+.label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  opacity: 0.8;
+}
+
+/* 输入框和选择器 */
+.input,
+.select {
+  width: 100%;
+  height: 32px;
+  padding: 6px 8px;
+  border: 1px solid;
+  border-color: inherit;
+  border-radius: 6px;
+  background: transparent;
+  font-size: 12px;
+  transition: all 0.2s ease;
+}
+
+.input:focus,
+.select:focus {
+  outline: none;
+  border-color: rgb(59, 130, 246);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.dark .input:focus,
+.dark .select:focus {
+  border-color: rgb(96, 165, 250);
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
+}
+
+/* 分隔线 */
+.separator {
+  height: 1px;
+  background: currentColor;
+  opacity: 0.1;
+  margin: 12px 0;
+}
+
+/* 操作按钮区域 */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.actions.collapsed {
+  align-items: center;
+  gap: 4px;
+}
+
+/* 操作按钮 */
+.actionButton {
+  width: 100%;
+  height: 36px;
+  padding: 8px 16px;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.05), rgba(74, 222, 128, 0.05));
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: rgb(34, 197, 94);
+  backdrop-filter: blur(4px);
+}
+
+.actionButton:hover {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(74, 222, 128, 0.15));
+  border-color: rgb(34, 197, 94);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
+}
+
+.dark .actionButton {
+  color: rgb(74, 222, 128);
+  border-color: rgba(74, 222, 128, 0.4);
+  background: linear-gradient(135deg, rgba(74, 222, 128, 0.08), rgba(34, 197, 94, 0.08));
+}
+
+.dark .actionButton:hover {
+  background: linear-gradient(135deg, rgba(74, 222, 128, 0.2), rgba(34, 197, 94, 0.2));
+  border-color: rgb(74, 222, 128);
+  box-shadow: 0 4px 12px rgba(74, 222, 128, 0.25);
+}
+
+.actionButton.destructive {
+  color: rgb(239, 68, 68);
+  border-color: rgb(239, 68, 68);
+}
+
+.actionButton.destructive:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.dark .actionButton.destructive {
+  color: rgb(248, 113, 113);
+  border-color: rgb(248, 113, 113);
+}
+
+.dark .actionButton.destructive:hover {
+  background: rgba(248, 113, 113, 0.1);
+}
+
+/* 收起状态的操作按钮 */
+.actionButton.collapsed {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  padding: 0;
+}
+
+/* 快捷键提示 */
+.shortcutHint {
+  font-size: 10px;
+  text-align: center;
+  opacity: 0.6;
+  margin-top: 8px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.dark .shortcutHint {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* 隐藏按钮 */
+.hideButton {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 60;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgb(34, 197, 94), rgb(74, 222, 128));
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+}
+
+.hideButton:hover {
+  background: linear-gradient(135deg, rgb(22, 163, 74), rgb(34, 197, 94));
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 8px 25px rgba(34, 197, 94, 0.5);
+}
+
+.dark .hideButton {
+  background: linear-gradient(135deg, rgb(74, 222, 128), rgb(34, 197, 94));
+  box-shadow: 0 6px 20px rgba(74, 222, 128, 0.4);
+}
+
+.dark .hideButton:hover {
+  background: linear-gradient(135deg, rgb(34, 197, 94), rgb(22, 163, 74));
+  box-shadow: 0 8px 25px rgba(74, 222, 128, 0.5);
+}
+
+/* 图标样式 */
+.icon {
+  width: 16px;
+  height: 16px;
+}
+
+.icon.small {
+  width: 12px;
+  height: 12px;
+}
+
+/* 动画效果 */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+}
+
+.slideIn {
+  animation: slideIn 0.3s ease-out;
+}
+
+.slideOut {
+  animation: slideOut 0.3s ease-in;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .panel.expanded {
+    width: 280px;
+  }
+  
+  .panel.collapsed {
+    width: 56px;
+  }
+  
+  .content {
+    padding: 12px;
+  }
+  
+  .content.collapsed {
+    padding: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .panel.expanded {
+    width: calc(100vw - 32px);
+    left: 16px !important;
+    right: 16px !important;
+  }
+  
+  .panel.collapsed {
+    width: 48px;
+  }
+}
