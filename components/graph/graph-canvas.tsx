@@ -393,18 +393,37 @@ export default function GraphCanvas({
     }, [setNodes, setEdges, setStoreNodes, addEdgeToStore])
 
     // GNN处理功能
-    const handleGNNProcess = useCallback(async (text: string) => {
+    const handleGNNProcess = useCallback(async (
+        text: string, 
+        modelName?: string | null, 
+        strategy?: string
+    ) => {
         if (!selectedNode) return
 
         setIsProcessingGNN(true)
         try {
+            const requestBody: {
+                text: string
+                seedId?: number
+                model_name?: string | null
+                strategy?: string
+            } = {
+                text,
+                seedId: 1 // 可以从store中获取实际的seedId
+            }
+            
+            if (modelName !== undefined) {
+                requestBody.model_name = modelName
+            }
+            
+            if (strategy !== undefined) {
+                requestBody.strategy = strategy
+            }
+            
             const response = await fetch('/api/gnn', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    text,
-                    seedId: 1 // 可以从store中获取实际的seedId
-                })
+                body: JSON.stringify(requestBody)
             })
 
             if (!response.ok) {
