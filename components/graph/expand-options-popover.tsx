@@ -2,7 +2,20 @@
 
 import React, { forwardRef, useEffect, useMemo, useState } from 'react'
 import { Node } from 'reactflow'
-import { Button, Paper, Typography, Stack, TextField, Divider, CircularProgress, Alert } from '@mui/material'
+import { 
+    Button, 
+    Paper, 
+    Typography, 
+    Stack, 
+    TextField, 
+    Divider, 
+    CircularProgress, 
+    Alert,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+} from '@mui/material'
 
 type ExpandOptionsPopoverProps = {
     node: Node
@@ -13,8 +26,26 @@ type ExpandOptionsPopoverProps = {
     isLeaf: boolean
     onClose: () => void
     onTextExpand?: (text: string) => Promise<void>
-    onGNNProcess?: (text: string) => Promise<void>
+    onGNNProcess?: (text: string, modelName?: string | null, strategy?: string) => Promise<void>
 }
+
+// 可用的模型列表（根据API文档v2.1.0）
+const AVAILABLE_MODELS = [
+    { value: null, label: '默认模型' },
+    { value: 'bert-base-chinese', label: 'BERT中文基础模型' },
+    { value: 'roberta-base-chinese', label: 'RoBERTa中文模型（推荐，准确率较高）' },
+    { value: 'macbert-base-chinese', label: 'MacBERT中文模型' },
+    { value: 'bert-large-chinese', label: 'BERT Large中文模型（可选，需要更多GPU内存）' },
+    { value: 'roberta-large-chinese', label: 'RoBERTa Large中文模型（可选，需要更多GPU内存）' },
+]
+
+// 可用的策略列表（根据API文档v2.1.0）
+const AVAILABLE_STRATEGIES = [
+    { value: 'single', label: '单模型模式（最快）' },
+    { value: 'vote', label: '多模型投票（准确率高）' },
+    { value: 'union', label: '多模型并集（召回率高）' },
+    { value: 'intersection', label: '多模型交集（精确率高）' },
+]
 
 // ⬇️ forwardRef 用于接收 ref，从父组件注入
 const ExpandOptionsPopover = forwardRef<HTMLDivElement, ExpandOptionsPopoverProps>(
@@ -27,6 +58,8 @@ const ExpandOptionsPopover = forwardRef<HTMLDivElement, ExpandOptionsPopoverProp
         const [isProcessingGNN, setIsProcessingGNN] = useState(false)
         const [error, setError] = useState<string | null>(null)
         const [showExpandedText, setShowExpandedText] = useState(false)
+        const [modelName, setModelName] = useState<string | null>(null)
+        const [strategy, setStrategy] = useState<string>('single')
 
         useEffect(() => {
             setTitle(typeof node.data?.title === 'string' ? node.data.title : '')
@@ -66,7 +99,7 @@ const ExpandOptionsPopover = forwardRef<HTMLDivElement, ExpandOptionsPopoverProp
             
             try {
                 if (onGNNProcess) {
-                    await onGNNProcess(expandedText)
+                    await onGNNProcess(expandedText, modelName, strategy)
                 }
             } catch (err) {
                 setError('GNN处理失败')
@@ -148,17 +181,55 @@ const ExpandOptionsPopover = forwardRef<HTMLDivElement, ExpandOptionsPopoverProp
                                 </Button>
 
                                 {showExpandedText && (
-                                    <TextField
-                                        fullWidth
-                                        size="small"
-                                        label="扩展后的文本"
-                                        value={expandedText}
-                                        onChange={(event) => setExpandedText(event.target.value)}
-                                        multiline
-                                        minRows={4}
-                                        maxRows={8}
-                                        sx={{ mb: 1.5 }}
-                                    />
+                                    <>
+                                        <TextField
+                                            fullWidth
+                                            size="small"
+                                            label="扩展后的文本"
+                                            value={expandedText}
+                                            onChange={(event) => setExpandedText(event.target.value)}
+                                            multiline
+                                            minRows={4}
+                                            maxRows={8}
+                                            sx={{ mb: 1.5 }}
+                                        />
+                                        
+                                        <Divider sx={{ my: 1.5 }} />
+                                        
+                                        <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mb: 1 }}>
+                                            GNN模型配置
+                                        </Typography>
+                                        
+                                        <FormControl fullWidth size="small" sx={{ mb: 1.5 }}>
+                                            <InputLabel>选择模型</InputLabel>
+                                            <Select
+                                                value={modelName ?? ''}
+                                                onChange={(e) => setModelName(e.target.value || null)}
+                                                label="选择模型"
+                                            >
+                                                {AVAILABLE_MODELS.map((model) => (
+                                                    <MenuItem key={model.value ?? 'default'} value={model.value ?? ''}>
+                                                        {model.label}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                        
+                                        <FormControl fullWidth size="small" sx={{ mb: 1.5 }}>
+                                            <InputLabel>选择策略</InputLabel>
+                                            <Select
+                                                value={strategy}
+                                                onChange={(e) => setStrategy(e.target.value)}
+                                                label="选择策略"
+                                            >
+                                                {AVAILABLE_STRATEGIES.map((strat) => (
+                                                    <MenuItem key={strat.value} value={strat.value}>
+                                                        {strat.label}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </>
                                 )}
 
                                 <Button
