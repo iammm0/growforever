@@ -1,35 +1,135 @@
 'use client'
 
-import { Box } from '@mui/material'
+import { Box, Container, Typography, alpha, useTheme } from '@mui/material'
+import { useRouter } from 'next/navigation'
+import { useAuth } from '@/context/auth-context'
 import GrowHero from '@/components/presentation/grow-hero'
 import FeatureCard from '@/components/presentation/feature-card'
-import styles from '../styles/grow.module.css'
+import GlobalBackground from '@/components/presentation/global-background'
+import { AutoGraph, Search, Share } from '@mui/icons-material'
 
 const features = [
-  { title: '从一个想法开始', description: '每一次点击，都是一颗思维的种子——GrowForever 自动为你展开思维的枝叶。' },
-  { title: '多维连接', description: '探索一个事物与多个领域的交汇点，让复杂变清晰。' },
-  { title: '自由 · 狂暴 · 手动 三种模式', description: '模拟你的思维节奏，从结构思维到爆发式脑暴自由切换。' },
-  { title: '面向未来的认知系统', description: 'GrowForever 是一个用于「观察思维」「理解知识」「组织认知」的 AI 工具。' },
-  { title: '实时视觉反馈', description: '每个节点都是认知的一部分，实时可视化让你的思考路径清晰可见。' },
-  { title: '融合 AI 与结构化思维', description: '结合大模型生成能力与图结构管理，打造类人智能认知体验。' },
+  {
+    icon: AutoGraph,
+    title: 'AI 文本扩展',
+    description:
+      '结合大模型生成能力与结构化思维管理，支持改写、续写、摘要等多种模式，打造类人智能认知体验。',
+    color: '#8b5cf6',
+    link: '/expand',
+  },
+  {
+    icon: Search,
+    title: '语义搜索',
+    description:
+      '基于向量数据库的智能语义搜索，快速找到相关的思维节点和作品，让知识连接更高效。',
+    color: '#ec4899',
+    link: '/graph',
+  },
+  {
+    icon: Share,
+    title: '多数据库架构',
+    description:
+      'MongoDB + Neo4j + Qdrant 三重存储，确保数据安全、查询高效、扩展灵活。',
+    color: '#06b6d4',
+    link: null,
+  },
 ]
 
 export default function Home() {
-    return (
-    <Box className={styles.page}>
-      {/* 顶部 Hero 背景：增加渐变遮罩，提升可读性 */}
-      <Box>
-          <GrowHero />
+  const router = useRouter()
+  const theme = useTheme()
+  const { user } = useAuth()
+  const isDark = theme.palette.mode === 'dark'
+  const textColor = isDark ? '#fff' : '#000'
+  const textShadow = isDark ? '0 1px 8px rgba(0, 0, 0, 0.5)' : 'none'
+
+  return (
+    <Box
+      sx={{
+        position: 'relative',
+        minHeight: '100vh',
+        zIndex: 1,
+      }}
+    >
+      {/* 全局背景 */}
+      <GlobalBackground
+        mobilePosDark="center"
+        mobilePosLight="center"
+        desktopPosDark="center"
+        desktopPosLight="center"
+        mobileZoom={1.0}
+        overlay={true}
+      />
+
+      {/* Hero 区域 */}
+      <Box sx={{ position: 'relative', zIndex: 1 }}>
+        <GrowHero />
       </Box>
 
-      {/* Feature 列表 */}
-      <Box className={styles.featureCardSection}>
-        <Box className={styles.cardGrid}>
-          {features.map((f, idx) => (
-            <FeatureCard key={idx} title={f.title} description={f.description} />
-          ))}
+      {/* 功能特性区域 */}
+      <Container maxWidth="lg" sx={{ mt: 8, mb: 8, position: 'relative', zIndex: 1 }}>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: {
+              xs: '1fr',
+              sm: 'repeat(2, 1fr)',
+              lg: 'repeat(3, 1fr)',
+            },
+            gap: 4,
+            maxWidth: 1400,
+            mx: 'auto',
+            px: { xs: 2, sm: 3 },
+          }}
+        >
+          {features.map((feature, idx) => {
+            const IconComponent = feature.icon
+            return (
+              <Box
+                key={idx}
+                onClick={() => feature.link && router.push(feature.link)}
+                sx={{
+                  cursor: feature.link ? 'pointer' : 'default',
+                }}
+              >
+                <FeatureCard
+                  icon={<IconComponent sx={{ fontSize: 48, color: feature.color }} />}
+                  title={feature.title}
+                  description={feature.description}
+                  color={feature.color}
+                />
+              </Box>
+            )
+          })}
         </Box>
-      </Box>
+      </Container>
+
+      {/* 统计信息区域（可选） */}
+      {user && (
+        <Container maxWidth="md" sx={{ mt: 8, mb: 8, position: 'relative', zIndex: 1 }}>
+          <Box
+            sx={{
+              p: 4,
+              borderRadius: 3,
+              background: isDark ? alpha('#fff', 0.1) : alpha('#fff', 0.15),
+              backdropFilter: 'blur(20px)',
+              border: `1px solid ${isDark ? alpha('#fff', 0.2) : alpha('#000', 0.15)}`,
+              textAlign: 'center',
+            }}
+          >
+            <Typography
+              variant="h5"
+              gutterBottom
+              sx={{ fontWeight: 600, color: textColor, textShadow }}
+            >
+              欢迎回来，{user.username}！
+            </Typography>
+            <Typography variant="body2" sx={{ color: alpha(textColor, 0.9), textShadow }}>
+              继续你的思维之旅，或探索其他用户的作品
+            </Typography>
+          </Box>
+        </Container>
+      )}
     </Box>
   )
 }

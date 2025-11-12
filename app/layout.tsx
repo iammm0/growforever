@@ -1,11 +1,12 @@
 'use client'
 
 import './globals.css'
-import React from "react";
-import {usePathname} from "next/navigation";
-import Providers from "./providers";
-import Footer from "@/components/presentation/footer";
-import Navigation from "@/components/presentation/navigation";
+import React from "react"
+import { usePathname } from "next/navigation"
+import { Box } from '@mui/material'
+import Providers from "./providers"
+import Footer from "@/components/presentation/footer"
+import Navigation from "@/components/presentation/navigation"
 
 export default function RootLayout({
    children,
@@ -26,11 +27,24 @@ export default function RootLayout({
         </head>
         <body>
         <Providers>
-            <div className="layoutContainer">
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    minHeight: '100vh',
+                }}
+            >
                 {!hideHeaderFooter && <Navigation />}
-                <main className="mainContent">{children}</main>
+                <Box
+                    component="main"
+                    sx={{
+                        flex: 1,
+                    }}
+                >
+                    {children}
+                </Box>
                 {!hideHeaderFooter && <Footer />}
-            </div>
+            </Box>
         </Providers>
         </body>
         </html>
