@@ -2,14 +2,15 @@
 /**
  * 应用初始化模块 —— 模拟 FastAPI lifespan
  * 在 Next.js 服务启动后首次调用时连接：
- *   - PostgreSQL (Prisma)
+ *   - MongoDB
  *   - Neo4j
  *   - Qdrant
  */
 
-import { prisma } from '@/lib/db'
+import connectDB from '@/lib/mongodb'
 import { getNeo4j, closeNeo4j } from '@/lib/neo4j'
 import { getQdrant } from '@/lib/qdrant'
+import mongoose from 'mongoose'
 
 let initialized = false
 
@@ -19,12 +20,13 @@ export async function initApp() {
 
     console.log('🚀 [growforever] initializing services...')
 
-    // 1️⃣ PostgreSQL
+    // 1️⃣ MongoDB
     try {
-        await prisma.$queryRawUnsafe('SELECT 1')
-        console.log('✅ PostgreSQL connected')
+        await connectDB()
+        await mongoose.connection.db.admin().ping()
+        console.log('✅ MongoDB connected')
     } catch (e: any) {
-        console.error('❌ PostgreSQL connect failed:', e.message)
+        console.error('❌ MongoDB connect failed:', e.message)
         process.exit(1)
     }
 
@@ -59,7 +61,9 @@ async function shutdown() {
     console.log('\n🧹 Shutting down...')
     try {
         await closeNeo4j()
-        await prisma.$disconnect()
+        if (mongoose.connection.readyState === 1) {
+            await mongoose.connection.close()
+        }
         console.log('✅ Graceful shutdown completed')
     } catch (e) {
         console.error('❌ Shutdown error:', e)
