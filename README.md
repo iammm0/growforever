@@ -20,7 +20,7 @@
 
 ### 技术亮点
 - **图结构 AI**：融合 GPT 与图神经网络，智能拆解心理活动
-- **多数据库架构**：PostgreSQL + Neo4j + Qdrant 三重存储
+- **多数据库架构**：MongoDB + Neo4j + Qdrant 三重存储
 - **现代前端技术栈**：Next.js 15 + ReactFlow + Framer Motion
 - **响应式设计**：支持桌面端和移动端，优雅的黑白主题
 
@@ -29,7 +29,7 @@
 ### 环境要求
 - Node.js 22+ 
 - Docker & Docker Compose
-- PostgreSQL 数据库
+- MongoDB 数据库
 - Neo4j 图数据库
 - Qdrant 向量数据库
 
@@ -47,14 +47,19 @@ npm install
 ```
 
 3. **配置环境变量**
-创建 `.env.local` 文件：
+复制 `.env.example` 文件为 `.env.local` 并根据实际情况修改配置：
+```bash
+cp .env.example .env.local
+```
+
+`.env.local` 文件示例：
 ```env
-# 数据库配置
-DATABASE_URL="postgresql://postgres:password@localhost:5432/growforever"
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=password
-POSTGRES_DB=growforever
-POSTGRES_PORT=5432
+# MongoDB 配置（用于知识图谱数据和用户认证）
+MONGODB_URI="mongodb://admin:password@localhost:27017/growforever?authSource=admin"
+MONGO_USER=admin
+MONGO_PASSWORD=password
+MONGO_DB=growforever
+MONGO_PORT=27017
 
 # Neo4j 配置
 NEO4J_URI="bolt://localhost:7687"
@@ -67,9 +72,18 @@ QDRANT_COLLECTION="growforever"
 QDRANT_VECTOR_SIZE=1536
 QDRANT_DISTANCE=Cosine
 
+# JWT 密钥（用于用户认证）
+# 生产环境请使用强随机密钥
+JWT_SECRET="your-secret-key-change-in-production"
+
 # 其他配置
 NODE_ENV=development
 ```
+
+**重要提示**：
+- `.env.local` 文件不会被提交到版本控制（已在 `.gitignore` 中）
+- 生产环境请务必修改默认密码和 JWT_SECRET
+- MongoDB URI 格式：`mongodb://用户名:密码@主机:端口/数据库名?authSource=admin`
 
 4. **启动数据库服务**
 ```bash
@@ -77,13 +91,7 @@ docker-compose up -d
 ```
 
 5. **初始化数据库**
-```bash
-# 生成 Prisma 客户端
-npx prisma generate
-
-# 运行数据库迁移
-npx prisma db push
-```
+MongoDB 会在首次连接时自动创建数据库和集合，无需手动迁移。
 
 6. **启动开发服务器**
 ```bash
@@ -129,7 +137,7 @@ growforever-web/
 ├── hooks/               # 自定义 Hooks
 ├── types/               # TypeScript 类型定义
 ├── styles/              # CSS 模块样式
-└── prisma/              # 数据库模式
+└── models/             # MongoDB 模型定义
 ```
 
 ## 🎯 核心功能详解
@@ -167,7 +175,7 @@ growforever-web/
 
 ### 3. 数据存储架构
 
-**PostgreSQL (Prisma)**
+**MongoDB (Mongoose)**
 - 存储基础数据：种子、节点、边
 - 支持复杂查询和事务
 - 数据一致性和完整性
@@ -196,8 +204,8 @@ growforever-web/
 
 ### 后端技术
 - **Next.js API Routes**：服务端 API
-- **Prisma**：数据库 ORM
-- **PostgreSQL**：关系型数据库
+- **Mongoose**：MongoDB ODM
+- **MongoDB**：文档型数据库
 - **Neo4j**：图数据库
 - **Qdrant**：向量数据库
 
@@ -243,14 +251,9 @@ npm run lint
 
 ### 数据库操作
 ```bash
-# 查看数据库状态
-npx prisma studio
-
-# 重置数据库
-npx prisma db push --force-reset
-
-# 生成 Prisma 客户端
-npx prisma generate
+# MongoDB 管理工具（可选）
+# 可以使用 MongoDB Compass 或 mongo shell 管理数据库
+# mongo shell: docker exec -it mongodb mongosh -u admin -p password
 ```
 
 ### Docker 部署
