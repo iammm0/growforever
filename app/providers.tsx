@@ -4,6 +4,7 @@ import React, { createContext, useContext, useEffect, useMemo, useState, ReactNo
 import { createTheme, ThemeProvider, CssBaseline } from '@mui/material'
 import { CacheProvider } from '@emotion/react'
 import createCache from '@emotion/cache'
+import { AuthProvider } from '@/context/auth-context'
 
 // 主题类型定义
 type ThemeMode = 'light' | 'dark' | 'system'
@@ -197,7 +198,9 @@ export function ThemeProviderWrapper({ children }: { children: ReactNode }) {
       <CacheProvider value={emotionCache}>
         <ThemeProvider theme={muiTheme}>
           <CssBaseline />
-          {children}
+          <AuthProvider>
+            {children}
+          </AuthProvider>
         </ThemeProvider>
       </CacheProvider>
     </ThemeContext.Provider>
