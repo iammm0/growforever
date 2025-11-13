@@ -13,7 +13,6 @@ import {
   Avatar,
   Alert,
   CircularProgress,
-  Grid,
   Divider,
   alpha,
   useTheme,
@@ -280,38 +279,34 @@ export default function ProfilePage() {
               <Edit sx={{ fontSize: 20 }} />
               基本信息
             </Typography>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="用户名"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  required
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      borderRadius: 2,
-                    },
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="个人简介"
-                  value={bio}
-                  onChange={(e) => setBio(e.target.value)}
-                  multiline
-                  rows={4}
-                  helperText="最多 500 字"
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      borderRadius: 2,
-                    },
-                  }}
-                />
-              </Grid>
-            </Grid>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+              <TextField
+                fullWidth
+                label="用户名"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 2,
+                  },
+                }}
+              />
+              <TextField
+                fullWidth
+                label="个人简介"
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+                multiline
+                rows={4}
+                helperText="最多 500 字"
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 2,
+                  },
+                }}
+              />
+            </Box>
           </Box>
 
           <Divider sx={{ my: 4 }} />
@@ -327,11 +322,10 @@ export default function ProfilePage() {
             >
               公开信息
             </Typography>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="显示名称"
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+              <TextField
+                fullWidth
+                label="显示名称"
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
                   sx={{
@@ -340,11 +334,9 @@ export default function ProfilePage() {
                     },
                   }}
                 />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="所在地"
+              <TextField
+                fullWidth
+                label="所在地"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   sx={{
@@ -353,11 +345,9 @@ export default function ProfilePage() {
                     },
                   }}
                 />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="个人网站"
+              <TextField
+                fullWidth
+                label="个人网站"
                   value={website}
                   onChange={(e) => setWebsite(e.target.value)}
                   placeholder="https://"
@@ -367,50 +357,48 @@ export default function ProfilePage() {
                     },
                   }}
                 />
-              </Grid>
-              <Grid item xs={12} sm={4}>
+              <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
                 <TextField
                   fullWidth
+                  sx={{
+                    flex: { xs: '1 1 100%', sm: '1 1 calc(33.333% - 16px)' },
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: 2,
+                    },
+                  }}
                   label="Twitter"
                   value={twitter}
                   onChange={(e) => setTwitter(e.target.value)}
                   placeholder="@username"
+                />
+                <TextField
+                  fullWidth
                   sx={{
+                    flex: { xs: '1 1 100%', sm: '1 1 calc(33.333% - 16px)' },
                     '& .MuiOutlinedInput-root': {
                       borderRadius: 2,
                     },
                   }}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <TextField
-                  fullWidth
                   label="Instagram"
                   value={instagram}
                   onChange={(e) => setInstagram(e.target.value)}
                   placeholder="@username"
+                />
+                <TextField
+                  fullWidth
                   sx={{
+                    flex: { xs: '1 1 100%', sm: '1 1 calc(33.333% - 16px)' },
                     '& .MuiOutlinedInput-root': {
                       borderRadius: 2,
                     },
                   }}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <TextField
-                  fullWidth
                   label="GitHub"
                   value={github}
                   onChange={(e) => setGithub(e.target.value)}
                   placeholder="username"
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      borderRadius: 2,
-                    },
-                  }}
                 />
-              </Grid>
-            </Grid>
+              </Box>
+            </Box>
           </Box>
 
           <Button

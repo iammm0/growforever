@@ -20,6 +20,7 @@ export async function GET(req: Request) {
         query.seedId = new mongoose.Types.ObjectId(seedId)
     }
     
+    // @ts-expect-error - Mongoose type inference issue with TypeScript 5.9
     const data = await Node.find(query)
         .sort({ createdAt: -1 })
         .limit(200)
@@ -62,6 +63,7 @@ export async function POST(req: Request) {
         nodeData.parentId = new mongoose.Types.ObjectId(parentId)
     }
 
+    // @ts-expect-error - Mongoose type inference issue with TypeScript 5.9
     const node = await Node.create(nodeData)
     const nodeId = node._id.toString()
 

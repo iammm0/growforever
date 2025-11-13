@@ -65,9 +65,8 @@ const UserSchema = new Schema<IUser>(
   }
 )
 
-// 确保索引
-UserSchema.index({ email: 1 })
-UserSchema.index({ username: 1 })
+// 注意：email 和 username 字段已经通过 unique: true 自动创建了索引
+// 不需要手动再次创建索引，否则会导致重复索引警告
 
 export default mongoose.models.User || mongoose.model<IUser>('User', UserSchema)
 

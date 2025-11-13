@@ -27,6 +27,7 @@ export async function GET(req: Request) {
         .filter(id => mongoose.Types.ObjectId.isValid(id))
         .map(id => new mongoose.Types.ObjectId(id))
     
+    // @ts-expect-error - Mongoose type inference issue with TypeScript 5.9
     const nodes = await Node.find({ _id: { $in: ids } }).lean()
     const byId = new Map(nodes.map(n => [n._id.toString(), n]))
     

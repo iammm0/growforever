@@ -16,6 +16,7 @@ export async function GET(req: NextRequest) {
 
     await connectDB()
 
+    // @ts-expect-error - Mongoose type inference issue with TypeScript 5.9
     const user = await User.findById(currentUser.userId).select('-password')
 
     if (!user) {

@@ -4,12 +4,14 @@ import User from '@/models/User'
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
     await connectDB()
 
-    const user = await User.findById(params.userId).select(
+    const { userId } = await params
+    // @ts-expect-error - Mongoose type inference issue with TypeScript 5.9
+    const user = await User.findById(userId).select(
       'username avatar bio publicInfo createdAt'
     )
 

@@ -18,6 +18,7 @@ export async function POST(req: NextRequest) {
     }
 
     // 查找用户
+    // @ts-expect-error - Mongoose type inference issue with TypeScript 5.9
     const user = await User.findOne({ email: email.toLowerCase() })
 
     if (!user) {

@@ -16,6 +16,7 @@ export async function GET(req: NextRequest) {
 
     await connectDB()
 
+    // @ts-expect-error - Mongoose type inference issue with TypeScript 5.9
     const user = await User.findById(currentUser.userId).select('-password')
 
     if (!user) {
@@ -64,6 +65,7 @@ export async function PATCH(req: NextRequest) {
 
     if (username !== undefined) {
       // 检查用户名是否已被使用
+      // @ts-expect-error - Mongoose type inference issue with TypeScript 5.9
       const existingUser = await User.findOne({
         username,
         _id: { $ne: currentUser.userId },
@@ -89,6 +91,7 @@ export async function PATCH(req: NextRequest) {
       updateData.publicInfo = publicInfo
     }
 
+    // @ts-expect-error - Mongoose type inference issue with TypeScript 5.9
     const user = await User.findByIdAndUpdate(
       currentUser.userId,
       { $set: updateData },

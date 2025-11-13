@@ -26,6 +26,7 @@ export async function POST(req: NextRequest) {
     }
 
     // 检查用户是否已存在
+    // @ts-expect-error - Mongoose type inference issue with TypeScript 5.9
     const existingUser = await User.findOne({
       $or: [{ email }, { username }],
     })
@@ -41,6 +42,7 @@ export async function POST(req: NextRequest) {
     const hashedPassword = await bcrypt.hash(password, 10)
 
     // 创建用户
+    // @ts-expect-error - Mongoose type inference issue with TypeScript 5.9
     const user = await User.create({
       email,
       password: hashedPassword,

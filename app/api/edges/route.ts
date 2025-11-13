@@ -27,6 +27,7 @@ export async function POST(req: Request) {
     }
 
     // 1) MongoDB
+    // @ts-expect-error - Mongoose type inference issue with TypeScript 5.9
     const edge = await Edge.create({
         sourceId: new mongoose.Types.ObjectId(sourceId),
         targetId: new mongoose.Types.ObjectId(targetId),

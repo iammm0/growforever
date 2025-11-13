@@ -16,7 +16,6 @@ import {
   Divider,
 } from '@mui/material'
 import GitHubIcon from '@mui/icons-material/GitHub'
-import PaletteIcon from '@mui/icons-material/Palette'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import LoginIcon from '@mui/icons-material/Login'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
@@ -112,28 +111,10 @@ const Navigation: React.FC = () => {
           </Tooltip>
         </Box>
 
-        {/* 右侧：主题切换 + 艺术家作品 + 认证 */}
+        {/* 右侧：主题切换 + 认证 */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
           {/* 主题切换按钮 */}
           <ThemeToggle />
-
-          {/* 艺术家作品按钮 */}
-          <Tooltip title="艺术家作品" arrow placement="bottom">
-            <IconButton
-              onClick={() => handleNavigate('/artworks')}
-              size={isMobile ? 'small' : 'medium'}
-              sx={{
-                color: textColor,
-                '&:hover': {
-                  backgroundColor: hoverBgColor,
-                  transform: 'scale(1.1)',
-                },
-                transition: 'all 0.2s ease',
-              }}
-            >
-              <PaletteIcon fontSize={isMobile ? 'small' : 'medium'} />
-            </IconButton>
-          </Tooltip>
 
           {/* 认证按钮 */}
           {user ? (

@@ -49,6 +49,7 @@ export async function POST(req: NextRequest) {
     const dataUrl = `data:${file.type};base64,${base64}`
 
     // 更新用户头像
+    // @ts-expect-error - Mongoose type inference issue with TypeScript 5.9
     const user = await User.findByIdAndUpdate(
       currentUser.userId,
       { $set: { avatar: dataUrl } },

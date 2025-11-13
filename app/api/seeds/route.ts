@@ -19,6 +19,7 @@ export async function GET(req: Request) {
         ]
     }
     
+    // @ts-expect-error - Mongoose type inference issue with TypeScript 5.9
     const data = await Seed.find(query)
         .sort({ createdAt: -1 })
         .limit(100)
@@ -38,6 +39,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: 'title required' }, { status: 422 })
     }
 
+    // @ts-expect-error - Mongoose type inference issue with TypeScript 5.9
     const seed = await Seed.create({ title, description })
     const seedId = seed._id.toString()
     

@@ -21,7 +21,7 @@ const features = [
     icon: Search,
     title: '语义搜索',
     description:
-      '基于向量数据库的智能语义搜索，快速找到相关的思维节点和作品，让知识连接更高效。',
+      '基于向量数据库的智能语义搜索，快速找到相关的思维节点，让知识连接更高效。',
     color: '#ec4899',
     link: '/graph',
   },
@@ -125,7 +125,7 @@ export default function Home() {
               欢迎回来，{user.username}！
             </Typography>
             <Typography variant="body2" sx={{ color: alpha(textColor, 0.9), textShadow }}>
-              继续你的思维之旅，或探索其他用户的作品
+              继续你的思维之旅
             </Typography>
           </Box>
         </Container>
