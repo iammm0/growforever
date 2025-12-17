@@ -45,8 +45,8 @@ export default function GlobalBackground({
       ? mobilePosDark
       : mobilePosLight
     : isDark
-    ? desktopPosDark
-    : desktopPosLight
+      ? desktopPosDark
+      : desktopPosLight
 
   return (
     <Box
@@ -67,23 +67,23 @@ export default function GlobalBackground({
         transform: isMobile ? `scale(${mobileZoom})` : 'none',
         transformOrigin: 'center center',
         filter: isDark
-          ? 'brightness(0.85) contrast(1.1) saturate(1.1)'
-          : 'brightness(0.85) contrast(1.1) saturate(0.95) sepia(0.1)',
+          ? 'brightness(0.95) contrast(1.05) saturate(1.1)'
+          : 'brightness(1.0) contrast(1.05) saturate(1.05)',
         '&::before': overlay
           ? {
-              content: '""',
-              position: 'absolute',
-              inset: 0,
-              background: isDark
-                ? `linear-gradient(
+            content: '""',
+            position: 'absolute',
+            inset: 0,
+            background: isDark
+              ? `linear-gradient(
                     to bottom,
-                    ${alpha('#000', 0.3)} 0%,
-                    ${alpha('#000', 0.1)} 30%,
+                    ${alpha('#000', 0.2)} 0%,
+                    ${alpha('#000', 0.05)} 30%,
                     transparent 50%,
-                    ${alpha('#000', 0.1)} 70%,
-                    ${alpha('#000', 0.3)} 100%
+                    ${alpha('#000', 0.05)} 70%,
+                    ${alpha('#000', 0.2)} 100%
                   )`
-                : `linear-gradient(
+              : `linear-gradient(
                     to bottom,
                     ${alpha('#000', 0.15)} 0%,
                     ${alpha('#000', 0.08)} 30%,
@@ -91,25 +91,25 @@ export default function GlobalBackground({
                     ${alpha('#000', 0.08)} 70%,
                     ${alpha('#000', 0.15)} 100%
                   )`,
-            }
+          }
           : {},
         '&::after': overlay
           ? {
-              content: '""',
-              position: 'absolute',
-              inset: 0,
-              background: isDark
-                ? `radial-gradient(
+            content: '""',
+            position: 'absolute',
+            inset: 0,
+            background: isDark
+              ? `radial-gradient(
                     ellipse at center,
                     transparent 0%,
-                    ${alpha('#000', 0.2)} 100%
+                    ${alpha('#000', 0.15)} 100%
                   )`
-                : `radial-gradient(
+              : `radial-gradient(
                     ellipse at center,
                     ${alpha('#000', 0.05)} 0%,
                     ${alpha('#000', 0.2)} 100%
                   )`,
-            }
+          }
           : {},
       }}
       aria-hidden

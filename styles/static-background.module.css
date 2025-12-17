@@ -6,7 +6,8 @@
   pointer-events: none;
   background-image: var(--bg);
   background-size: cover;
-  background-position: center; /* 默认 */
+  background-position: center;
+  /* 默认 */
 }
 
 /* 移动端焦点裁切 + 缩放 */
@@ -25,5 +26,10 @@
 }
 
 :global(.dark) .container {
-  filter: brightness(0.92) contrast(1.08);
+  filter: brightness(0.95) contrast(1.05) saturate(1.1);
+}
+
+/* 浅色模式：更明亮的滤镜 */
+.container:not(:global(.dark)) {
+  filter: brightness(1.0) contrast(1.05) saturate(1.05);
 }
