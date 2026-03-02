@@ -102,8 +102,33 @@ npm run dev
 
 ## 📁 项目结构
 
+本仓库为 **GrowForever** 一体化项目，包含前端应用、图神经网络服务、大模型推理服务与实验模型代码：
+
 ```
 growforever-web/
+├── web/                    # 前端应用（Next.js）
+│   └── Dockerfile         # Web 容器构建
+├── gnn-service/           # 图神经网络服务（FastAPI）
+│   ├── main.py            # 服务入口
+│   ├── src/               # NER、关系抽取、知识图谱构建
+│   ├── scripts/           # 文本分割器训练等脚本
+│   └── README.md          # 服务说明与 API 文档
+├── gpt-service/           # 大模型推理与训练服务（FastAPI）
+│   ├── src/               # 生成、训练、评估、Ollama 代理
+│   ├── config/            # 环境与模型配置
+│   ├── scripts/           # 训练与评估脚本
+│   └── docs/              # API、部署、训练指南
+├── model/                  # Text↔Graph 循环模型实验（PyTorch / Conda）
+│   ├── src/               # 图构建、GNN、对比学习、文本生成
+│   ├── config/            # 训练与运行配置
+│   ├── scripts/           # 训练、运行、可视化脚本
+│   └── docs/              # 设计与理论文档
+└── README.md              # 本文件
+```
+
+### 前端应用详细结构（web 或项目根下）
+
+```
 ├── algo/                    # 算法核心
 │   ├── edge.ts            # 边关系处理
 │   ├── emotion-cache.ts   # 情感缓存
@@ -139,6 +164,14 @@ growforever-web/
 ├── styles/              # CSS 模块样式
 └── models/             # MongoDB 模型定义
 ```
+
+### 子项目快速入口
+
+| 子项目 | 说明 | 文档与启动 |
+|--------|------|------------|
+| **gnn-service** | 中文 NER、关系抽取与知识图谱构建，支持多模型与长文本 | [gnn-service/README.md](gnn-service/README.md)，`python main.py` 或 Docker |
+| **gpt-service** | 大模型推理、LoRA 训练、评估与 Ollama 代理 | [gpt-service/docs/API_DOCUMENTATION.md](gpt-service/docs/API_DOCUMENTATION.md)，见 `gpt-service` 内 README / 部署文档 |
+| **model** | Text→Graph→Text 循环建模与 GNN 实验 | [model/README.md](model/README.md)，Conda `environment.yml` + `scripts/` |
 
 ## 🎯 核心功能详解
 
@@ -295,6 +328,13 @@ docker run -p 3000:3000 growforever-web
 
 ## 📝 更新日志
 
+### 近期更新（2025-03）
+- 📁 **仓库结构调整**：README 更新为 monorepo 说明，包含 web、gnn-service、gpt-service、model 四大子项目
+- ✨ **gnn-service**：新增图神经网络服务，支持中文 NER、关系抽取、知识图谱构建，多模型与长文本处理
+- ✨ **gpt-service**：新增大模型推理与训练服务，支持生成、LoRA 训练、评估与 Ollama 代理
+- ✨ **model**：新增 Text↔Graph 循环模型实验项目，含图构建、GNN、对比学习与文档
+- 🛠 **web**：更新 Web Dockerfile 等构建配置
+
 ### v1.0.0 (2025-10-21)
 - 🎉 初始版本发布
 - ✨ 思维图谱构建功能
@@ -304,7 +344,7 @@ docker run -p 3000:3000 growforever-web
 
 ## 📄 许可证
 
-本项目采用 [MIT 许可证](LICENSE)。
+本项目采用 [MIT 许可证](web/LICENSE)。
 
 ## 🙏 致谢
 
