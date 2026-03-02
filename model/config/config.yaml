@@ -1,0 +1,13 @@
+gpt:
+  model_name: uer/gpt2-chinese-cluecorpussmall
+  max_new_tokens: 100
+  temperature: 1.0
+graph_encoder:
+  hidden_channels: 32
+  out_channels: 16
+  heads: 2
+training:
+  lr: 0.005
+  epochs: 10
+contrastive_loss:
+  temperature: 0.5

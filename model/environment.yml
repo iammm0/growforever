@@ -1,0 +1,72 @@
+name: text2graph2text
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+  - defaults
+
+dependencies:
+  # 1) Python & 基本工具
+  - python=3.10
+  - pip
+
+  # 2) PyTorch + 官方 CUDA 元包（不要再写 cudatoolkit）
+  - pytorch=2.3.1
+  - torchvision=0.18.1
+  - torchaudio=2.3.1
+  - pytorch-cuda=12.1            # 仅限有 NVIDIA GPU；CPU-only 环境请删除这一行
+
+  # 3) 科学计算 & 数据处理
+  - numpy=1.26.*                 # 与部分包更兼容
+  - pandas
+  - pyarrow
+  - scipy
+  - scikit-learn
+  - matplotlib
+  - seaborn
+  - tqdm
+  - networkx
+  - faiss-cpu                    # Windows 下用 conda-forge 版本，pip 的轮子多为 Linux
+
+  # 4) NLP 基础
+  - spacy
+  - nltk
+  - sentencepiece
+
+  # 5) 交互 & 可视化
+  - jupyterlab
+  - ipywidgets
+  - pyvis=0.3.1
+
+  # 6) 代码质量 & 测试
+  - black
+  - isort
+  - flake8
+  - mypy
+  - pytest
+  - pre-commit
+
+  # 7) 其它常用
+  - python-dotenv
+  - wandb
+  - openssl
+  - ca-certificates
+
+  # 8) 通过 pip 安装的前沿/快速更新包
+  - pip:
+      - transformers>=4.43.0
+      - tokenizers>=0.15.2
+      - accelerate>=0.29.0
+      - huggingface-hub>=0.23.0
+      - datasets>=2.18
+      - evaluate>=0.4
+      - safetensors>=0.3
+      - tiktoken>=0.7.0
+      - diffusers>=0.20
+      - gradio
+      - openai
+      - peft
+      - rich
+      - langdetect
+      - spacy
+      - hf_xet
