@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+transformers>=4.30.0
+accelerate>=0.26.0
+networkx
+pydantic
+scikit-learn>=1.0.0
+numpy>=1.21.0
+nvidia-ml-py
+# 注意：PyTorch GPU版本需要从PyTorch官网安装
+# 安装命令：pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124

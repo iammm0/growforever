@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 模型文件（大文件，运行时从 HuggingFace 下载）
+# 如果需要将模型打包进镜像，请注释掉下面这行
+models/*/
+
+# 日志文件
+*.log
+
+# 环境变量
+.env
+.env.local
+
+# 临时文件
+*.tmp
+*.bak
+*.tar
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# 文档（可选，如果不需要在容器中）
+docs/
+
+# 测试文件
+test/
+tests/
+*_test.py
+*_tests.py
+
