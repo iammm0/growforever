@@ -4,7 +4,7 @@ FROM node:22-alpine AS deps
 WORKDIR /app
 
 # 拷贝项目依赖定义文件，利用缓存加速
-COPY ./package.json package-lock.json* pnpm-lock.yaml* ./
+COPY package.json package-lock.json* pnpm-lock.yaml* ./
 RUN npm install --frozen-lockfile
 
 # 第二步：仅在需要时重建源代码
@@ -13,8 +13,8 @@ FROM node:22-alpine AS builder
 WORKDIR /app
 
 # 复用上一步的 node_modules，加快构建
-COPY --from=deps /app/node_modules ./node_modules
-COPY .. .
+COPY --from=deps /web/app/node_modules ./node_modules
+COPY ../.. .
 
 # 关闭 Next.js 统计上报，防止在构建时收集遥测数据
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -32,10 +32,10 @@ ENV NODE_ENV=production
 ENV PORT=3000
 
 # 仅复制构建产物和运行时必须文件
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /web/app/public ./public
+COPY --from=builder /web/app/.next ./.next
+COPY --from=builder /web/app/node_modules ./node_modules
+COPY --from=builder /web/app/package.json ./package.json
 COPY .env.local ./
 
 # 暴露应用端口
