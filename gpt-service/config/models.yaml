@@ -1,0 +1,49 @@
+# 模型配置
+
+# 默认模型
+default_model: "qwen2-7b-instruct"
+
+# 本地模型列表
+local_models:
+  - name: "qwen2-7b-instruct"
+    path: "Qwen/Qwen2-7B-Instruct"
+    type: "causal_lm"
+    description: "Qwen2 7B Instruct模型"
+    enabled: true
+    max_length: 8192
+    lora_config:
+      r: 16
+      lora_alpha: 32
+      target_modules: ["q_proj", "k_proj", "v_proj", "o_proj"]
+      lora_dropout: 0.05
+      bias: "none"
+      task_type: "CAUSAL_LM"
+  
+  - name: "qwen2-1.5b-instruct"
+    path: "Qwen/Qwen2-1.5B-Instruct"
+    type: "causal_lm"
+    description: "Qwen2 1.5B Instruct模型（轻量级）"
+    enabled: false
+    max_length: 4096
+    lora_config:
+      r: 8
+      lora_alpha: 16
+      target_modules: ["q_proj", "k_proj", "v_proj", "o_proj"]
+      lora_dropout: 0.05
+      bias: "none"
+      task_type: "CAUSAL_LM"
+
+# Ollama模型列表（用于代理）
+ollama_models:
+  - name: "llama2"
+    description: "Llama 2模型"
+    enabled: true
+  
+  - name: "mistral"
+    description: "Mistral模型"
+    enabled: true
+  
+  - name: "qwen2:7b"
+    description: "Qwen2 7B模型"
+    enabled: true
+

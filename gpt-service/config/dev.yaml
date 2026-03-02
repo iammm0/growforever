@@ -1,0 +1,70 @@
+# 开发环境配置
+
+environment: dev
+
+# API配置
+api:
+  host: "0.0.0.0"
+  port: 8001
+  reload: true
+
+# 日志配置
+logging:
+  level: "DEBUG"
+  format: "detailed"  # detailed 或 json
+  file_enabled: true
+  file_path: "logs/gpt-service.log"
+  max_bytes: 10485760  # 10MB
+  backup_count: 5
+  console_enabled: true
+
+# 模型配置
+models:
+  cache_dir: "models/cache"
+  base_dir: "models/base"
+  lora_dir: "models/lora"
+  checkpoints_dir: "models/checkpoints"
+  device: "auto"  # auto, cuda, cpu
+  torch_dtype: "float16"  # float16, bfloat16, float32
+  max_memory: null  # GPU内存限制，例如: {0: "20GiB", 1: "20GiB"}
+
+# Ollama配置
+ollama:
+  base_url: "http://localhost:11434"
+  timeout: 300
+  max_retries: 3
+  retry_delay: 1.0
+  enable_cache: false
+  cache_ttl: 3600
+  load_balancing: "round_robin"  # round_robin, least_connections
+  instances:
+    - url: "http://localhost:11434"
+      weight: 1
+
+# 训练配置
+training:
+  output_dir: "models/checkpoints"
+  max_workers: 2
+  batch_size: 4
+  gradient_accumulation_steps: 4
+  learning_rate: 2e-4
+  num_epochs: 3
+  save_steps: 500
+  eval_steps: 500
+  logging_steps: 10
+  warmup_steps: 100
+  max_grad_norm: 1.0
+  fp16: true
+  bf16: false
+
+# 缓存配置
+cache:
+  enabled: false
+  type: "memory"  # memory 或 redis
+  redis:
+    host: "localhost"
+    port: 6379
+    db: 0
+    password: null
+    max_connections: 10
+
