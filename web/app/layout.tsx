@@ -1,52 +1,30 @@
 'use client'
 
 import './globals.css'
-import React from "react"
-import { usePathname } from "next/navigation"
-import { Box } from '@mui/material'
-import Providers from "./providers"
-import Footer from "@/components/presentation/footer"
-import Navigation from "@/components/presentation/navigation"
+import React from 'react'
+import { usePathname } from 'next/navigation'
+import Providers from './providers'
+import Footer from '@/components/presentation/footer'
+import Navigation from '@/components/presentation/navigation'
 
-export default function RootLayout({
-   children,
-}: {
-    children: React.ReactNode
-}) {
-    const pathname = usePathname()
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname()
+  const hideHeaderFooter = pathname?.startsWith('/graph')
 
-    // 你可以在这里定义要隐藏 Navigation/Footer 的路径
-    const hideHeaderFooter = pathname?.startsWith('/graph')
-
-    return (
-        <html lang="zh-CN">
-        <head>
-        {/* Emotion/MUI 样式插入点，确保 SSR/CSR 顺序一致 */}
-            <meta name="emotion-insertion-point" content="mui-insertion-point" />
-            <title>GrowForever-循环生成式知识图谱研究</title>
-        </head>
-        <body>
+  return (
+    <html lang="zh-CN">
+      <head>
+        <title>GrowForever-循环生成式知识图谱研究</title>
+      </head>
+      <body>
         <Providers>
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    minHeight: '100vh',
-                }}
-            >
-                {!hideHeaderFooter && <Navigation />}
-                <Box
-                    component="main"
-                    sx={{
-                        flex: 1,
-                    }}
-                >
-                    {children}
-                </Box>
-                {!hideHeaderFooter && <Footer />}
-            </Box>
+          <div className="flex flex-col min-h-screen">
+            {!hideHeaderFooter && <Navigation />}
+            <main className="flex-1">{children}</main>
+            {!hideHeaderFooter && <Footer />}
+          </div>
         </Providers>
-        </body>
-        </html>
-    )
+      </body>
+    </html>
+  )
 }
