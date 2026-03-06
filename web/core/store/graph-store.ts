@@ -1,107 +1,144 @@
-import { create } from 'zustand'
+import { useSyncExternalStore } from 'react'
 import { Node, Edge } from 'reactflow'
-import {GrowMode} from "@/types/grow-mode";
+import type { GrowMode } from '@/types/grow-mode'
 
 const initialRootNode: Node = {
-    id: 'root',
-    type: 'thought',
-    position: { x: 300, y: 150 },
-    draggable: false,
-    data: {
-        title: '种子',
-        description: '一切从一个想法开始。',
-        node_metadata: { tags: ['开心', '兴奋'] },
-        highlight: true,
-        role: 'seed',
-        depth: 0,
-        prompt: '',
-        order: 0,
-        magnified: false,
-    },
+  id: 'root',
+  type: 'thought',
+  position: { x: 300, y: 150 },
+  draggable: false,
+  data: {
+    title: '种子',
+    description: '一切从一个想法开始。',
+    node_metadata: { tags: ['开心', '兴奋'] },
+    highlight: true,
+    role: 'seed',
+    depth: 0,
+    prompt: '',
+    order: 0,
+    magnified: false,
+  },
 }
 
-// 示例初始配置
+export type AutoExpandConfig = {
+  maxDepth: number
+  childrenRange: [number, number]
+  interval: number
+  spreadRadius: number
+  angleSpread: number
+  autoArrange: boolean
+}
+
 const defaultConfig: Record<GrowMode, AutoExpandConfig> = {
-    free: {
-        maxDepth: 4,
-        childrenRange: [1, 2],
-        interval: 800,
-        spreadRadius: 500,
-        angleSpread: 180,
-        autoArrange: true,
-    },
-    fury: {
-        maxDepth: 6,
-        childrenRange: [2, 4],
-        interval: 200,
-        spreadRadius: 500,
-        angleSpread: 300,
-        autoArrange: true,
-    },
-    manual: {
-        maxDepth: 0,
-        childrenRange: [0, 0],
-        interval: 0,
-        spreadRadius: 0,
-        angleSpread: 0,
-        autoArrange: false,
-    }
+  free: {
+    maxDepth: 4,
+    childrenRange: [1, 2],
+    interval: 800,
+    spreadRadius: 500,
+    angleSpread: 180,
+    autoArrange: true,
+  },
+  fury: {
+    maxDepth: 6,
+    childrenRange: [2, 4],
+    interval: 200,
+    spreadRadius: 500,
+    angleSpread: 300,
+    autoArrange: true,
+  },
+  manual: {
+    maxDepth: 0,
+    childrenRange: [0, 0],
+    interval: 0,
+    spreadRadius: 0,
+    angleSpread: 0,
+    autoArrange: false,
+  },
 }
 
-type AutoExpandConfig = {
-    maxDepth: number
-    childrenRange: [number, number]
-    interval: number
-    spreadRadius: number
-    angleSpread: number
-    autoArrange: boolean
+export interface GraphStoreState {
+  nodes: Node[]
+  edges: Edge[]
+  growMode: GrowMode
+  isAutoExpanding: boolean
+  config: Record<GrowMode, AutoExpandConfig>
 }
 
-interface GraphStore {
-    nodes: Node[]
-    edges: Edge[]
-    growMode: GrowMode
-    isAutoExpanding: boolean
-
-    setNodes: (updater: (nodes: Node[]) => Node[]) => void
-    setEdges: (updater: (edges: Edge[]) => Edge[]) => void
-    addNode: (node: Node) => void
-    addEdge: (edge: Edge) => void
-    setGrowMode: (mode: GrowMode) => void
-    setAutoExpanding: (v: boolean) => void
-    reset: () => void
-
-    config: Record<GrowMode, AutoExpandConfig>
-    setConfig: (mode: GrowMode, config: Partial<AutoExpandConfig>) => void
+type GraphStoreActions = {
+  setNodes: (updater: (nodes: Node[]) => Node[]) => void
+  setEdges: (updater: (edges: Edge[]) => Edge[]) => void
+  addNode: (node: Node) => void
+  addEdge: (edge: Edge) => void
+  setGrowMode: (mode: GrowMode) => void
+  setAutoExpanding: (v: boolean) => void
+  reset: () => void
+  setConfig: (mode: GrowMode, config: Partial<AutoExpandConfig>) => void
 }
 
-export const useGraphStore = create<GraphStore>((set) => ({
+type GraphStore = GraphStoreState & GraphStoreActions
+
+function createGraphStore() {
+  let state: GraphStoreState = {
     nodes: [],
     edges: [],
     growMode: 'free',
     isAutoExpanding: false,
+    config: defaultConfig,
+  }
 
-    setNodes: (updater) => set((state) => ({ nodes: updater(state.nodes) })),
-    setEdges: (updater) => set((state) => ({ edges: updater(state.edges) })),
-    addNode: (node) => set((state) => ({ nodes: [...state.nodes, node] })),
-    addEdge: (edge) => set((state) => ({ edges: [...state.edges, edge] })),
-    setGrowMode: (mode:GrowMode) => set({ growMode: mode }),
-    setAutoExpanding: (v) => set({ isAutoExpanding: v }),
-    reset: () => set({
+  const listeners = new Set<() => void>()
+
+  const subscribe = (listener: () => void) => {
+    listeners.add(listener)
+    return () => listeners.delete(listener)
+  }
+
+  const getSnapshot = () => state
+
+  const setState = (partial: Partial<GraphStoreState>) => {
+    state = { ...state, ...partial }
+    listeners.forEach((l) => l())
+  }
+
+  const actions: GraphStoreActions = {
+    setNodes: (updater) => setState({ nodes: updater(state.nodes) }),
+    setEdges: (updater) => setState({ edges: updater(state.edges) }),
+    addNode: (node) => setState({ nodes: [...state.nodes, node] }),
+    addEdge: (edge) => setState({ edges: [...state.edges, edge] }),
+    setGrowMode: (mode) => setState({ growMode: mode }),
+    setAutoExpanding: (v) => setState({ isAutoExpanding: v }),
+    reset: () =>
+      setState({
         nodes: [initialRootNode],
         edges: [],
         growMode: 'manual',
         isAutoExpanding: false,
-    }),
-
-    config: defaultConfig,
-    setConfig: (mode, newConfig) => set((state) => ({
+      }),
+    setConfig: (mode, newConfig) =>
+      setState({
         config: {
-            ...state.config,
-            [mode]: {
-                ...state.config[mode],
-                ...newConfig,
-            },
+          ...state.config,
+          [mode]: { ...state.config[mode], ...newConfig },
         },
-    })),
-}))
+      }),
+  }
+
+  const getState = (): GraphStore => ({ ...state, ...actions })
+
+  return { subscribe, getSnapshot, getState, setState, actions }
+}
+
+const graphStore = createGraphStore()
+
+export function useGraphStore(): GraphStore
+export function useGraphStore<T>(selector: (s: GraphStore) => T): T
+export function useGraphStore<T>(selector?: (s: GraphStore) => T): GraphStore | T {
+  const snapshot = useSyncExternalStore(graphStore.subscribe, graphStore.getSnapshot, graphStore.getSnapshot)
+  const fullState = { ...snapshot, ...graphStore.actions } as GraphStore
+  if (selector) {
+    return selector(fullState)
+  }
+  return fullState
+}
+
+export const getGraphStoreState = graphStore.getState
