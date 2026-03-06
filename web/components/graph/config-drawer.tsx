@@ -1,16 +1,11 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Drawer, Divider, Tabs, Tab, Box, Typography, IconButton, alpha, useTheme } from '@mui/material'
-import CloseIcon from '@mui/icons-material/Close'
+import { X } from 'lucide-react'
 import { useGraphStore } from '@/core/store/graph-store'
+import { useTheme } from '@/context/theme-context'
 import ExpandConfigPanel from './expand-config-panel'
-import { GrowMode } from '@/types/grow-mode'
-
-type Props = {
-  open: boolean
-  closeAction: () => void
-}
+import type { GrowMode } from '@/types/grow-mode'
 
 const modeLabelMap: Record<GrowMode, string> = {
   manual: '手动模式',
@@ -18,94 +13,73 @@ const modeLabelMap: Record<GrowMode, string> = {
   fury: '狂暴模式',
 }
 
+type Props = {
+  open: boolean
+  closeAction: () => void
+}
+
 export default function ConfigDrawer({ open, closeAction }: Props) {
-  const theme = useTheme()
-  const isDark = theme.palette.mode === 'dark'
+  const { actualMode } = useTheme()
+  const isDark = actualMode === 'dark'
   const [tab, setTab] = useState<GrowMode>('manual')
   const setMode = useGraphStore((s) => s.setGrowMode)
 
-  const textColor = isDark ? '#fff' : '#000'
-  const borderColor = isDark ? alpha('#fff', 0.1) : alpha('#000', 0.1)
-  const bgColor = isDark ? alpha('#000', 0.8) : alpha('#fff', 0.9)
+  const textColor = isDark ? 'text-white' : 'text-black'
+  const borderColor = isDark ? 'border-white/10' : 'border-black/10'
+  const bgColor = isDark ? 'bg-black/80' : 'bg-white/90'
+
+  if (!open) return null
 
   return (
-    <Drawer
-      anchor="right"
-      open={open}
-      onClose={closeAction}
-      PaperProps={{
-        sx: {
-          width: { xs: 280, sm: 320, md: 420 },
-          p: { xs: 2, sm: 3, md: 4 },
-          background: bgColor,
-          backdropFilter: 'blur(20px)',
-          borderLeft: `1px solid ${borderColor}`,
-        },
-      }}
-    >
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          mb: 3,
-        }}
+    <>
+      <div
+        className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm"
+        onClick={closeAction}
+        aria-hidden
+      />
+      <aside
+        className={`fixed right-0 top-0 z-50 h-full w-[280px] border-l p-6 backdrop-blur-xl sm:w-80 md:w-[420px] md:p-8 ${borderColor} ${bgColor}`}
       >
-        <Typography variant="h6" sx={{ color: textColor }}>
-          高级配置
-        </Typography>
-        <IconButton onClick={closeAction} size="small" sx={{ color: textColor }}>
-          <CloseIcon />
-        </IconButton>
-      </Box>
-
-      <Divider sx={{ borderColor: borderColor, mb: 3 }} />
-
-      <Tabs
-        value={tab}
-        onChange={(_, val) => setTab(val as GrowMode)}
-        textColor="secondary"
-        indicatorColor="secondary"
-        sx={{ mb: 3 }}
-      >
-        <Tab value="manual" label="手动" sx={{ color: textColor }} />
-        <Tab value="free" label="自由" sx={{ color: textColor }} />
-        <Tab value="fury" label="狂暴" sx={{ color: textColor }} />
-      </Tabs>
-
-      <Box>
-        <ExpandConfigPanel mode={tab} />
-        <Box sx={{ mt: 3 }}>
-          <Typography variant="caption" sx={{ display: 'block', mb: 0.5, color: textColor, opacity: 0.7 }}>
-            当前配置模式：
-          </Typography>
-          <Typography variant="subtitle2" sx={{ mb: 1.5, color: textColor }}>
-            {modeLabelMap[tab]}
-          </Typography>
-          <Box
-            component="button"
-            onClick={() => setMode(tab)}
-            sx={{
-              mt: 1.5,
-              p: 1.25,
-              width: '100%',
-              bgcolor: theme.palette.primary.main,
-              color: 'white',
-              border: 'none',
-              borderRadius: 1.5,
-              cursor: 'pointer',
-              fontWeight: 600,
-              transition: 'all 0.2s ease',
-              '&:hover': {
-                bgcolor: theme.palette.primary.dark,
-                transform: 'scale(1.02)',
-              },
-            }}
+        <div className="mb-6 flex items-center justify-between">
+          <h2 className={`text-lg font-semibold ${textColor}`}>高级配置</h2>
+          <button
+            type="button"
+            onClick={closeAction}
+            className={`rounded p-1 ${textColor} transition-colors hover:bg-white/10`}
           >
-            应用此模式
-          </Box>
-        </Box>
-      </Box>
-    </Drawer>
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+        <div className={`mb-6 h-px ${borderColor}`} />
+        <div className="mb-6 flex gap-2 rounded-lg border p-1 border-border">
+          {(['manual', 'free', 'fury'] as GrowMode[]).map((m) => (
+            <button
+              key={m}
+              type="button"
+              onClick={() => setTab(m)}
+              className={`flex-1 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                tab === m ? 'bg-primary text-primary-foreground' : textColor
+              }`}
+            >
+              {modeLabelMap[m]}
+            </button>
+          ))}
+        </div>
+        <div>
+          <ExpandConfigPanel mode={tab} />
+          <div className="mt-6">
+            <p className={`mb-1 text-xs opacity-70 ${textColor}`}>当前配置模式：</p>
+            <p className={`mb-3 text-sm font-medium ${textColor}`}>{modeLabelMap[tab]}</p>
+            <button
+              type="button"
+              onClick={() => setMode(tab)}
+              className="w-full rounded-xl bg-primary px-5 py-3 font-semibold text-white transition-all hover:scale-[1.02] hover:bg-primary/90"
+            >
+              应用此模式
+            </button>
+          </div>
+        </div>
+      </aside>
+    </>
   )
 }

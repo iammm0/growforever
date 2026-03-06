@@ -1,6 +1,5 @@
 'use client'
 import { useState } from 'react'
-import { Box } from '@mui/material'
 import { ReactFlowProvider } from 'reactflow'
 import GraphCanvas from '../../components/graph/graph-canvas'
 import ControlPanel from '../../components/graph/control-panel'
@@ -31,14 +30,7 @@ export default function GraphPage() {
   }
 
   return (
-    <Box
-      sx={{
-        position: 'relative',
-        width: '100%',
-        height: '100vh',
-        overflow: 'hidden',
-      }}
-    >
+    <div className="relative w-full h-screen overflow-hidden">
       {/* 全局背景 */}
       <GlobalBackground
         mobilePosDark="center"
@@ -65,6 +57,6 @@ export default function GraphPage() {
           onPromptDialogClose={handlePromptClose}
         />
       </ReactFlowProvider>
-    </Box>
+    </div>
   )
 }

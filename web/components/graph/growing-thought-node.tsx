@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Handle, Position, NodeProps } from 'reactflow'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { useTheme } from '@mui/material/styles'
+import { useTheme } from '@/context/theme-context'
 
 interface GrowingThoughtNodeData {
   title: string
@@ -27,8 +27,8 @@ interface GrowingThoughtNodeProps extends NodeProps {
 }
 
 export default function GrowingThoughtNode({ data, selected }: GrowingThoughtNodeProps) {
-  const theme = useTheme()
-  const isDark = theme.palette.mode === 'dark'
+  const { actualMode } = useTheme()
+  const isDark = actualMode === 'dark'
   const [animationPhase, setAnimationPhase] = useState<'entering' | 'growing' | 'stable'>('entering')
   const [scale, setScale] = useState(0)
   const [opacity, setOpacity] = useState(0)

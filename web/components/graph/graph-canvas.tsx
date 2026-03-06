@@ -13,7 +13,7 @@ import ReactFlow, {
 } from 'reactflow'
 import type { Node } from 'reactflow'
 import 'reactflow/dist/style.css'
-import {useTheme} from "@mui/system";
+import { useTheme } from '@/context/theme-context'
 import {useGraphStore} from "@/core/store/graph-store";
 import {nodeTypes} from "@/components/graph/thought-card";
 import ExpandOptionsPopover from "@/components/graph/expand-options-popover";
@@ -184,8 +184,8 @@ export default function GraphCanvas({
     
     // 使用外部传入的状态，如果没有则使用内部状态
     const promptDialogOpen = externalPromptDialogOpen !== undefined ? externalPromptDialogOpen : internalPromptDialogOpen
-    const theme = useTheme()
-    const isDark = theme.palette.mode === 'dark'
+    const { actualMode } = useTheme()
+    const isDark = actualMode === 'dark'
 
 
     // 文本扩展功能

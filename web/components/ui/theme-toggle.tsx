@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { Sun, Moon, Monitor } from 'lucide-react'
-import { useTheme } from '@/app/providers'
+import { useTheme } from '@/context/theme-context'
 
 interface ThemeToggleProps {
   className?: string

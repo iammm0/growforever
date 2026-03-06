@@ -1,55 +1,47 @@
 'use client'
 
-import { IconButton, Tooltip, alpha, useTheme } from '@mui/material'
-import Brightness4Icon from '@mui/icons-material/Brightness4'
-import Brightness7Icon from '@mui/icons-material/Brightness7'
-import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness'
-import { useTheme as useAppTheme } from '@/app/providers'
+import { useTheme } from '@/context/theme-context'
+import { Sun, Moon, Monitor } from 'lucide-react'
 
 export default function ThemeToggle() {
-  const { mode, actualMode, setMode } = useAppTheme()
-  const theme = useTheme()
-  const isDark = theme.palette.mode === 'dark'
-  const textColor = isDark ? '#fff' : '#000'
-  const hoverBgColor = isDark ? alpha('#fff', 0.1) : alpha('#000', 0.05)
-
-  const handleToggle = () => {
-    if (mode === 'system') {
-      setMode(actualMode === 'dark' ? 'light' : 'dark')
-    } else {
-      setMode(actualMode === 'dark' ? 'light' : 'dark')
-    }
-  }
-
-  const getIcon = () => {
-    if (mode === 'system') {
-      return <SettingsBrightnessIcon />
-    }
-    return actualMode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />
-  }
+  const { actualMode, setMode } = useTheme()
+  const isDark = actualMode === 'dark'
 
   const getTooltip = () => {
-    if (mode === 'system') {
-      return `系统主题 (${actualMode === 'dark' ? '深色' : '浅色'})`
-    }
-    return actualMode === 'dark' ? '切换到浅色主题' : '切换到深色主题'
+    if (isDark) return '切换到浅色模式'
+    return '切换到深色模式'
   }
 
   return (
-    <Tooltip title={getTooltip()} arrow placement="bottom">
-      <IconButton
-        onClick={handleToggle}
-        sx={{
-          color: textColor,
-          '&:hover': {
-            backgroundColor: hoverBgColor,
-            transform: 'rotate(15deg)',
-          },
-          transition: 'all 0.3s ease',
-        }}
+    <div className="flex items-center gap-0.5 rounded-lg border border-border bg-background/50 p-0.5">
+      <button
+        type="button"
+        onClick={() => setMode('light')}
+        title="浅色"
+        className={`rounded-md p-1.5 transition-colors ${
+          !isDark ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent'
+        }`}
       >
-        {getIcon()}
-      </IconButton>
-    </Tooltip>
+        <Sun className="h-4 w-4" />
+      </button>
+      <button
+        type="button"
+        onClick={() => setMode('dark')}
+        title="深色"
+        className={`rounded-md p-1.5 transition-colors ${
+          isDark ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent'
+        }`}
+      >
+        <Moon className="h-4 w-4" />
+      </button>
+      <button
+        type="button"
+        onClick={() => setMode('system')}
+        title="跟随系统"
+        className="rounded-md p-1.5 text-foreground transition-colors hover:bg-accent"
+      >
+        <Monitor className="h-4 w-4" />
+      </button>
+    </div>
   )
 }

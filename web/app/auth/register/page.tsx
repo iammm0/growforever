@@ -1,27 +1,19 @@
 'use client'
 
 import React, { useState } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
-import {
-  Container,
-  Paper,
-  TextField,
-  Button,
-  Typography,
-  Link,
-  Box,
-  Alert,
-  CircularProgress,
-  alpha,
-  useTheme,
-} from '@mui/material'
-import { PersonAdd as PersonAddIcon } from '@mui/icons-material'
+import { useTheme } from '@/context/theme-context'
 import GlobalBackground from '@/components/presentation/global-background'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Alert } from '@/components/ui/alert'
+import { UserPlus, Loader2 } from 'lucide-react'
 
 export default function RegisterPage() {
   const router = useRouter()
-  const theme = useTheme()
+  const { actualMode } = useTheme()
   const { register } = useAuth()
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('')
@@ -29,27 +21,23 @@ export default function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const isDark = theme.palette.mode === 'dark'
-  const textColor = isDark ? '#fff' : '#000'
-  const borderColor = isDark ? alpha('#fff', 0.2) : alpha('#000', 0.15)
-  const bgColor = isDark ? alpha('#000', 0.6) : alpha('#fff', 0.15)
+  const isDark = actualMode === 'dark'
+  const textColor = isDark ? 'text-white' : 'text-black'
+  const borderColor = isDark ? 'border-white/20' : 'border-black/15'
+  const bgColor = isDark ? 'bg-black/60' : 'bg-white/15'
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
-
     if (password !== confirmPassword) {
       setError('两次输入的密码不一致')
       return
     }
-
     if (password.length < 6) {
       setError('密码长度至少为 6 位')
       return
     }
-
     setLoading(true)
-
     try {
       await register(email, password, username)
       router.push('/profile')
@@ -61,261 +49,51 @@ export default function RegisterPage() {
   }
 
   return (
-    <Box
-      sx={{
-        position: 'relative',
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      {/* 全局背景 */}
-      <GlobalBackground
-        mobilePosDark="center"
-        mobilePosLight="center"
-        desktopPosDark="center"
-        desktopPosLight="center"
-        mobileZoom={1.0}
-        overlay={true}
-      />
-
-      <Container
-        maxWidth="sm"
-        sx={{
-          position: 'relative',
-          zIndex: 1,
-          mt: { xs: 4, sm: 8 },
-          mb: 4,
-        }}
-      >
-        <Paper
-          elevation={0}
-          sx={{
-            p: { xs: 3, sm: 5 },
-            width: '100%',
-            borderRadius: 4,
-            border: `1px solid ${borderColor}`,
-            background: bgColor,
-            backdropFilter: 'blur(20px)',
-            boxShadow: isDark
-              ? '0 8px 32px rgba(0, 0, 0, 0.4)'
-              : '0 8px 32px rgba(0, 0, 0, 0.1)',
-          }}
-        >
-          <Box sx={{ textAlign: 'center', mb: 4 }}>
-            <Box
-              sx={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: 64,
-                height: 64,
-                borderRadius: 3,
-                background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
-                mb: 2,
-              }}
-            >
-              <PersonAddIcon sx={{ fontSize: 32, color: 'white' }} />
-            </Box>
-            <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 700, color: textColor }}>
-              注册
-            </Typography>
-            <Typography variant="body2" sx={{ color: alpha(textColor, 0.8) }}>
-              加入 GrowForever，开始你的思维之旅
-            </Typography>
-          </Box>
-
+    <div className="relative flex min-h-screen items-center justify-center">
+      <GlobalBackground mobilePosDark="center" mobilePosLight="center" desktopPosDark="center" desktopPosLight="center" mobileZoom={1.0} overlay={true} />
+      <div className="relative z-10 mx-auto w-full max-w-sm px-4 py-8">
+        <div className={`w-full rounded-2xl border p-6 shadow-2xl backdrop-blur-xl sm:p-8 ${borderColor} ${bgColor}`}>
+          <div className="mb-6 text-center">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-indigo-500 text-white">
+              <UserPlus className="h-8 w-8" />
+            </div>
+            <h1 className={`mb-2 text-2xl font-bold ${textColor}`}>注册</h1>
+            <p className={`text-sm opacity-80 ${textColor}`}>加入 GrowForever，开始你的思维之旅</p>
+          </div>
           {error && (
-            <Alert
-              severity="error"
-              sx={{
-                mb: 3,
-                borderRadius: 2,
-              }}
-            >
+            <Alert variant="destructive" className="mb-4 rounded-xl">
               {error}
             </Alert>
           )}
-
-          <Box component="form" onSubmit={handleSubmit}>
-            <TextField
-              fullWidth
-              label="邮箱"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              margin="normal"
-              autoComplete="email"
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: 2,
-                  '& fieldset': {
-                    borderColor: borderColor,
-                  },
-                  '&:hover fieldset': {
-                    borderColor: theme.palette.primary.main,
-                  },
-                  '&.Mui-focused fieldset': {
-                    borderColor: theme.palette.primary.main,
-                  },
-                },
-                '& .MuiInputLabel-root': {
-                  color: alpha(textColor, 0.7),
-                },
-                '& .MuiInputLabel-root.Mui-focused': {
-                  color: theme.palette.primary.main,
-                },
-                '& .MuiOutlinedInput-input': {
-                  color: textColor,
-                },
-              }}
-            />
-            <TextField
-              fullWidth
-              label="用户名"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              margin="normal"
-              autoComplete="username"
-              inputProps={{ minLength: 3, maxLength: 30 }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: 2,
-                  '& fieldset': {
-                    borderColor: borderColor,
-                  },
-                  '&:hover fieldset': {
-                    borderColor: theme.palette.primary.main,
-                  },
-                  '&.Mui-focused fieldset': {
-                    borderColor: theme.palette.primary.main,
-                  },
-                },
-                '& .MuiInputLabel-root': {
-                  color: alpha(textColor, 0.7),
-                },
-                '& .MuiInputLabel-root.Mui-focused': {
-                  color: theme.palette.primary.main,
-                },
-                '& .MuiOutlinedInput-input': {
-                  color: textColor,
-                },
-              }}
-            />
-            <TextField
-              fullWidth
-              label="密码"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              margin="normal"
-              autoComplete="new-password"
-              helperText="密码长度至少为 6 位"
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: 2,
-                  '& fieldset': {
-                    borderColor: borderColor,
-                  },
-                  '&:hover fieldset': {
-                    borderColor: theme.palette.primary.main,
-                  },
-                  '&.Mui-focused fieldset': {
-                    borderColor: theme.palette.primary.main,
-                  },
-                },
-                '& .MuiInputLabel-root': {
-                  color: alpha(textColor, 0.7),
-                },
-                '& .MuiInputLabel-root.Mui-focused': {
-                  color: theme.palette.primary.main,
-                },
-                '& .MuiOutlinedInput-input': {
-                  color: textColor,
-                },
-                '& .MuiFormHelperText-root': {
-                  color: alpha(textColor, 0.6),
-                },
-              }}
-            />
-            <TextField
-              fullWidth
-              label="确认密码"
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-              margin="normal"
-              autoComplete="new-password"
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: 2,
-                  '& fieldset': {
-                    borderColor: borderColor,
-                  },
-                  '&:hover fieldset': {
-                    borderColor: theme.palette.primary.main,
-                  },
-                  '&.Mui-focused fieldset': {
-                    borderColor: theme.palette.primary.main,
-                  },
-                },
-                '& .MuiInputLabel-root': {
-                  color: alpha(textColor, 0.7),
-                },
-                '& .MuiInputLabel-root.Mui-focused': {
-                  color: theme.palette.primary.main,
-                },
-                '& .MuiOutlinedInput-input': {
-                  color: textColor,
-                },
-              }}
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              size="large"
-              disabled={loading}
-              sx={{
-                mt: 3,
-                mb: 2,
-                py: 1.5,
-                borderRadius: 2,
-                fontWeight: 600,
-                fontSize: '1rem',
-                boxShadow: 'none',
-                '&:hover': {
-                  boxShadow: 4,
-                  transform: 'translateY(-2px)',
-                },
-                transition: 'all 0.3s ease',
-              }}
-            >
-              {loading ? <CircularProgress size={24} color="inherit" /> : '注册'}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className={`mb-2 block text-sm font-medium ${textColor}`}>邮箱</label>
+              <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" className={`border ${borderColor} bg-transparent ${textColor}`} />
+            </div>
+            <div>
+              <label className={`mb-2 block text-sm font-medium ${textColor}`}>用户名</label>
+              <Input value={username} onChange={(e) => setUsername(e.target.value)} required autoComplete="username" minLength={3} maxLength={30} className={`border ${borderColor} bg-transparent ${textColor}`} />
+            </div>
+            <div>
+              <label className={`mb-2 block text-sm font-medium ${textColor}`}>密码</label>
+              <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="new-password" className={`border ${borderColor} bg-transparent ${textColor}`} />
+              <p className={`mt-1 text-xs opacity-60 ${textColor}`}>密码长度至少为 6 位</p>
+            </div>
+            <div>
+              <label className={`mb-2 block text-sm font-medium ${textColor}`}>确认密码</label>
+              <Input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required autoComplete="new-password" className={`border ${borderColor} bg-transparent ${textColor}`} />
+            </div>
+            <Button type="submit" variant="grow" disabled={loading} className="w-full py-4 font-semibold">
+              {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : '注册'}
             </Button>
-            <Box textAlign="center">
-              <Link
-                href="/auth/login"
-                underline="hover"
-                sx={{
-                  color: theme.palette.primary.main,
-                  fontWeight: 500,
-                  '&:hover': {
-                    color: theme.palette.primary.dark,
-                  },
-                }}
-              >
+            <p className="text-center">
+              <Link href="/auth/login" className="font-medium text-primary hover:underline">
                 已有账号？立即登录
               </Link>
-            </Box>
-          </Box>
-        </Paper>
-      </Container>
-    </Box>
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
   )
 }

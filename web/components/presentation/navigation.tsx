@@ -1,261 +1,154 @@
 'use client'
 
-import React, { useState } from 'react'
-import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  Menu,
-  MenuItem,
-  Tooltip,
-  useMediaQuery,
-  Avatar,
-  Box,
-  alpha,
-  useTheme,
-  Divider,
-} from '@mui/material'
-import GitHubIcon from '@mui/icons-material/GitHub'
-import AccountCircleIcon from '@mui/icons-material/AccountCircle'
-import LoginIcon from '@mui/icons-material/Login'
-import PersonAddIcon from '@mui/icons-material/PersonAdd'
-import LogoutIcon from '@mui/icons-material/Logout'
+import React, { useState, useRef, useEffect } from 'react'
+import { Github, User, LogIn, UserPlus, LogOut } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
+import { useTheme } from '@/context/theme-context'
 import ThemeToggle from './theme-toggle'
 
 const Navigation: React.FC = () => {
   const router = useRouter()
-  const theme = useTheme()
+  const { actualMode } = useTheme()
   const { user, logout } = useAuth()
-  const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null)
-  const [authMenuAnchor, setAuthMenuAnchor] = useState<null | HTMLElement>(null)
-  const userMenuOpen = Boolean(userMenuAnchor)
-  const authMenuOpen = Boolean(authMenuAnchor)
-  const isMobile = useMediaQuery('(max-width:768px)')
-  const isDark = theme.palette.mode === 'dark'
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const [authMenuOpen, setAuthMenuOpen] = useState(false)
+  const userMenuRef = useRef<HTMLDivElement>(null)
+  const authMenuRef = useRef<HTMLDivElement>(null)
+  const isDark = actualMode === 'dark'
 
-  const handleUserMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setUserMenuAnchor(event.currentTarget)
-  }
-
-  const handleUserMenuClose = () => {
-    setUserMenuAnchor(null)
-  }
-
-  const handleAuthMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAuthMenuAnchor(event.currentTarget)
-  }
-
-  const handleAuthMenuClose = () => {
-    setAuthMenuAnchor(null)
-  }
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        userMenuRef.current &&
+        !userMenuRef.current.contains(e.target as Node) &&
+        authMenuRef.current &&
+        !authMenuRef.current.contains(e.target as Node)
+      ) {
+        setUserMenuOpen(false)
+        setAuthMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   const handleNavigate = (path: string) => {
+    setUserMenuOpen(false)
+    setAuthMenuOpen(false)
     router.push(path)
-    handleUserMenuClose()
-    handleAuthMenuClose()
-  }
-
-  const handleGitHubClick = () => {
-    window.open('https://github.com/iammm0/growforever-web.git', '_blank', 'noopener,noreferrer')
   }
 
   const handleLogout = async () => {
     await logout()
-    handleUserMenuClose()
+    setUserMenuOpen(false)
     router.push('/')
   }
 
-  const textColor = isDark ? '#fff' : '#000'
-  const borderColor = isDark ? alpha('#fff', 0.1) : alpha('#000', 0.15)
-  const hoverBgColor = isDark ? alpha('#fff', 0.1) : alpha('#000', 0.05)
+  const borderColor = isDark ? 'border-white/10' : 'border-black/10'
+  const hoverBg = isDark ? 'hover:bg-white/10' : 'hover:bg-black/5'
+  const textColor = isDark ? 'text-white' : 'text-black'
+  const menuBg = isDark ? 'bg-black/80' : 'bg-white/90'
 
   return (
-    <AppBar
-      position="sticky"
-      elevation={0}
-      sx={{
-        backgroundColor: 'transparent',
-        backdropFilter: 'blur(20px)',
-        borderBottom: `1px solid ${borderColor}`,
-        transition: 'all 0.3s ease',
-      }}
+    <header
+      className={`sticky top-0 z-40 border-b ${borderColor} bg-transparent backdrop-blur-xl transition-all duration-300`}
     >
-      <Toolbar
-        disableGutters
-        sx={{
-          px: { xs: 2, sm: 3 },
-          py: 1,
-          minHeight: { xs: 56, sm: 64 },
-          justifyContent: 'space-between',
-        }}
-      >
-        {/* 左侧：Logo 和 GitHub */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Tooltip title="与我一起协作开发该项目！" arrow placement="bottom">
-            <IconButton
-              onClick={handleGitHubClick}
-              size={isMobile ? 'small' : 'medium'}
-              sx={{
-                color: textColor,
-                '&:hover': {
-                  backgroundColor: hoverBgColor,
-                  transform: 'scale(1.1)',
-                },
-                transition: 'all 0.2s ease',
-              }}
-            >
-              <GitHubIcon fontSize={isMobile ? 'small' : 'medium'} />
-            </IconButton>
-          </Tooltip>
-        </Box>
+      <div className="flex min-h-14 items-center justify-between px-4 py-2 sm:min-h-16 sm:px-6">
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => window.open('https://github.com/iammm0/growforever-web.git', '_blank')}
+            title="与我一起协作开发该项目！"
+            className={`rounded-lg p-2 ${textColor} transition-all hover:scale-110 ${hoverBg}`}
+          >
+            <Github className="h-5 w-5 sm:h-6 sm:w-6" />
+          </button>
+        </div>
 
-        {/* 右侧：主题切换 + 认证 */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-          {/* 主题切换按钮 */}
+        <div className="flex items-center gap-2">
           <ThemeToggle />
-
-          {/* 认证按钮 */}
           {user ? (
-            <>
-              <Tooltip title="用户菜单" arrow placement="bottom">
-                <IconButton
-                  onClick={handleUserMenuOpen}
-                  size={isMobile ? 'small' : 'medium'}
-                  sx={{
-                    '&:hover': {
-                      transform: 'scale(1.05)',
-                    },
-                    transition: 'transform 0.2s ease',
-                  }}
+            <div className="relative" ref={userMenuRef}>
+              <button
+                type="button"
+                onClick={() => setUserMenuOpen(!userMenuOpen)}
+                title="用户菜单"
+                className="rounded-full transition-transform hover:scale-105"
+              >
+                <div
+                  className={`flex h-8 w-8 items-center justify-center rounded-full border-2 sm:h-9 sm:w-9 ${
+                    isDark ? 'border-white/30' : 'border-black/20'
+                  } ${textColor} font-semibold`}
                 >
-                  <Avatar
-                    src={user.avatar}
-                    sx={{
-                      width: { xs: 32, sm: 36 },
-                      height: { xs: 32, sm: 36 },
-                      border: `2px solid ${isDark ? alpha('#fff', 0.3) : alpha('#000', 0.2)}`,
-                      '&:hover': {
-                        borderColor: textColor,
-                      },
-                      transition: 'border-color 0.2s ease',
-                    }}
+                  {user.avatar ? (
+                    <img src={user.avatar} alt="" className="h-full w-full rounded-full object-cover" />
+                  ) : (
+                    user.username.charAt(0).toUpperCase()
+                  )}
+                </div>
+              </button>
+              {userMenuOpen && (
+                <div
+                  className={`absolute right-0 mt-2 min-w-[200px] rounded-lg border ${borderColor} ${menuBg} p-1 shadow-xl backdrop-blur-xl`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => handleNavigate('/profile')}
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 ${textColor} ${hoverBg}`}
                   >
-                    {user.username.charAt(0).toUpperCase()}
-                  </Avatar>
-                </IconButton>
-              </Tooltip>
-              <Menu
-                anchorEl={userMenuAnchor}
-                open={userMenuOpen}
-                onClose={handleUserMenuClose}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                PaperProps={{
-                  sx: {
-                    mt: 1.5,
-                    minWidth: 200,
-                    borderRadius: 2,
-                    border: `1px solid ${isDark ? alpha('#fff', 0.1) : alpha('#000', 0.1)}`,
-                    boxShadow: isDark
-                      ? '0 8px 32px rgba(0, 0, 0, 0.4)'
-                      : '0 8px 32px rgba(0, 0, 0, 0.1)',
-                    backgroundColor: isDark
-                      ? alpha('#000', 0.8)
-                      : alpha('#fff', 0.9),
-                    backdropFilter: 'blur(20px)',
-                    '& .MuiMenuItem-root': {
-                      px: 2,
-                      py: 1.5,
-                      borderRadius: 1,
-                      mx: 1,
-                      my: 0.5,
-                      '&:hover': {
-                        backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                      },
-                    },
-                  },
-                }}
-              >
-                <MenuItem onClick={() => handleNavigate('/profile')}>
-                  <AccountCircleIcon sx={{ mr: 1.5, fontSize: 20 }} />
-                  个人资料
-                </MenuItem>
-                <Divider sx={{ my: 1 }} />
-                <MenuItem onClick={handleLogout}>
-                  <LogoutIcon sx={{ mr: 1.5, fontSize: 20 }} />
-                  登出
-                </MenuItem>
-              </Menu>
-            </>
+                    <User className="h-5 w-5" />
+                    个人资料
+                  </button>
+                  <div className={`my-1 h-px ${isDark ? 'bg-white/10' : 'bg-black/10'}`} />
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 ${textColor} ${hoverBg}`}
+                  >
+                    <LogOut className="h-5 w-5" />
+                    登出
+                  </button>
+                </div>
+              )}
+            </div>
           ) : (
-            <>
-              <Tooltip title="登录/注册" arrow placement="bottom">
-                <IconButton
-                  onClick={handleAuthMenuOpen}
-                  size={isMobile ? 'small' : 'medium'}
-                  sx={{
-                    color: textColor,
-                    bgcolor: alpha(theme.palette.primary.main, 0.1),
-                    border: `1px solid ${alpha(theme.palette.primary.main, 0.3)}`,
-                    '&:hover': {
-                      bgcolor: alpha(theme.palette.primary.main, 0.2),
-                      borderColor: theme.palette.primary.main,
-                      transform: 'scale(1.1)',
-                    },
-                    transition: 'all 0.2s ease',
-                  }}
-                >
-                  <AccountCircleIcon fontSize={isMobile ? 'small' : 'medium'} />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                anchorEl={authMenuAnchor}
-                open={authMenuOpen}
-                onClose={handleAuthMenuClose}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                PaperProps={{
-                  sx: {
-                    mt: 1.5,
-                    minWidth: 180,
-                    borderRadius: 2,
-                    border: `1px solid ${isDark ? alpha('#fff', 0.1) : alpha('#000', 0.1)}`,
-                    boxShadow: isDark
-                      ? '0 8px 32px rgba(0, 0, 0, 0.4)'
-                      : '0 8px 32px rgba(0, 0, 0, 0.1)',
-                    backgroundColor: isDark
-                      ? alpha('#000', 0.8)
-                      : alpha('#fff', 0.9),
-                    backdropFilter: 'blur(20px)',
-                    '& .MuiMenuItem-root': {
-                      px: 2,
-                      py: 1.5,
-                      borderRadius: 1,
-                      mx: 1,
-                      my: 0.5,
-                      '&:hover': {
-                        backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                      },
-                    },
-                  },
-                }}
+            <div className="relative" ref={authMenuRef}>
+              <button
+                type="button"
+                onClick={() => setAuthMenuOpen(!authMenuOpen)}
+                title="登录/注册"
+                className={`flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/10 px-3 py-2 ${textColor} transition-all hover:scale-105 hover:border-primary hover:bg-primary/20`}
               >
-                <MenuItem onClick={() => handleNavigate('/auth/login')}>
-                  <LoginIcon sx={{ mr: 1.5, fontSize: 20 }} />
-                  登录
-                </MenuItem>
-                <MenuItem onClick={() => handleNavigate('/auth/register')}>
-                  <PersonAddIcon sx={{ mr: 1.5, fontSize: 20 }} />
-                  注册
-                </MenuItem>
-              </Menu>
-            </>
+                <User className="h-5 w-5" />
+              </button>
+              {authMenuOpen && (
+                <div
+                  className={`absolute right-0 mt-2 min-w-[180px] rounded-lg border ${borderColor} ${menuBg} p-1 shadow-xl backdrop-blur-xl`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => handleNavigate('/auth/login')}
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 ${textColor} ${hoverBg}`}
+                  >
+                    <LogIn className="h-5 w-5" />
+                    登录
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleNavigate('/auth/register')}
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 ${textColor} ${hoverBg}`}
+                  >
+                    <UserPlus className="h-5 w-5" />
+                    注册
+                  </button>
+                </div>
+              )}
+            </div>
           )}
-        </Box>
-      </Toolbar>
-    </AppBar>
+        </div>
+      </div>
+    </header>
   )
 }
 
